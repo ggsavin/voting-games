@@ -1,5 +1,5 @@
 cloudpickle==2.2.0
-gym==0.26.2
-gym-notices==0.0.8
+Gymnasium==0.26.3
+gymnasium-notices==0.0.1
 numpy==1.23.5
-PettingZoo==1.3.5
+PettingZoo==1.22.2
