@@ -1,6 +1,6 @@
 from pettingzoo import AECEnv
 from pettingzoo.utils import agent_selector, wrappers
-# from pettingzoo.test import api_test
+from pettingzoo.test import api_test
 from gymnasium.spaces import Discrete, MultiDiscrete, Dict, Box, Space
 import enum
 import random
@@ -276,15 +276,22 @@ if __name__ == "__main__":
     env = raw_env()
     env.reset()
 
-    def policy(observation, agent):
-        available_actions = [0,1,2,3,4]
+    def random_policy(observation, agent):
+        # these are the other wolves. we cannot vote for them either
+        available_actions = list(range(len(observation['observation']['player_status'])))
+        # dead players
         action_mask = observation['action_mask']
-        legal_actions = [action for action,is_legal in zip(available_actions, action_mask) if is_legal]
+
+        legal_actions = [action for action,is_alive,is_wolf in zip(available_actions, action_mask, observation['observation']['roles']) if is_alive and not is_wolf]
+        # wolves don't vote for other wolves. will select another villager at random
         action = random.choice(legal_actions)
         return action
 
     for agent in env.agent_iter():
         observation, reward, termination, truncation, info = env.last()
-        action = policy(observation, agent)  if not termination or truncation else None
+        
+        # werewolves have full role visibility
+        action = random_policy(observation, agent) if not termination or truncation else None
+
         env.render()
         env.step(action)
