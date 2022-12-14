@@ -52,7 +52,8 @@ class raw_env(AECEnv):
             "executed": [],
             "werewolves_remaining": [],
             "villagers_remaining": [],
-            "votes": {}
+            "votes": {},
+            "winners": None,
         }
         self.history = [self.world_state.copy()]
 
@@ -83,6 +84,9 @@ class raw_env(AECEnv):
         """
 
         if self._agent_selector.is_first() and False in self.terminations.values():
+            print(json.dumps(self.world_state, indent=4))
+
+        if True not in self.terminations.values():
             print(json.dumps(self.world_state, indent=4))
     
     def close():
@@ -139,16 +143,15 @@ class raw_env(AECEnv):
             else:
                 self.world_state['executed'].append(agent_to_die)
 
-            winners = None
             if not set(self.world_state["werewolves"]) & set(self.world_state['alive']):
                 # print("Villagers WIN!!!!!")
-                winners = Roles.VILLAGER
+                self.world_state['winners'] = Roles.VILLAGER
                 self.terminations = {agent: True for agent in self.terminations}
 
             elif len(set(self.world_state["werewolves"]) & set(self.world_state['alive'])) >= \
                 len(set(self.world_state["villagers"]) & set(self.world_state['alive'])):
                 # print("Werewolves WIN!!!!")
-                winners = Roles.WEREWOLF
+                self.world_state['winners'] = Roles.WEREWOLF
                 self.terminations = {agent: True for agent in self.terminations}
 
             # votes are in, append snapshot of world state to history
@@ -163,9 +166,9 @@ class raw_env(AECEnv):
                     self.rewards[agent] = REWARDS["vote_miss"]
 
             if False not in self.terminations.values():
-                if winners != None:
+                if self.world_state['winners'] != None:
                     for agent in self.agents:
-                        if self.agent_roles[agent] == winners:
+                        if self.agent_roles[agent] == self.world_state['winners']:
                             self.rewards[agent] += REWARDS["win"]
                         else:
                             self.rewards[agent] += REWARDS["loss"]
@@ -212,6 +215,7 @@ class raw_env(AECEnv):
             "werewolves": [agent for agent in self.agents if self.agent_roles[agent] == Roles.WEREWOLF],
             "villagers": [agent for agent in self.agents if self.agent_roles[agent] == Roles.VILLAGER],
             "votes": {},
+            "winners": None,
         }
         self.history = [self.world_state.copy()]
 
@@ -269,6 +273,18 @@ class raw_env(AECEnv):
 
         return {"observation": observation, "action_mask": action_mask}
 
+
+def random_policy(observation, agent):
+    # these are the other wolves. we cannot vote for them either
+    available_actions = list(range(len(observation['observation']['player_status'])))
+    # dead players
+    action_mask = observation['action_mask']
+
+    legal_actions = [action for action,is_alive,is_wolf in zip(available_actions, action_mask, observation['observation']['roles']) if is_alive and not is_wolf]
+    # wolves don't vote for other wolves. will select another villager at random
+    action = random.choice(legal_actions)
+    return action
+
 if __name__ == "__main__":
 
     # api_test(raw_env(), num_cycles=100, verbose_progress=True)
@@ -295,3 +311,6 @@ if __name__ == "__main__":
 
         env.render()
         env.step(action)
+    env.render()
+    
+    print("Done")
