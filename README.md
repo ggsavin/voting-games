@@ -17,6 +17,7 @@ A custom simplified ultimate werewolf environment is available, along with noteb
         - [ ] Weights and Biases
         - [ ] MLFlow
         - [ ] Neptune
+        - [ ] AIM.io
     - [ ] Experiment with adding further roles
     - [ ] Experiment with an additional information layer, so agents have more to work with
     - [ ] What would a communication layer on top of this look like?
