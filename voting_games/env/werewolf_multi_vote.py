@@ -7,6 +7,7 @@ import random
 import numpy as np
 import collections
 import json
+import os
 
 class Roles(enum.IntEnum):
     VILLAGER = 0
@@ -51,7 +52,7 @@ class raw_env(AECEnv):
 
         self.world_state = {
             "day": 1,
-            "phase": Phase.DAY,
+            "phase": Phase.ACCUSATION,
             "alive": self.agents.copy(),
             "killed": [],
             "executed": [],
@@ -87,12 +88,17 @@ class raw_env(AECEnv):
         """
         Renders the environment. In human mode, it prints to the terminal
         """
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(json.dumps(self.world_state, indent=4))
+        
+        # if self._agent_selector.is_first() and False in self.terminations.values():
+        #     print(json.dumps(self.world_state, indent=4))
 
-        if self._agent_selector.is_first() and False in self.terminations.values():
-            print(json.dumps(self.world_state, indent=4))
+        # # if True not in self.terminations.values():
+        # #     print(json.dumps(self.world_state, indent=4))
+        # if self.world_state['winners'] != None:
+        #     print(json.dumps(self.world_state, indent=4))
 
-        if True not in self.terminations.values():
-            print(json.dumps(self.world_state, indent=4))
     
     def close():
         """
@@ -136,12 +142,16 @@ class raw_env(AECEnv):
         # if this is the last agent to go, kill whomever we need to kill
         if self._agent_selector.is_last():
             
-            agent_id_to_die = self._count_votes()
-            agent_to_die = self.possible_agents[agent_id_to_die]
+            if self.world_state['phase'] != Phase.ACCUSATION:
+                agent_id_to_die = self._count_votes()
+                agent_to_die = self.possible_agents[agent_id_to_die]
 
-            self.terminations[agent_to_die] = True
-            self.dead_agents.append(agent_to_die)
-            self.world_state['alive'].remove(agent_to_die)
+                self.terminations[agent_to_die] = True
+                self.dead_agents.append(agent_to_die)
+                self.world_state['alive'].remove(agent_to_die)
+            else:
+                agent_id_to_die = -1
+                agent_to_die = -1
 
             if self.world_state['phase'] == Phase.NIGHT:
                 self.world_state['killed'].append(agent_to_die)
@@ -213,7 +223,7 @@ class raw_env(AECEnv):
 
         self.world_state = {
             "day": 1,
-            "phase": Phase.DAY,
+            "phase": Phase.ACCUSATION,
             "alive": self.agents.copy(),
             "killed": [],
             "executed": [],
@@ -261,7 +271,7 @@ class raw_env(AECEnv):
         prev_state = self.history[-1]
 
         # Determine what should be shown for previous votes
-        if self.agent_roles[agent] == Roles.VILLAGER and prev_state['time_of_day'] == 1:
+        if self.agent_roles[agent] == Roles.VILLAGER and prev_state['phase'] == Phase.NIGHT:
             votes = [0] * len(self.possible_agents)
         elif len(self.history) == 1:
             votes = [0] * len(self.possible_agents)
@@ -270,7 +280,7 @@ class raw_env(AECEnv):
 
         observation = {
             "day" : prev_state["day"],
-            "time_of_day": prev_state["time_of_day"],
+            "phase": prev_state["phase"],
             "player_status": action_mask,
             "roles": roles,
             "votes": votes
