@@ -12,6 +12,11 @@ class Roles(enum.IntEnum):
     VILLAGER = 0
     WEREWOLF = 1
 
+class Phase(enum.IntEnum):
+    ACCUSATION = 0
+    VOTING = 1
+    NIGHT = 2
+
 REWARDS = {
     "day": -1,
     "death": -5,
@@ -46,7 +51,7 @@ class raw_env(AECEnv):
 
         self.world_state = {
             "day": 1,
-            "time_of_day": 0,
+            "phase": Phase.DAY,
             "alive": self.agents.copy(),
             "killed": [],
             "executed": [],
@@ -64,7 +69,7 @@ class raw_env(AECEnv):
                 {
                     "observation": Dict({
                         "day": Discrete(int(num_agents/2), start=1),
-                        "time_of_day": Discrete(2),
+                        "phase": Discrete(3),
                         "player_status": Box(low=0, high=1, shape=(num_agents,), dtype=bool), # Is player alive or dead
                         "roles": Box(low=0, high=1, shape=(num_agents,), dtype=int), # 0 - villager, 1 - werewolf 
                         "votes": Box(low=0, high=num_agents+1, shape=(num_agents,))
@@ -117,7 +122,7 @@ class raw_env(AECEnv):
             # self.agent_selection = self._agent_selector.next()
 
         # Villagers cannot vote during nightime
-        if self.world_state['time_of_day'] == 1:
+        if self.world_state['phase'] == Phase.NIGHT:
              if self.agent_roles[self.agent_selection] != Roles.VILLAGER:
                     self.votes[self.agent_selection] = action
                     self.world_state['votes'][self.agent_selection] = action
@@ -138,9 +143,9 @@ class raw_env(AECEnv):
             self.dead_agents.append(agent_to_die)
             self.world_state['alive'].remove(agent_to_die)
 
-            if self.world_state['time_of_day'] == 1:
+            if self.world_state['phase'] == Phase.NIGHT:
                 self.world_state['killed'].append(agent_to_die)
-            else:
+            elif self.world_state['phase'] == Phase.VOTING:
                 self.world_state['executed'].append(agent_to_die)
 
             if not set(self.world_state["werewolves"]) & set(self.world_state['alive']):
@@ -172,7 +177,7 @@ class raw_env(AECEnv):
                             self.rewards[agent] += REWARDS["win"]
                         else:
                             self.rewards[agent] += REWARDS["loss"]
-            elif self.world_state['time_of_day'] == 1:
+            elif self.world_state['phase'] == Phase.NIGHT:
                 for agent in self.agents:
                     self.rewards[agent] += REWARDS["day"]
 
@@ -181,9 +186,9 @@ class raw_env(AECEnv):
             self.votes = {}
             self.world_state['votes'] = {}
 
-            if self.world_state['time_of_day'] == 1:
+            if self.world_state['phase'] == Phase.NIGHT:
                 self.world_state['day'] += 1
-            self.world_state['time_of_day'] =  (self.world_state['time_of_day'] + 1) % 2
+            self.world_state['phase'] =  (self.world_state['phase'] + 1) % 3
 
             # re-init logic here might be still needed
             self._agent_selector.reinit(self.world_state['alive'])
@@ -208,7 +213,7 @@ class raw_env(AECEnv):
 
         self.world_state = {
             "day": 1,
-            "time_of_day": 0,
+            "phase": Phase.DAY,
             "alive": self.agents.copy(),
             "killed": [],
             "executed": [],
