@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pettingzoo import AECEnv
 from pettingzoo.utils import agent_selector, wrappers
 from pettingzoo.test import api_test
@@ -8,6 +9,7 @@ import numpy as np
 import collections
 import json
 import os
+from typing import List
 
 class Roles(enum.IntEnum):
     VILLAGER = 0
@@ -17,6 +19,14 @@ class Phase(enum.IntEnum):
     ACCUSATION = 0
     VOTING = 1
     NIGHT = 2
+
+
+@dataclass
+class Player:
+    id: str
+    role: Roles
+    status: bool # alive or dead
+
 
 REWARDS = {
     "day": -1,
@@ -39,6 +49,11 @@ class raw_env(AECEnv):
         "name": "werewolf_v1"
     }
 
+    def generatePlayers(self, agents, num_wolves) -> List[Player]:
+        roles = [Roles.WEREWOLF] * num_wolves + [Roles.VILLAGER] * (len(agents) - num_wolves)
+        return [Player(id, role, 1) for id, role in zip(agents, roles)]
+
+
     def __init__(self, num_agents=5, werewolves=1):
         super().__init__()
 
@@ -47,6 +62,10 @@ class raw_env(AECEnv):
 
         self.agents = [f"player_{i+1}" for i in range(num_agents)]
         self.possible_agents = self.agents[:]
+
+        # mirrors agents, but stores roles extra information on each player
+        self.players = self.generatePlayers(self.agents, werewolves)
+
         self.possible_roles = [Roles.WEREWOLF] * werewolves + [Roles.VILLAGER] * (num_agents - werewolves)
         self.agent_roles = { name : role for name, role in zip(self.agents, self.possible_roles)}
 
@@ -90,14 +109,6 @@ class raw_env(AECEnv):
         """
         os.system('cls' if os.name == 'nt' else 'clear')
         print(json.dumps(self.world_state, indent=4))
-        
-        # if self._agent_selector.is_first() and False in self.terminations.values():
-        #     print(json.dumps(self.world_state, indent=4))
-
-        # # if True not in self.terminations.values():
-        # #     print(json.dumps(self.world_state, indent=4))
-        # if self.world_state['winners'] != None:
-        #     print(json.dumps(self.world_state, indent=4))
 
     
     def close():
@@ -123,9 +134,6 @@ class raw_env(AECEnv):
         if self.terminations[self.agent_selection] or self.truncations[self.agent_selection]:
             self._was_dead_step(action)
             return
-            # self._was_done_step(action) does not actually set the next agent, so we should do it here
-            # this also fails if everyone had DONES before hand
-            # self.agent_selection = self._agent_selector.next()
 
         # Villagers cannot vote during nightime
         if self.world_state['phase'] == Phase.NIGHT:
