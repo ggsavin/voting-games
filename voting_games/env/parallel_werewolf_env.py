@@ -21,9 +21,11 @@ class Phase(enum.IntEnum):
 REWARDS = {
     "day": -1,
     "death": -5,
-    "win": 25,
-    "loss": -25,
-    "vote_miss": -1
+    "win": 50,
+    "loss": -30,
+    "vote_miss": -1,
+    "self_vote": -3,
+    "dead_vote": -5,
 }
 
 def env(**kwargs):
@@ -81,8 +83,8 @@ class raw_env(ParallelEnv):
             for name in self.agents
         }
 
-        self._agent_selector = agent_selector(self.agents)
-        self.agent_selection = self._agent_selector.reset()
+        # self._agent_selector = agent_selector(self.agents)
+        # self.agent_selection = self._agent_selector.reset()
 
     def render(self, mode: str = "human"):
         """
@@ -118,7 +120,30 @@ class raw_env(ParallelEnv):
     def _step_night(self, action):
         return 
 
-    def step(self, action):
+    def step(self, actions):
+
+        # If its night time, only count votes from werewolves
+        if self.world_state['phase'] == Phase.NIGHT:
+             if self.agent_roles[self.agent_selection] != Roles.VILLAGER:
+                    self.votes[self.agent_selection] = action
+                    self.world_state['votes'][self.agent_selection] = action
+        else:
+            self.votes[self.agent_selection] = action
+            self.world_state['votes'][self.agent_selection] = action
+
+        # Count votes if we are not in the accusation phase
+        if self.world_state['phase'] != Phase.ACCUSATION:
+            agent_id_to_die = self._count_votes()
+            agent_to_die = self.possible_agents[agent_id_to_die]
+
+            self.terminations[agent_to_die] = True
+            self.dead_agents.append(agent_to_die)
+            self.world_state['alive'].remove(agent_to_die)
+        else:
+            agent_id_to_die = -1
+            agent_to_die = -1
+
+
         ## everyone votes
         if self.terminations[self.agent_selection] or self.truncations[self.agent_selection]:
             self._was_dead_step(action)
@@ -243,9 +268,9 @@ class raw_env(ParallelEnv):
         self.truncations = {agent: False for agent in self.agents}
         self.infos = {agent: {} for agent in self.agents}
 
-        self._agent_selector.reinit(self.agents)
-        self._agent_selector.reset()
-        self.agent_selection = self._agent_selector.reset()
+        # self._agent_selector.reinit(self.agents)
+        # self._agent_selector.reset()
+        # self.agent_selection = self._agent_selector.reset()
 
     
     def observation_space(self, agent: str) -> Space:
