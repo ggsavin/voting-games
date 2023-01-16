@@ -23,7 +23,9 @@ REWARDS = {
     "death": -5,
     "win": 25,
     "loss": -25,
-    "vote_miss": -1
+    "vote_miss": -1,
+    "self_vote": -3,
+    "dead_vote": -5,
 }
 
 def env(**kwargs):
@@ -90,27 +92,25 @@ class raw_env(AECEnv):
         """
         os.system('cls' if os.name == 'nt' else 'clear')
         print(json.dumps(self.world_state, indent=4))
-        
-        # if self._agent_selector.is_first() and False in self.terminations.values():
-        #     print(json.dumps(self.world_state, indent=4))
-
-        # # if True not in self.terminations.values():
-        # #     print(json.dumps(self.world_state, indent=4))
-        # if self.world_state['winners'] != None:
-        #     print(json.dumps(self.world_state, indent=4))
 
     
     def close():
         """
         Needed for games with a render function
         """
+        pass
 
     def _is_game_over(self) -> bool: 
         pass
 
-    def _count_votes(self) -> int:
+    def _get_player_to_be_killed(self) -> int:
         vote_counts = collections.Counter(list(self.votes.values()))
-        return vote_counts.most_common(1)[0][0]
+        for (player_id,_) in vote_counts.most_common():
+            if f'player_{player_id+1}' not in self.dead_agents:
+                return player_id
+        # no legitimate player was voted for, kill a random living player
+        player = random.choice(self.world_state['alive'])
+        return int(player.split('_')[-1]) - 1
 
     def _step_day(self, action):
         return
@@ -143,7 +143,7 @@ class raw_env(AECEnv):
         if self._agent_selector.is_last():
             
             if self.world_state['phase'] != Phase.ACCUSATION:
-                agent_id_to_die = self._count_votes()
+                agent_id_to_die = self._get_player_to_be_killed()
                 agent_to_die = self.possible_agents[agent_id_to_die]
 
                 self.terminations[agent_to_die] = True
@@ -177,8 +177,18 @@ class raw_env(AECEnv):
             for agent in self.agents:
                 if agent == agent_to_die:
                     self.rewards[agent] = REWARDS["death"]
-                elif agent in self.votes and agent_id_to_die != self.votes[agent]:
+                elif agent in self.votes and agent_id_to_die != self.votes[agent] and self.world_state['phase'] != Phase.ACCUSATION:
                     self.rewards[agent] = REWARDS["vote_miss"]
+                
+                voted_for = f'player_{self.votes[agent] + 1}'
+                if self.world_state['phase'] != Phase.ACCUSATION:
+                    # determine if the agent voted for an already dead player
+                    if (voted_for in self.dead_agents) and (voted_for != agent_to_die):
+                        self.rewards[agent] += REWARDS["dead_vote"]
+                
+                    # penalize if agent voted for themselves
+                    if voted_for == agent:
+                        self.rewards[agent] += REWARDS["self_vote"]
 
             if False not in self.terminations.values():
                 if self.world_state['winners'] != None:
@@ -190,6 +200,7 @@ class raw_env(AECEnv):
             elif self.world_state['phase'] == Phase.NIGHT:
                 for agent in self.agents:
                     self.rewards[agent] += REWARDS["day"]
+
 
 
             # phase is over, set votes to nothing, increment time_of_day and day accordingly
