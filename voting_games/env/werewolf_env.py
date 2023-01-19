@@ -180,15 +180,18 @@ class raw_env(AECEnv):
                 elif agent in self.votes and agent_id_to_die != self.votes[agent] and self.world_state['phase'] != Phase.ACCUSATION:
                     self.rewards[agent] = REWARDS["vote_miss"]
                 
-                voted_for = f'player_{self.votes[agent] + 1}'
-                if self.world_state['phase'] != Phase.ACCUSATION:
-                    # determine if the agent voted for an already dead player
-                    if (voted_for in self.dead_agents) and (voted_for != agent_to_die):
-                        self.rewards[agent] += REWARDS["dead_vote"]
-                
-                    # penalize if agent voted for themselves
-                    if voted_for == agent:
-                        self.rewards[agent] += REWARDS["self_vote"]
+                # TODO: handle villager night votes better
+                # Right now we will go ahead and just ignore anything a villager does at night
+                if not (self.world_state['phase'] == Phase.NIGHT and self.agent_roles[agent] == Roles.VILLAGER) and agent in self.votes:
+                    voted_for = f'player_{self.votes[agent] + 1}'
+                    if self.world_state['phase'] != Phase.ACCUSATION:
+                        # determine if the agent voted for an already dead player
+                        if (voted_for in self.dead_agents) and (voted_for != agent_to_die):
+                            self.rewards[agent] += REWARDS["dead_vote"]
+                    
+                        # penalize if agent voted for themselves
+                        if voted_for == agent:
+                            self.rewards[agent] += REWARDS["self_vote"]
 
             if False not in self.terminations.values():
                 if self.world_state['winners'] != None:
@@ -315,7 +318,7 @@ if __name__ == "__main__":
 
     # api_test(raw_env(), num_cycles=100, verbose_progress=True)
 
-    env = raw_env()
+    env = raw_env(num_agents=10, werewolves=2)
     env.reset()
 
     def random_policy(observation, agent):
