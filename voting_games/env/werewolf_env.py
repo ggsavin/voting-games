@@ -73,6 +73,7 @@ class raw_env(AECEnv):
                     "observation": Dict({
                         "day": Discrete(int(num_agents/2), start=1),
                         "phase": Discrete(3),
+                        "self_id": Discrete(num_agents), # TODO: FINISH THIS
                         "player_status": Box(low=0, high=1, shape=(num_agents,), dtype=bool), # Is player alive or dead
                         "roles": Box(low=0, high=1, shape=(num_agents,), dtype=int), # 0 - villager, 1 - werewolf 
                         "votes": Box(low=0, high=num_agents+1, shape=(num_agents,))
