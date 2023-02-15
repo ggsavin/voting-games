@@ -296,6 +296,7 @@ class raw_env(AECEnv):
         observation = {
             "day" : prev_state["day"],
             "phase": prev_state["phase"],
+            "self_id": int(agent.split('_')[-1]) - 1,
             "player_status": action_mask,
             "roles": roles,
             "votes": votes
@@ -315,29 +316,36 @@ def random_policy(observation, agent):
     action = random.choice(legal_actions)
     return action
 
+def revenge_wolf_policy(observation, agent, action=None):
+    # we already know the agent is a werewolf
+
+    return action
+
+def coordinated_wolf_policy(observation, agent, action=None):
+    # first wolf decides who dies
+
+    return action
+
+def revenge_coordinated_wolf_policy(observation, agent, action=None):
+    # first wolf decides who dies 
+    return action
+
 if __name__ == "__main__":
 
     # api_test(raw_env(), num_cycles=100, verbose_progress=True)
 
-    env = raw_env(num_agents=10, werewolves=2)
+    env = raw_env(num_agents=5, werewolves=1)
     env.reset()
-
-    def random_policy(observation, agent):
-        # these are the other wolves. we cannot vote for them either
-        available_actions = list(range(len(observation['observation']['player_status'])))
-        # dead players
-        action_mask = observation['action_mask']
-
-        legal_actions = [action for action,is_alive,is_wolf in zip(available_actions, action_mask, observation['observation']['roles']) if is_alive and not is_wolf]
-        # wolves don't vote for other wolves. will select another villager at random
-        action = random.choice(legal_actions)
-        return action
 
     for agent in env.agent_iter():
         observation, reward, termination, truncation, info = env.last()
         
-        # werewolves have full role visibility
-        action = random_policy(observation, agent) if not termination or truncation else None
+        role = observation['observation']['roles'][observation['observation']['self_id']]
+
+        if role == Roles.WEREWOLF:
+            action = revenge_wolf_policy(observation, agent) if not termination or truncation else None
+        else:
+            action = random_policy(observation, agent) if not termination or truncation else None
 
         env.render()
         env.step(action)
