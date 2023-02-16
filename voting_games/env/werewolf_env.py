@@ -318,32 +318,59 @@ def random_policy(observation, agent):
 
 def revenge_wolf_policy(observation, agent, action=None):
     # we already know the agent is a werewolf
+    me = observation['observation']['self_id']
 
-    return action
+    # who voted for me 
+    votes_against_me = [i for i, x in enumerate(observation['observation']['votes']) if x == me and i != me]
 
-def coordinated_wolf_policy(observation, agent, action=None):
-    # first wolf decides who dies
+    # remove any wolves who voted for me (they should not have)
+    wolf_ids = [i for i, x in enumerate(observation['observation']['roles']) if x == 1 and i != me]
+    votes_against_me = list(set(votes_against_me)^set(wolf_ids))
 
-    return action
+    # remove any players who voted for me but are dead now
+    votes_against_me = [i for i in votes_against_me if observation['observation']['player_status'][i] == True]
 
-def revenge_coordinated_wolf_policy(observation, agent, action=None):
-    # first wolf decides who dies 
-    return action
+    villagers_alive = [i for i, x in enumerate(observation['observation']['roles']) \
+        if observation['observation']['player_status'][i] == True and x == 0]
+
+    # if there are no votes against me, pick a random villager that is alive
+    choice = random.choice(votes_against_me) if len(votes_against_me) > 0 else random.choice(villagers_alive)
+
+    return action if action != None else choice
+
+def random_wolf_policy(observation, agent, action=None):
+    # pick a villager to vote for that is alive
+    villagers_alive = [i for i, x in enumerate(observation['observation']['roles']) \
+        if observation['observation']['player_status'][i] == True and x == 0]
+    return action if action != None else random.choice(villagers_alive)
+
 
 if __name__ == "__main__":
 
     # api_test(raw_env(), num_cycles=100, verbose_progress=True)
 
-    env = raw_env(num_agents=5, werewolves=1)
+    env = raw_env(num_agents=10, werewolves=2)
     env.reset()
+
+    wolf_brain = {'day': 1, 'phase': 0, 'action': None}
 
     for agent in env.agent_iter():
         observation, reward, termination, truncation, info = env.last()
         
+        day = observation['observation']['day']
+        phase = observation['observation']['phase']
+
+        if wolf_brain['day'] != day or wolf_brain['phase'] != phase:
+            wolf_brain = {'day': day, 'phase': phase, 'action': None}
+
         role = observation['observation']['roles'][observation['observation']['self_id']]
 
         if role == Roles.WEREWOLF:
-            action = revenge_wolf_policy(observation, agent) if not termination or truncation else None
+            if wolf_brain['action'] != None:
+                action = wolf_brain['action'] if not termination or truncation else None
+            else:
+                action = revenge_wolf_policy(observation, agent) if not termination or truncation else None
+                wolf_brain['action'] = action
         else:
             action = random_policy(observation, agent) if not termination or truncation else None
 

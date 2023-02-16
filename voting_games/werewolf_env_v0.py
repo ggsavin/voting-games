@@ -1,3 +1,3 @@
 from .env.werewolf_env import (
-    raw_env,
+    raw_env, Roles
 )
