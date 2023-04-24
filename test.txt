@@ -1,0 +1,3373 @@
+{
+    "day": 1,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 1,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 4
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 4,
+        "player_2": 8
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 4,
+        "player_2": 8,
+        "player_3": 3
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 4,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 4,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3,
+        "player_5": 4
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 4,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3,
+        "player_5": 4,
+        "player_6": 7
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 4,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3,
+        "player_5": 4,
+        "player_6": 7,
+        "player_7": 4
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 4,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3,
+        "player_5": 4,
+        "player_6": 7,
+        "player_7": 4,
+        "player_8": 8
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 4,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3,
+        "player_5": 4,
+        "player_6": 7,
+        "player_7": 4,
+        "player_8": 8,
+        "player_9": 9
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 1,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 7
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 7,
+        "player_2": 8
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 7,
+        "player_2": 8,
+        "player_3": 3
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 7,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 7,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3,
+        "player_5": 0
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 7,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3,
+        "player_5": 0,
+        "player_6": 6
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 7,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3,
+        "player_5": 0,
+        "player_6": 6,
+        "player_7": 7
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 7,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3,
+        "player_5": 0,
+        "player_6": 6,
+        "player_7": 7,
+        "player_8": 2
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 7,
+        "player_2": 8,
+        "player_3": 3,
+        "player_4": 3,
+        "player_5": 0,
+        "player_6": 6,
+        "player_7": 7,
+        "player_8": 2,
+        "player_9": 4
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 1,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 1,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 1,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 3
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 3,
+        "player_4": 3
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 3,
+        "player_4": 3
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 3,
+        "player_4": 3
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 3,
+        "player_4": 3
+    },
+    "winners": null
+}{
+    "day": 1,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 3,
+        "player_4": 3
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 2,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 5
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 5,
+        "player_2": 9
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 5,
+        "player_2": 9,
+        "player_3": 6
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 5,
+        "player_2": 9,
+        "player_3": 6,
+        "player_5": 6
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 5,
+        "player_2": 9,
+        "player_3": 6,
+        "player_5": 6,
+        "player_6": 6
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 5,
+        "player_2": 9,
+        "player_3": 6,
+        "player_5": 6,
+        "player_6": 6,
+        "player_7": 2
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 5,
+        "player_2": 9,
+        "player_3": 6,
+        "player_5": 6,
+        "player_6": 6,
+        "player_7": 2,
+        "player_9": 9
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 2,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 9
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 9,
+        "player_2": 9
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 9,
+        "player_2": 9,
+        "player_3": 6
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 9,
+        "player_2": 9,
+        "player_3": 6,
+        "player_5": 2
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 9,
+        "player_2": 9,
+        "player_3": 6,
+        "player_5": 2,
+        "player_6": 9
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 9,
+        "player_2": 9,
+        "player_3": 6,
+        "player_5": 2,
+        "player_6": 9,
+        "player_7": 0
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9",
+        "player_10"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 9,
+        "player_2": 9,
+        "player_3": 6,
+        "player_5": 2,
+        "player_6": 9,
+        "player_7": 0,
+        "player_9": 1
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 2,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 2,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 2,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 4
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 4
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 4
+    },
+    "winners": null
+}{
+    "day": 2,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 4
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 3,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 0
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 0,
+        "player_2": 2
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 0,
+        "player_2": 2,
+        "player_3": 5
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 0,
+        "player_2": 2,
+        "player_3": 5,
+        "player_6": 5
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 0,
+        "player_2": 2,
+        "player_3": 5,
+        "player_6": 5,
+        "player_7": 6
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 3,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 1
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 1,
+        "player_2": 5
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 1,
+        "player_2": 5,
+        "player_3": 1
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 1,
+        "player_2": 5,
+        "player_3": 1,
+        "player_6": 2
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_2",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 1,
+        "player_2": 5,
+        "player_3": 1,
+        "player_6": 2,
+        "player_7": 1
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 3,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 3,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 5
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 5
+    },
+    "winners": null
+}{
+    "day": 3,
+    "phase": 2,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_6",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 5
+    },
+    "winners": null
+}{
+    "day": 4,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 4,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 6
+    },
+    "winners": null
+}{
+    "day": 4,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 6,
+        "player_3": 0
+    },
+    "winners": null
+}{
+    "day": 4,
+    "phase": 0,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 6,
+        "player_3": 0,
+        "player_7": 6
+    },
+    "winners": null
+}{
+    "day": 4,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 4,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 2
+    },
+    "winners": null
+}{
+    "day": 4,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 2,
+        "player_3": 0
+    },
+    "winners": null
+}{
+    "day": 4,
+    "phase": 1,
+    "alive": [
+        "player_1",
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_1": 2,
+        "player_3": 0,
+        "player_7": 0
+    },
+    "winners": null
+}{
+    "day": 4,
+    "phase": 2,
+    "alive": [
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": null
+}{
+    "day": 4,
+    "phase": 2,
+    "alive": [
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 8
+    },
+    "winners": null
+}{
+    "day": 4,
+    "phase": 2,
+    "alive": [
+        "player_3",
+        "player_7",
+        "player_9"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {
+        "player_3": 8
+    },
+    "winners": null
+}{
+    "day": 5,
+    "phase": 0,
+    "alive": [
+        "player_3",
+        "player_7"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_9"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": 1
+}{
+    "day": 5,
+    "phase": 0,
+    "alive": [
+        "player_3",
+        "player_7"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_9"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": 1
+}{
+    "day": 5,
+    "phase": 0,
+    "alive": [
+        "player_3",
+        "player_7"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_9"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": 1
+}{
+    "day": 5,
+    "phase": 0,
+    "alive": [
+        "player_3",
+        "player_7"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_9"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": 1
+}{
+    "day": 5,
+    "phase": 0,
+    "alive": [
+        "player_3",
+        "player_7"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_9"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": 1
+}{
+    "day": 5,
+    "phase": 0,
+    "alive": [
+        "player_3",
+        "player_7"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_9"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": 1
+}{
+    "day": 5,
+    "phase": 0,
+    "alive": [
+        "player_3",
+        "player_7"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_9"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": 1
+}{
+    "day": 5,
+    "phase": 0,
+    "alive": [
+        "player_3",
+        "player_7"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_9"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": 1
+}{
+    "day": 5,
+    "phase": 0,
+    "alive": [
+        "player_3",
+        "player_7"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_9"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": 1
+}{
+    "day": 5,
+    "phase": 0,
+    "alive": [
+        "player_3",
+        "player_7"
+    ],
+    "killed": [
+        "player_4",
+        "player_5",
+        "player_6",
+        "player_9"
+    ],
+    "executed": [
+        "player_8",
+        "player_10",
+        "player_2",
+        "player_1"
+    ],
+    "werewolves": [
+        "player_3",
+        "player_4"
+    ],
+    "villagers": [
+        "player_1",
+        "player_2",
+        "player_5",
+        "player_6",
+        "player_7",
+        "player_8",
+        "player_9",
+        "player_10"
+    ],
+    "votes": {},
+    "winners": 1
+}

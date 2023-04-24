@@ -92,6 +92,8 @@ class raw_env(AECEnv):
         Renders the environment. In human mode, it prints to the terminal
         """
         os.system('cls' if os.name == 'nt' else 'clear')
+        if mode == "ret":
+            return json.dumps(self.world_state)
         print(json.dumps(self.world_state, indent=4))
 
     
@@ -374,7 +376,7 @@ if __name__ == "__main__":
         else:
             action = random_policy(observation, agent) if not termination or truncation else None
 
-        env.render()
+        env.render(mode="ret")
         env.step(action)
     env.render()
     
