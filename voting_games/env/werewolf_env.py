@@ -93,7 +93,7 @@ class raw_env(AECEnv):
         """
         os.system('cls' if os.name == 'nt' else 'clear')
         if mode == "ret":
-            return json.dumps(self.world_state)
+            return self.world_state
         print(json.dumps(self.world_state, indent=4))
 
     
