@@ -1,4 +1,4 @@
-from pettingzoo import ParallelEnv
+from pettingzoo.utils.env import ParallelEnv
 from pettingzoo.utils import agent_selector, wrappers
 from pettingzoo.test import api_test
 from gymnasium.spaces import Discrete, MultiDiscrete, Dict, Box, Space
@@ -47,7 +47,7 @@ class raw_env(ParallelEnv):
         assert werewolves < num_agents, f"The number of werewolves should be less than the number of players ({num_agents})"
         assert werewolves <= np.sqrt(num_agents), f"The number of werewolves should be less than the square root of agents ({num_agents})"       
 
-        self.agents = [f"player_{i+1}" for i in range(num_agents)]
+        self.agents = [f"player_{i}" for i in range(num_agents)]
         self.possible_agents = self.agents[:]
         self.possible_roles = [Roles.WEREWOLF] * werewolves + [Roles.VILLAGER] * (num_agents - werewolves)
         self.agent_roles = { name : role for name, role in zip(self.agents, self.possible_roles)}
@@ -73,9 +73,10 @@ class raw_env(ParallelEnv):
                     "observation": Dict({
                         "day": Discrete(int(num_agents/2), start=1),
                         "phase": Discrete(3),
+                        "self_id": Discrete(num_agents), # TODO: FINISH THIS
                         "player_status": Box(low=0, high=1, shape=(num_agents,), dtype=bool), # Is player alive or dead
                         "roles": Box(low=0, high=1, shape=(num_agents,), dtype=int), # 0 - villager, 1 - werewolf 
-                        "votes": Box(low=0, high=num_agents+1, shape=(num_agents,))
+                        "votes": Box(low=0, high=num_agents+1, shape=(num_agents,)) # num_agents + 1 means a no-vote because most likely dead
                 }),
                     "action_mask": Box(low=0, high=1, shape=(num_agents,), dtype=bool)
                 }
@@ -83,8 +84,115 @@ class raw_env(ParallelEnv):
             for name in self.agents
         }
 
-        # self._agent_selector = agent_selector(self.agents)
-        # self.agent_selection = self._agent_selector.reset()
+        self._agent_selector = agent_selector(self.agents)
+        self.agent_selection = self._agent_selector.reset()
+
+    def observation_space(self, agent: str) -> Space:
+        return self.observation_spaces[agent]
+
+    def action_space(self, agent: str) -> Space:
+        return self.action_spaces[agent]
+    
+    def reset():
+        pass
+
+    def _get_player_to_be_killed(self, votes) -> int:
+        vote_counts = collections.Counter(votes)
+        for (player_id,_) in vote_counts.most_common():
+            if f'player_{player_id}' not in self.dead_agents:
+                return player_id
+        # no legitimate player was voted for, kill a random living player
+        player = random.choice(self.world_state['alive'])
+        return int(player.split('_')[-1])
+    
+    
+    def step(self, actions):
+        # get votes, kill a target or random person if no legitimate player was voted for.
+        # TODO : Penalty for no legitimate target
+        # TODO : Get stats on if we had to randomly kill a living player
+
+        if not actions:
+            self.agents = []
+            return {}, {}, {}, {}, {}
+
+        target = self._get_player_to_be_killed(actions.values())
+
+        if self.world_state['phase'] != Phase.ACCUSATION:
+            
+            print(f'About to kill {target}')
+            self.dead_agents.append(f'player_{target}')
+
+            # updating these lists
+            self.world_state['alive'].remove(f'player_{target}')
+            
+            if self.world_state['phase'] == Phase.NIGHT:
+                self.world_state['killed'].append(f'player_{target}')
+            elif self.world_state['phase'] == Phase.VOTING:
+                self.world_state['executed'].append(f'player_{target}')
+
+        # WIN CONDITIONS #
+        terminations = {agent: agent == f'player_{target}' for agent in actions.keys()}
+
+        if not set(self.world_state["werewolves"]) & set(self.world_state['alive']):
+            # print("Villagers WIN!!!!!")
+            self.world_state['winners'] = Roles.VILLAGER
+            terminations = {agent: True for agent in actions.keys()}
+
+        elif len(set(self.world_state["werewolves"]) & set(self.world_state['alive'])) >= \
+            len(set(self.world_state["villagers"]) & set(self.world_state['alive'])):
+            # print("Werewolves WIN!!!!")
+            self.world_state['winners'] = Roles.WEREWOLF
+            terminations = {agent: True for agent in actions.keys()}
+
+        # votes are in, append snapshot of world state to history
+        self.history.append(self.world_state.copy())
+
+        # UPDATE TIME OF DAY AND PHASE # 
+        if self.world_state['phase'] == Phase.NIGHT:
+            self.world_state['day'] += 1
+        self.world_state['phase'] =  (self.world_state['phase'] + 1) % 3
+
+        # hand out rewards conditions
+        rewards = {a: 0 for a in self.agents}
+
+        # Override with truncations if needed
+        truncations = {a: False for a in self.agents}
+
+        # if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
+        #     votes = [len(self.possible_agents)] * len(self.possible_agents)
+        # elif len(self.history) == 1:
+        #     votes = [0] * len(self.possible_agents)
+        # else: 
+        #     votes = [0 if agent not in prev_state['votes'] else prev_state['votes'][agent] for agent in self.possible_agents]
+
+        # BUILD OUT OBSERVATIONS #
+        action_mask = [agent not in self.dead_agents for agent in self.possible_agents]
+        observations = {
+            agent: {
+                    "observation" : {
+                    "day" : self.history[-1]["day"],
+                    "phase": self.history[-1]["phase"],
+                    "self_id": int(agent.split('_')[-1]),
+                    "player_status": action_mask,
+                    "roles": [Roles.VILLAGER] * len(self.possible_agents) if self.agent_roles[agent] == Roles.VILLAGER else list(self.agent_roles.values()),
+                    "votes": [len(self.possible_agents)] * len(self.possible_agents)
+                },
+                "action_mask": action_mask
+            }
+            for agent in self.agents
+        }
+
+        # Get dummy infos (not used in this example)
+        infos = {a: {} for a in self.agents}
+
+        # take out the dead agent
+        if self.history[-1]['phase'] != Phase.ACCUSATION:
+            self.agents.remove(f'player_{target}')
+
+        if self.world_state['winners'] != None:
+            self.agents = []
+
+        return observations, rewards, terminations, truncations, infos
 
     def render(self, mode: str = "human"):
         """
@@ -92,153 +200,12 @@ class raw_env(ParallelEnv):
         """
         os.system('cls' if os.name == 'nt' else 'clear')
         print(json.dumps(self.world_state, indent=4))
-        
-        # if self._agent_selector.is_first() and False in self.terminations.values():
-        #     print(json.dumps(self.world_state, indent=4))
-
-        # # if True not in self.terminations.values():
-        # #     print(json.dumps(self.world_state, indent=4))
-        # if self.world_state['winners'] != None:
-        #     print(json.dumps(self.world_state, indent=4))
-
     
     def close():
         """
         Needed for games with a render function
         """
-
-    def _is_game_over(self) -> bool: 
         pass
-
-    def _count_votes(self) -> int:
-        vote_counts = collections.Counter(list(self.votes.values()))
-        return vote_counts.most_common(1)[0][0]
-
-    def _step_day(self, action):
-        return
-
-    def _step_night(self, action):
-        return 
-
-    def step(self, actions):
-
-        # If its night time, only count votes from werewolves
-        if self.world_state['phase'] == Phase.NIGHT:
-             if self.agent_roles[self.agent_selection] != Roles.VILLAGER:
-                    self.votes[self.agent_selection] = action
-                    self.world_state['votes'][self.agent_selection] = action
-        else:
-            self.votes[self.agent_selection] = action
-            self.world_state['votes'][self.agent_selection] = action
-
-        # Count votes if we are not in the accusation phase
-        if self.world_state['phase'] != Phase.ACCUSATION:
-            agent_id_to_die = self._count_votes()
-            agent_to_die = self.possible_agents[agent_id_to_die]
-
-            self.terminations[agent_to_die] = True
-            self.dead_agents.append(agent_to_die)
-            self.world_state['alive'].remove(agent_to_die)
-        else:
-            agent_id_to_die = -1
-            agent_to_die = -1
-
-
-        ## everyone votes
-        if self.terminations[self.agent_selection] or self.truncations[self.agent_selection]:
-            self._was_dead_step(action)
-            return
-            # self._was_done_step(action) does not actually set the next agent, so we should do it here
-            # this also fails if everyone had DONES before hand
-            # self.agent_selection = self._agent_selector.next()
-
-        # Villagers cannot vote during nightime
-        if self.world_state['phase'] == Phase.NIGHT:
-             if self.agent_roles[self.agent_selection] != Roles.VILLAGER:
-                    self.votes[self.agent_selection] = action
-                    self.world_state['votes'][self.agent_selection] = action
-        else:
-            self.votes[self.agent_selection] = action
-            self.world_state['votes'][self.agent_selection] = action
-
-        # What is needed here?
-        self._cumulative_rewards[self.agent_selection] = 0
-
-        # if this is the last agent to go, kill whomever we need to kill
-        if self._agent_selector.is_last():
-            
-            if self.world_state['phase'] != Phase.ACCUSATION:
-                agent_id_to_die = self._count_votes()
-                agent_to_die = self.possible_agents[agent_id_to_die]
-
-                self.terminations[agent_to_die] = True
-                self.dead_agents.append(agent_to_die)
-                self.world_state['alive'].remove(agent_to_die)
-            else:
-                agent_id_to_die = -1
-                agent_to_die = -1
-
-            if self.world_state['phase'] == Phase.NIGHT:
-                self.world_state['killed'].append(agent_to_die)
-            elif self.world_state['phase'] == Phase.VOTING:
-                self.world_state['executed'].append(agent_to_die)
-
-            if not set(self.world_state["werewolves"]) & set(self.world_state['alive']):
-                # print("Villagers WIN!!!!!")
-                self.world_state['winners'] = Roles.VILLAGER
-                self.terminations = {agent: True for agent in self.terminations}
-
-            elif len(set(self.world_state["werewolves"]) & set(self.world_state['alive'])) >= \
-                len(set(self.world_state["villagers"]) & set(self.world_state['alive'])):
-                # print("Werewolves WIN!!!!")
-                self.world_state['winners'] = Roles.WEREWOLF
-                self.terminations = {agent: True for agent in self.terminations}
-
-            # votes are in, append snapshot of world state to history
-            self.history.append(self.world_state.copy())
-
-            # figure out rewards for everyone 
-            # extra logic for night turn with villagers not voting, so not getting rewards
-            for agent in self.agents:
-                if agent == agent_to_die:
-                    self.rewards[agent] = REWARDS["death"]
-                elif agent in self.votes and agent_id_to_die != self.votes[agent]:
-                    self.rewards[agent] = REWARDS["vote_miss"]
-
-            if False not in self.terminations.values():
-                if self.world_state['winners'] != None:
-                    for agent in self.agents:
-                        if self.agent_roles[agent] == self.world_state['winners']:
-                            self.rewards[agent] += REWARDS["win"]
-                        else:
-                            self.rewards[agent] += REWARDS["loss"]
-            elif self.world_state['phase'] == Phase.NIGHT:
-                for agent in self.agents:
-                    self.rewards[agent] += REWARDS["day"]
-
-
-            # phase is over, set votes to nothing, increment time_of_day and day accordingly
-            self.votes = {}
-            self.world_state['votes'] = {}
-
-            if self.world_state['phase'] == Phase.NIGHT:
-                self.world_state['day'] += 1
-            self.world_state['phase'] =  (self.world_state['phase'] + 1) % 3
-
-            # re-init logic here might be still needed
-            self._agent_selector.reinit(self.world_state['alive'])
-        else:
-            # no rewards are allocated until all players give an action
-            self._clear_rewards()
-
-        if len(self._agent_selector.agent_order):
-            self.agent_selection = self._agent_selector.next()
-        
-        self._accumulate_rewards()
-
-        # option to call deads step first here possiblu
-        # self._deads_step_first()
-
 
     def reset(self, seed=None, return_info=False, options=None):
         self.agents = self.possible_agents[:]
@@ -268,51 +235,6 @@ class raw_env(ParallelEnv):
         self.truncations = {agent: False for agent in self.agents}
         self.infos = {agent: {} for agent in self.agents}
 
-        # self._agent_selector.reinit(self.agents)
-        # self._agent_selector.reset()
-        # self.agent_selection = self._agent_selector.reset()
-
-    
-    def observation_space(self, agent: str) -> Space:
-        return self.observation_spaces[agent]
-
-    def action_space(self, agent: str) -> Space:
-        return self.action_spaces[agent]
-
-    def observe(self, agent: str):
-        
-        # action: action 0 : no vote - cannot vote against a dead Agent
-        action_mask = [agent not in self.dead_agents for agent in self.possible_agents]
-
-        # player roles 
-        if self.agent_roles[agent] == Roles.VILLAGER:
-            # villagers think everyone is a villager
-            roles = [Roles.VILLAGER] * len(self.possible_agents)
-        else:
-            # werewolves know the true roles of everyone
-            roles = list(self.agent_roles.values())
-
-        # TODO: hide previous votes of werewolves if it was nighttime from villagers
-        prev_state = self.history[-1]
-
-        # Determine what should be shown for previous votes
-        if self.agent_roles[agent] == Roles.VILLAGER and prev_state['phase'] == Phase.NIGHT:
-            votes = [0] * len(self.possible_agents)
-        elif len(self.history) == 1:
-            votes = [0] * len(self.possible_agents)
-        else: 
-            votes = [0 if agent not in prev_state['votes'] else prev_state['votes'][agent] for agent in self.possible_agents]
-
-        observation = {
-            "day" : prev_state["day"],
-            "phase": prev_state["phase"],
-            "player_status": action_mask,
-            "roles": roles,
-            "votes": votes
-        }
-
-        return {"observation": observation, "action_mask": action_mask}
-
 
 def random_policy(observation, agent):
     # these are the other wolves. we cannot vote for them either
@@ -332,25 +254,11 @@ if __name__ == "__main__":
     env = raw_env()
     env.reset()
 
-    def random_policy(observation, agent):
-        # these are the other wolves. we cannot vote for them either
-        available_actions = list(range(len(observation['observation']['player_status'])))
-        # dead players
-        action_mask = observation['action_mask']
-
-        legal_actions = [action for action,is_alive,is_wolf in zip(available_actions, action_mask, observation['observation']['roles']) if is_alive and not is_wolf]
-        # wolves don't vote for other wolves. will select another villager at random
-        action = random.choice(legal_actions)
-        return action
-
-    for agent in env.agent_iter():
-        observation, reward, termination, truncation, info = env.last()
-        
-        # werewolves have full role visibility
-        action = random_policy(observation, agent) if not termination or truncation else None
-
+    while env.agents:
+        actions = {agent: env.action_space(agent).sample() for agent in env.agents}  # this is where you would insert your policy
         env.render()
-        env.step(action)
-    env.render()
-    
-    print("Done")
+        observations, rewards, terminations, truncations, infos = env.step(actions)
+    env.render() # post game render
+    print("hello")
+
+print("Done")
