@@ -8,6 +8,7 @@ import numpy as np
 import collections
 import json
 import os
+import copy 
 
 class Roles(enum.IntEnum):
     VILLAGER = 0
@@ -63,7 +64,7 @@ class raw_env(ParallelEnv):
             "votes": {},
             "winners": None,
         }
-        self.history = [self.world_state.copy()]
+        self.history = [copy.deepcopy(self.world_state)]
 
         # Action and Observation Spaces
         self.action_spaces = { name: Discrete(num_agents) for name in self.agents }
@@ -149,7 +150,7 @@ class raw_env(ParallelEnv):
             terminations = {agent: True for agent in actions.keys()}
 
         # votes are in, append snapshot of world state to history
-        self.history.append(self.world_state.copy())
+        self.history.append(copy.deepcopy(self.world_state))
 
         # UPDATE TIME OF DAY AND PHASE # 
         if self.world_state['phase'] == Phase.NIGHT:
@@ -228,7 +229,7 @@ class raw_env(ParallelEnv):
             "votes": {},
             "winners": None,
         }
-        self.history = [self.world_state.copy()]
+        self.history = [copy.deepcopy(self.world_state)]
 
         self.votes = {agent: 0 for agent in self.agents}
 
