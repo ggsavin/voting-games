@@ -96,18 +96,14 @@ class raw_env(ParallelEnv):
     def reset():
         pass
 
-    # we are keeping track of a random vote needing to be triggered
-    def _get_player_to_be_killed(self, votes) -> tuple[int, bool]:
+    def _get_player_to_be_killed(self, votes) -> int:
         vote_counts = collections.Counter(votes)
-        flag = 0
         for (player_id,_) in vote_counts.most_common():
             if f'player_{player_id}' not in self.dead_agents:
-                return player_id, bool(flag)
-            flag += 1
+                return player_id
         # no legitimate player was voted for, kill a random living player
-        # TODO : Consider another a seperate flag if we ever end up here?
         player = random.choice(self.world_state['alive'])
-        return int(player.split('_')[-1]), True
+        return int(player.split('_')[-1])
     
     
     def step(self, actions):
@@ -119,7 +115,7 @@ class raw_env(ParallelEnv):
             self.agents = []
             return {}, {}, {}, {}, {}
 
-        target, bad_vote = self._get_player_to_be_killed(actions.values())
+        target = self._get_player_to_be_killed(actions.values())
 
         if self.world_state['phase'] != Phase.ACCUSATION:
             
