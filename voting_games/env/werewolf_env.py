@@ -224,6 +224,10 @@ class raw_env(AECEnv):
             # no rewards are allocated until all players give an action
             self._clear_rewards()
 
+            # let user know 
+            # if f'player_{action + 1}' in self.dead_agents:
+            #     self.infos[self.agent_selection] = 
+
         if len(self._agent_selector.agent_order):
             self.agent_selection = self._agent_selector.next()
         
@@ -306,6 +310,14 @@ class raw_env(AECEnv):
         }
 
         return {"observation": observation, "action_mask": action_mask}
+    
+    def convert_obs(self, obs):
+        return  np.asarray([observation['day']] + \
+        [observation['phase']] + \
+        [observation['self_id']] + \
+        [int(status) for status in observation['player_status']] + \
+        [role for role in observation['roles']] + \
+        [vote for vote in observation['votes']])
 
 
 def random_policy(observation, agent):
