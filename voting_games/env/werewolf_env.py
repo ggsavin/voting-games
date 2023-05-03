@@ -48,7 +48,7 @@ class raw_env(AECEnv):
         assert werewolves < num_agents, f"The number of werewolves should be less than the number of players ({num_agents})"
         assert werewolves <= np.sqrt(num_agents), f"The number of werewolves should be less than the square root of agents ({num_agents})"       
 
-        self.agents = [f"player_{i+1}" for i in range(num_agents)]
+        self.agents = [f"player_{i}" for i in range(num_agents)]
         self.possible_agents = self.agents[:]
         self.possible_roles = [Roles.WEREWOLF] * werewolves + [Roles.VILLAGER] * (num_agents - werewolves)
         self.agent_roles = { name : role for name, role in zip(self.agents, self.possible_roles)}
@@ -84,7 +84,8 @@ class raw_env(AECEnv):
             )
             for name in self.agents
         }
-
+        self.infos = {agent: {} for agent in self.agents}
+        
         self._agent_selector = agent_selector(self.agents)
         self.agent_selection = self._agent_selector.reset()
 
@@ -110,11 +111,11 @@ class raw_env(AECEnv):
     def _get_player_to_be_killed(self) -> int:
         vote_counts = collections.Counter(list(self.votes.values()))
         for (player_id,_) in vote_counts.most_common():
-            if f'player_{player_id+1}' not in self.dead_agents:
+            if f'player_{player_id}' not in self.dead_agents:
                 return player_id
         # no legitimate player was voted for, kill a random living player
         player = random.choice(self.world_state['alive'])
-        return int(player.split('_')[-1]) - 1
+        return int(player.split('_')[-1])
 
     def _step_day(self, action):
         return
@@ -187,7 +188,7 @@ class raw_env(AECEnv):
                 # TODO: handle villager night votes better
                 # Right now we will go ahead and just ignore anything a villager does at night
                 if not (self.world_state['phase'] == Phase.NIGHT and self.agent_roles[agent] == Roles.VILLAGER) and agent in self.votes:
-                    voted_for = f'player_{self.votes[agent] + 1}'
+                    voted_for = f'player_{self.votes[agent]}'
                     if self.world_state['phase'] != Phase.ACCUSATION:
                         # determine if the agent voted for an already dead player
                         if (voted_for in self.dead_agents) and (voted_for != agent_to_die):
@@ -294,16 +295,16 @@ class raw_env(AECEnv):
 
         # Determine what should be shown for previous votes
         if self.agent_roles[agent] == Roles.VILLAGER and prev_state['phase'] == Phase.NIGHT:
-            votes = [0] * len(self.possible_agents)
+            votes = [self.num_agents+1] * len(self.possible_agents)
         elif len(self.history) == 1:
-            votes = [0] * len(self.possible_agents)
+            votes = [self.num_agents+1] * len(self.possible_agents)
         else: 
-            votes = [0 if agent not in prev_state['votes'] else prev_state['votes'][agent] for agent in self.possible_agents]
+            votes = [self.num_agents+1 if agent not in prev_state['votes'] else prev_state['votes'][agent] for agent in self.possible_agents]
 
         observation = {
             "day" : prev_state["day"],
             "phase": prev_state["phase"],
-            "self_id": int(agent.split('_')[-1]) - 1,
+            "self_id": int(agent.split('_')[-1]),
             "player_status": action_mask,
             "roles": roles,
             "votes": votes
