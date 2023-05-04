@@ -312,7 +312,7 @@ class raw_env(AECEnv):
 
         return {"observation": observation, "action_mask": action_mask}
     
-    def convert_obs(self, obs):
+    def convert_obs(self, observation):
         return  np.asarray([observation['day']] + \
         [observation['phase']] + \
         [observation['self_id']] + \
