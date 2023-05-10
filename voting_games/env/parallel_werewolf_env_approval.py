@@ -8,6 +8,7 @@ import numpy as np
 import collections
 import json
 import os
+import copy 
 
 class Roles(enum.IntEnum):
     VILLAGER = 0
@@ -63,10 +64,10 @@ class raw_env(ParallelEnv):
             "votes": {},
             "winners": None,
         }
-        self.history = [self.world_state.copy()]
+        self.history = [copy.deepcopy(self.world_state)]
 
         # Action and Observation Spaces
-        self.action_spaces = { name: Discrete(num_agents) for name in self.agents }
+        self.action_spaces = { name: Box(low=-1, high=1, shape=(num_agents,), dtype=int) for name in self.agents }
         self.observation_spaces = {
             name: Dict(
                 {
@@ -76,8 +77,9 @@ class raw_env(ParallelEnv):
                         "self_id": Discrete(num_agents), # TODO: FINISH THIS
                         "player_status": Box(low=0, high=1, shape=(num_agents,), dtype=bool), # Is player alive or dead
                         "roles": Box(low=0, high=1, shape=(num_agents,), dtype=int), # 0 - villager, 1 - werewolf 
-                        "votes": Box(low=0, high=num_agents+1, shape=(num_agents,)) # num_agents + 1 means a no-vote because most likely dead
-                }),
+                        "votes" : Dict({
+                            name: Box(low=-1, high=1, shape=(num_agents,), dtype=int) for name in self.agents}),
+                    }),
                     "action_mask": Box(low=0, high=1, shape=(num_agents,), dtype=bool)
                 }
             )
@@ -96,14 +98,35 @@ class raw_env(ParallelEnv):
     def reset():
         pass
 
-    def _get_player_to_be_killed(self, votes) -> int:
-        vote_counts = collections.Counter(votes)
-        for (player_id,_) in vote_counts.most_common():
-            if f'player_{player_id}' not in self.dead_agents:
-                return player_id
-        # no legitimate player was voted for, kill a random living player
-        player = random.choice(self.world_state['alive'])
-        return int(player.split('_')[-1])
+    # we are keeping track of a random vote needing to be triggered
+    def _get_player_to_be_killed(self, actions) -> tuple[int, bool, bool]:
+        # we now get an approval chain, we want to vote out the agent with the lowest approval rating?
+        # maybe we want to 
+        votes = np.sum(actions, axis=1)
+
+        max_indices = np.where(votes == max(votes))[0]
+        dead_vote_flag = False
+        tie_vote_flag = False
+
+        # if we have a tie, keep the living players and randomly choose between them, report back a tie
+        living_selections = [player for player in max_indices if player not in self.dead_agents]
+
+        if len(max_indices) > 1:
+            tie_vote_flag = True
+
+
+        if len(living_selections) < len(max_indices):
+            dead_vote_flag = True
+
+        # If we have any living selections, lets sampple one
+        if len(living_selections) > 0:
+            return random.choice(living_selections), dead_vote_flag, tie_vote_flag
+
+        # keep going down the chain
+        for next_best in np.argsort(votes)[::-1][len(max_indices):]:
+            if next_best not in self.dead_agents:
+                return next_best, dead_vote_flag, tie_vote_flag
+        
     
     
     def step(self, actions):
@@ -115,7 +138,7 @@ class raw_env(ParallelEnv):
             self.agents = []
             return {}, {}, {}, {}, {}
 
-        target = self._get_player_to_be_killed(actions.values())
+        target, dead_vote, tie_vote  = self._get_player_to_be_killed(list(actions.values()))
 
         if self.world_state['phase'] != Phase.ACCUSATION:
             
@@ -145,7 +168,7 @@ class raw_env(ParallelEnv):
             terminations = {agent: True for agent in actions.keys()}
 
         # votes are in, append snapshot of world state to history
-        self.history.append(self.world_state.copy())
+        self.history.append(copy.deepcopy(self.world_state))
 
         # UPDATE TIME OF DAY AND PHASE # 
         if self.world_state['phase'] == Phase.NIGHT:
@@ -221,12 +244,12 @@ class raw_env(ParallelEnv):
             "executed": [],
             "werewolves": [agent for agent in self.agents if self.agent_roles[agent] == Roles.WEREWOLF],
             "villagers": [agent for agent in self.agents if self.agent_roles[agent] == Roles.VILLAGER],
-            "votes": {},
+            "votes": {agent: [] for agent in self.agents},
             "winners": None,
         }
-        self.history = [self.world_state.copy()]
+        self.history = [copy.deepcopy(self.world_state)]
 
-        self.votes = {agent: 0 for agent in self.agents}
+        self.votes = {agent: [] for agent in self.agents}
 
         self._cumulative_rewards = {agent: 0 for agent in self.agents}
         self.rewards = {agent: 0 for agent in self.agents}
@@ -242,9 +265,8 @@ def random_policy(observation, agent):
     # dead players
     action_mask = observation['action_mask']
 
-    legal_actions = [action for action,is_alive,is_wolf in zip(available_actions, action_mask, observation['observation']['roles']) if is_alive and not is_wolf]
-    # wolves don't vote for other wolves. will select another villager at random
-    action = random.choice(legal_actions)
+    #TODO: random.choice a full array at once
+    action = [random.choice([0,1,-1]) for _ in action_mask]
     return action
 
 if __name__ == "__main__":
