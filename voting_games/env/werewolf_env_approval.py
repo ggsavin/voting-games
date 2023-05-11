@@ -113,9 +113,12 @@ class raw_env(AECEnv):
     def _get_player_to_be_killed(self) -> tuple(int, bool, bool):
         # we now get an approval chain, we want to vote out the agent with the lowest approval rating?
         # maybe we want to 
-        votes = np.sum(self.votes.values(), axis=1)
+        # we want to vote out the player with the lowest score.
+        # an approval should not count against a low score
+        votes = [[0 if i == 1 else i for i in p_actions] for p_actions in self.votes]
+        votes = np.sum(votes, axis=1)
 
-        max_indices = np.where(votes == max(votes))[0]
+        max_indices = np.where(votes == min(votes))[0]
         dead_vote_flag = False
         tie_vote_flag = False
 
@@ -134,7 +137,7 @@ class raw_env(AECEnv):
             return random.choice(living_selections), dead_vote_flag, tie_vote_flag
 
         # keep going down the chain
-        for next_best in np.argsort(votes)[::-1][len(max_indices):]:
+        for next_best in np.argsort(votes)[len(max_indices):]:
             if next_best not in self.dead_agents:
                 return next_best, dead_vote_flag, tie_vote_flag
         
@@ -209,16 +212,16 @@ class raw_env(AECEnv):
                 
                 # TODO: handle villager night votes better
                 # Right now we will go ahead and just ignore anything a villager does at night
-                if not (self.world_state['phase'] == Phase.NIGHT and self.agent_roles[agent] == Roles.VILLAGER) and agent in self.votes:
-                    voted_for = f'player_{self.votes[agent]}'
-                    if self.world_state['phase'] != Phase.ACCUSATION:
-                        # determine if the agent voted for an already dead player
-                        if (voted_for in self.dead_agents) and (voted_for != agent_to_die):
-                            self.rewards[agent] += REWARDS["dead_vote"]
+                # if not (self.world_state['phase'] == Phase.NIGHT and self.agent_roles[agent] == Roles.VILLAGER) and agent in self.votes:
+                #     voted_for = f'player_{self.votes[agent]}'
+                #     if self.world_state['phase'] != Phase.ACCUSATION:
+                #         # determine if the agent voted for an already dead player
+                #         if (voted_for in self.dead_agents) and (voted_for != agent_to_die):
+                #             self.rewards[agent] += REWARDS["dead_vote"]
                     
-                        # penalize if agent voted for themselves
-                        if voted_for == agent:
-                            self.rewards[agent] += REWARDS["self_vote"]
+                #         # penalize if agent voted for themselves
+                #         if voted_for == agent:
+                #             self.rewards[agent] += REWARDS["self_vote"]
 
             if False not in self.terminations.values():
                 if self.world_state['winners'] != None:
@@ -306,6 +309,7 @@ class raw_env(AECEnv):
 
         # player roles 
         if self.agent_roles[agent] == Roles.VILLAGER:
+            # TODO : If a werewolf is dead, then reveal their role
             # villagers think everyone is a villager
             roles = [Roles.VILLAGER] * len(self.possible_agents)
         else:
@@ -317,11 +321,11 @@ class raw_env(AECEnv):
 
         # Determine what should be shown for previous votes
         if self.agent_roles[agent] == Roles.VILLAGER and prev_state['phase'] == Phase.NIGHT:
-            votes = [self.num_agents+1] * len(self.possible_agents)
+            votes = {agent: [0 for _ in range(0, self.num_agents)] for agent in self.possible_agents}
         elif len(self.history) == 1:
-            votes = [self.num_agents+1] * len(self.possible_agents)
+            votes = {agent: [0 for _ in range(0, self.num_agents)] for agent in self.possible_agents}
         else: 
-            votes = [self.num_agents+1 if agent not in prev_state['votes'] else prev_state['votes'][agent] for agent in self.possible_agents]
+            votes = {agent: [0 for _ in range(0, self.num_agents)] if agent not in prev_state['votes'] else prev_state['votes'][agent] for agent in self.possible_agents}
 
         observation = {
             "day" : prev_state["day"],
