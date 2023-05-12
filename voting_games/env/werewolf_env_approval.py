@@ -340,12 +340,16 @@ class raw_env(AECEnv):
         return {"observation": observation, "action_mask": action_mask}
     
     def convert_obs(self, observation):
+        
+        if len(observation["votes"].keys()) != len(observation["player_status"]):
+            raise Exception()
+        
         return  np.asarray([observation['day']] + \
         [observation['phase']] + \
         [observation['self_id']] + \
         [int(status) for status in observation['player_status']] + \
         [role for role in observation['roles']] + \
-        [vote for vote in observation['votes']])
+        [i for sublist in observation["votes"].values() for i in sublist])
 
 
 def random_policy(observation, agent):
@@ -411,6 +415,7 @@ if __name__ == "__main__":
         observation, reward, termination, truncation, info = env.last()
         
         day = observation['observation']['day']
+        env.convert_obs(observation["observation"])
         phase = observation['observation']['phase']
 
         if wolf_brain['day'] != day or wolf_brain['phase'] != phase:
