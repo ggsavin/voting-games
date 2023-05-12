@@ -116,20 +116,20 @@ class raw_env(AECEnv):
         # we want to vote out the player with the lowest score.
         # an approval should not count against a low score
         votes = [[0 if i == 1 else i for i in p_actions] for p_actions in self.votes.values()]
-        votes = np.sum(votes, axis=1)
+        votes = np.sum(votes, axis=0)
 
-        max_indices = np.where(votes == min(votes))[0]
+        min_indices = np.where(votes == min(votes))[0]
         dead_vote_flag = False
         tie_vote_flag = False
 
         # if we have a tie, keep the living players and randomly choose between them, report back a tie
-        living_selections = [player for player in max_indices if player not in self.dead_agents]
+        living_selections = [player for player in min_indices if f'player_{player}' not in self.dead_agents]
 
-        if len(max_indices) > 1:
+        if len(min_indices) > 1:
             tie_vote_flag = True
 
 
-        if len(living_selections) < len(max_indices):
+        if len(living_selections) < len(min_indices):
             dead_vote_flag = True
 
         # If we have any living selections, lets sampple one
@@ -137,9 +137,10 @@ class raw_env(AECEnv):
             return random.choice(living_selections), dead_vote_flag, tie_vote_flag
 
         # keep going down the chain
-        for next_best in np.argsort(votes)[len(max_indices):]:
-            if next_best not in self.dead_agents:
+        for next_best in np.argsort(votes)[len(min_indices):]:
+            if f'player_{next_best}' not in self.dead_agents:
                 return next_best, dead_vote_flag, tie_vote_flag
+        print("Did I make it here?")
         
 
     def _step_day(self, action):
@@ -382,7 +383,7 @@ def revenge_wolf_policy(observation, agent, action=None):
 
     # if there are no votes against me, pick a random villager that is alive
     choice = random.choice(votes_against_me) if len(votes_against_me) > 0 else random.choice(villagers_alive)
-    choice = [-1] * len(observation['observation']['roles'])
+    choice = [-1] * len(observation['action_mask'])
 
     choice[me] = 1
     for wid in wolf_ids:
@@ -426,7 +427,7 @@ if __name__ == "__main__":
         else:
             action = random_policy(observation, agent) if not termination or truncation else None
 
-        env.render(mode="ret")
+        env.render()
         env.step(action)
     env.render()
     
