@@ -110,12 +110,12 @@ class raw_env(AECEnv):
     def _is_game_over(self) -> bool: 
         pass
 
-    def _get_player_to_be_killed(self) -> tuple(int, bool, bool):
+    def _get_player_to_be_killed(self) -> tuple[int, bool, bool]:
         # we now get an approval chain, we want to vote out the agent with the lowest approval rating?
         # maybe we want to 
         # we want to vote out the player with the lowest score.
         # an approval should not count against a low score
-        votes = [[0 if i == 1 else i for i in p_actions] for p_actions in self.votes]
+        votes = [[0 if i == 1 else i for i in p_actions] for p_actions in self.votes.values()]
         votes = np.sum(votes, axis=1)
 
         max_indices = np.where(votes == min(votes))[0]
@@ -173,7 +173,7 @@ class raw_env(AECEnv):
         if self._agent_selector.is_last():
             
             if self.world_state['phase'] != Phase.ACCUSATION:
-                agent_id_to_die = self._get_player_to_be_killed()
+                agent_id_to_die, was_dead_vote, was_tie_vote = self._get_player_to_be_killed()
                 agent_to_die = self.possible_agents[agent_id_to_die]
 
                 self.terminations[agent_to_die] = True
@@ -207,8 +207,8 @@ class raw_env(AECEnv):
             for agent in self.agents:
                 if agent == agent_to_die:
                     self.rewards[agent] = REWARDS["death"]
-                elif agent in self.votes and agent_id_to_die != self.votes[agent] and self.world_state['phase'] != Phase.ACCUSATION:
-                    self.rewards[agent] = REWARDS["vote_miss"]
+                # elif agent in self.votes and agent_id_to_die != self.votes[agent] and self.world_state['phase'] != Phase.ACCUSATION:
+                #     self.rewards[agent] = REWARDS["vote_miss"]
                 
                 # TODO: handle villager night votes better
                 # Right now we will go ahead and just ignore anything a villager does at night
@@ -349,13 +349,18 @@ class raw_env(AECEnv):
 
 def random_policy(observation, agent):
     # these are the other wolves. we cannot vote for them either
-    available_actions = list(range(len(observation['observation']['player_status'])))
+    player_status = list(range(len(observation['observation']['player_status'])))
     # dead players
     action_mask = observation['action_mask']
+    me = observation['observation']['self_id']
 
-    legal_actions = [action for action,is_alive,is_wolf in zip(available_actions, action_mask, observation['observation']['roles']) if is_alive and not is_wolf]
+    legal_actions = [action for action,is_alive,is_wolf in zip(player_status, action_mask, observation['observation']['roles']) if is_alive and not is_wolf]
     # wolves don't vote for other wolves. will select another villager at random
-    action = random.choice(legal_actions)
+    player = random.choice(legal_actions)
+
+    action = [0] * len(action_mask)
+    action[me] = 1
+    action[player] = -1
     return action
 
 def revenge_wolf_policy(observation, agent, action=None):
@@ -363,7 +368,7 @@ def revenge_wolf_policy(observation, agent, action=None):
     me = observation['observation']['self_id']
 
     # who voted for me 
-    votes_against_me = [i for i, x in enumerate(observation['observation']['votes']) if x == me and i != me]
+    votes_against_me = [i for i, x in enumerate(observation['observation']['votes']) if x == -1 and i == me]
 
     # remove any wolves who voted for me (they should not have)
     wolf_ids = [i for i, x in enumerate(observation['observation']['roles']) if x == 1 and i != me]
@@ -377,6 +382,11 @@ def revenge_wolf_policy(observation, agent, action=None):
 
     # if there are no votes against me, pick a random villager that is alive
     choice = random.choice(votes_against_me) if len(votes_against_me) > 0 else random.choice(villagers_alive)
+    choice = [-1] * len(observation['observation']['roles'])
+
+    choice[me] = 1
+    for wid in wolf_ids:
+        choice[wid] = 1
 
     return action if action != None else choice
 
