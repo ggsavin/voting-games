@@ -21,3 +21,13 @@ A custom simplified ultimate werewolf environment is available, along with noteb
     - [ ] Experiment with adding further roles
     - [ ] Experiment with an additional information layer, so agents have more to work with
     - [ ] What would a communication layer on top of this look like?
+
+### Directions to explore:
+
+    - [ ] Update environment
+        - [ ] How ? 
+    - [ ] Re-train agents with 
+        - [ ] different model
+        - [ ] different rewards (what should these be?)
+        - [ ] Environment now shows dead werewolves actual roles
+    - [ ] Visualize games even better
