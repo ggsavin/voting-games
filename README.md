@@ -31,3 +31,15 @@ A custom simplified ultimate werewolf environment is available, along with noteb
         - [ ] different rewards (what should these be?)
         - [ ] Environment now shows dead werewolves actual roles
     - [ ] Visualize games even better
+
+
+https://www.reddit.com/r/reinforcementlearning/comments/o5o0b7/agent_taking_multiple_actions/
+https://github.com/henrycharlesworth/multi_action_head_PPO
+
+https://www.sciencedirect.com/science/article/pii/S037722172100850X
+
+
+- change reward structures (verify that rewards and being given properly)
+- look at model differences
+- try to do combined action space of 3^n 
+-get a VM and run it for a day + instead of the amount of time I have been (1-3 hours)
