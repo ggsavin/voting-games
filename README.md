@@ -42,4 +42,9 @@ https://www.sciencedirect.com/science/article/pii/S037722172100850X
 - change reward structures (verify that rewards and being given properly)
 - look at model differences
 - try to do combined action space of 3^n 
--get a VM and run it for a day + instead of the amount of time I have been (1-3 hours)
+- get a VM and run it for a day + instead of the amount of time I have been (1-3 hours)
+- sum critic value vs mean right now
+- different architectures
+- ** USE AN LSTM, or something to allow history in observation? **
+- look at possibly keeping a counterfactual model of what the agent might be
+- change accusation phases
