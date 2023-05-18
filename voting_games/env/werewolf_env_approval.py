@@ -313,6 +313,10 @@ class raw_env(AECEnv):
             # TODO : If a werewolf is dead, then reveal their role
             # villagers think everyone is a villager
             roles = [Roles.VILLAGER] * len(self.possible_agents)
+            for agent in self.agents:
+                if agent in self.dead_agents and agent in self.world_state["werewolves"]:
+                    roles[int(agent.split("_")[-1])] = Roles.WEREWOLF
+
         else:
             # werewolves know the true roles of everyone
             roles = list(self.agent_roles.values())
