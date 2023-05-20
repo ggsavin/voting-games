@@ -21,10 +21,9 @@ class Phase(enum.IntEnum):
 
 REWARDS = {
     "day": -1,
-    "death": -5,
-    "win": 50,
-    "loss": -30,
-    "vote_miss": -1,
+    "death": -3,
+    "win": 25,
+    "loss": -20,
     "self_vote": -3,
     "dead_vote": -5,
 }
@@ -73,6 +72,8 @@ class raw_env(ParallelEnv):
                 {
                     "observation": Dict({
                         "day": Discrete(int(num_agents/2), start=1),
+                        # "time_step": Discrete(int(num_agents/2), start=1), TODO: Make this depend on a phase amount, so we can have
+                        # multiple accusation phases if needed
                         "phase": Discrete(3),
                         "self_id": Discrete(num_agents), # TODO: FINISH THIS
                         "player_status": Box(low=0, high=1, shape=(num_agents,), dtype=bool), # Is player alive or dead
@@ -102,7 +103,7 @@ class raw_env(ParallelEnv):
     def _get_player_to_be_killed(self, actions) -> tuple[int, bool, bool]:
         # we want to vote out the player with the lowest score.
         # an approval should not count against a low score
-        votes = [[0 if i == 1 else i for i in p_actions] for p_actions in self.votes.values()]
+        votes = [[0 if i >= 1 else i for i in p_actions] for p_actions in self.votes.values()]
         votes = np.sum(votes, axis=0)
 
         min_indices = np.where(votes == min(votes))[0]
@@ -127,7 +128,23 @@ class raw_env(ParallelEnv):
             if f'player_{next_best}' not in self.dead_agents:
                 return next_best, dead_vote_flag, tie_vote_flag
         
+    def _check_for_winner(self):
+        winners = None
+
+        if not set(self.world_state["werewolves"]) & set(self.world_state['alive']):
+            winners = Roles.VILLAGER
+
+        # if there is an equal or more amount of werewolves than villagers, the wolves win
+        elif len(set(self.world_state["werewolves"]) & set(self.world_state['alive'])) >= \
+            len(set(self.world_state["villagers"]) & set(self.world_state['alive'])):
+            # print("Werewolves WIN!!!!")
+            winners = Roles.WEREWOLF
+
+        return winners
     
+    def _get_roles(self, agents):
+        # TODO: we don't want villagers to have any information, unless a werewolf has died
+        return 
     
     def step(self, actions):
         # get votes, kill a target or random person if no legitimate player was voted for.
@@ -139,17 +156,23 @@ class raw_env(ParallelEnv):
             self.agents = []
             return {}, {}, {}, {}, {}
 
+        # set up some returns early 
+        rewards = {a: 0 for a in self.agents}
+        infos = {a: {} for a in self.agents}
+        truncations = {a: False for a in self.agents}
+
         self.world_state['votes'] = copy.deepcopy(actions)
         target, dead_vote, tie_vote  = self._get_player_to_be_killed(list(actions.values()))
 
         if self.world_state['phase'] != Phase.ACCUSATION:
             
-            print(f'About to kill {target}')
+            # add target to the dead agents
             self.dead_agents.append(f'player_{target}')
 
             # updating these lists
             self.world_state['alive'].remove(f'player_{target}')
             
+
             if self.world_state['phase'] == Phase.NIGHT:
                 self.world_state['killed'].append(f'player_{target}')
             elif self.world_state['phase'] == Phase.VOTING:
@@ -158,15 +181,10 @@ class raw_env(ParallelEnv):
         # WIN CONDITIONS #
         terminations = {agent: agent == f'player_{target}' for agent in actions.keys()}
 
-        if not set(self.world_state["werewolves"]) & set(self.world_state['alive']):
-            # print("Villagers WIN!!!!!")
-            self.world_state['winners'] = Roles.VILLAGER
-            terminations = {agent: True for agent in actions.keys()}
-
-        elif len(set(self.world_state["werewolves"]) & set(self.world_state['alive'])) >= \
-            len(set(self.world_state["villagers"]) & set(self.world_state['alive'])):
-            # print("Werewolves WIN!!!!")
-            self.world_state['winners'] = Roles.WEREWOLF
+        # Do we have winners
+        winners = self._check_for_winner()
+        if winners:
+            self.world_state['winners'] = winners
             terminations = {agent: True for agent in actions.keys()}
 
         # votes are in, append snapshot of world state to history
@@ -177,11 +195,6 @@ class raw_env(ParallelEnv):
             self.world_state['day'] += 1
         self.world_state['phase'] =  (self.world_state['phase'] + 1) % 3
 
-        # hand out rewards conditions
-        rewards = {a: 0 for a in self.agents}
-
-        # Override with truncations if needed
-        truncations = {a: False for a in self.agents}
 
         # if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
         #     votes = [len(self.possible_agents)] * len(self.possible_agents)
@@ -207,10 +220,7 @@ class raw_env(ParallelEnv):
             for agent in self.agents
         }
 
-        # Get dummy infos (not used in this example)
-        infos = {a: {} for a in self.agents}
-
-        # take out the dead agent
+        # take out the dead agent. Needs to be done for future loops
         if self.history[-1]['phase'] != Phase.ACCUSATION:
             self.agents.remove(f'player_{target}')
 
@@ -283,6 +293,5 @@ if __name__ == "__main__":
         env.render()
         observations, rewards, terminations, truncations, infos = env.step(actions)
     env.render() # post game render
-    print("hello")
 
 print("Done")
