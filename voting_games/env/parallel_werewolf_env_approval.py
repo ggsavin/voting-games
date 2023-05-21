@@ -100,7 +100,36 @@ class raw_env(ParallelEnv):
         pass
 
     # we are keeping track of a random vote needing to be triggered
+    # TODO: return the target and voting information on each player
     def _get_player_to_be_killed(self, actions) -> tuple[int, bool, bool]:
+        # TODO : We want to know if agents voted for a dead player (that was not an already dead werewolf)
+        #        or 
+
+        # no_viable_vote : no viable living target (i.e just voted for a dead wolf if villager)
+        # dead_vote : voted for a dead player, (does not count if the ggent keeps a negative opinion of a dead player) 
+        #   TODO: maybe this should still give a penalty
+        infos = {a: {"self_vote" : False, "dead_vote": 0, "viable_vote": 0} for a in self.actions.keys()}
+
+        for player, action in actions.items():
+            pid = int(player.split("_")[-1])
+
+            for i, opinion in enumerate(action):
+                
+                # self_vote
+                if i == pid and opinion == -1:
+                    infos[player]["self_vote"] = True
+
+                # dead_vote
+                if f'player_{i}' in self.dead_agents and opinion == -1:
+                    # maybe we want to possibly have a penalty here, or maybe we dont care
+                    if self.agent_roles[f'player_{i}'] != Roles.WEREWOLF:
+                        infos[player]["dead_vote"] += 1
+                
+                # maybe we want to sum how many viable votes are done
+                if f'player_{i}' in actions.keys() and opinion == -1:
+                    infos[player]["dead_vote"] += 1
+                    
+
         # we want to vote out the player with the lowest score.
         # an approval should not count against a low score
         votes = [[0 if i >= 1 else i for i in p_actions] for p_actions in self.votes.values()]
@@ -162,12 +191,15 @@ class raw_env(ParallelEnv):
         truncations = {a: False for a in self.agents}
 
         self.world_state['votes'] = copy.deepcopy(actions)
-        target, dead_vote, tie_vote  = self._get_player_to_be_killed(list(actions.values()))
+        target, dead_vote, tie_vote  = self._get_player_to_be_killed(actions)
 
         if self.world_state['phase'] != Phase.ACCUSATION:
             
             # add target to the dead agents
             self.dead_agents.append(f'player_{target}')
+
+            # hand out dead reward to the agent this round
+            rewards[f'player_{target}'] += REWARDS["death"]
 
             # updating these lists
             self.world_state['alive'].remove(f'player_{target}')
@@ -186,6 +218,10 @@ class raw_env(ParallelEnv):
         if winners:
             self.world_state['winners'] = winners
             terminations = {agent: True for agent in actions.keys()}
+
+            # give out winning rewards to winners, and losing rewards to losers
+            for agent in self. actions.keys():
+                rewards[agent] += REWARDS["win"] if self.agent_roles[agent] == winners else REWARDS["loss"]
 
         # votes are in, append snapshot of world state to history
         self.history.append(copy.deepcopy(self.world_state))
