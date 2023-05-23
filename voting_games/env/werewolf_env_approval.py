@@ -110,37 +110,47 @@ class raw_env(AECEnv):
     def _is_game_over(self) -> bool: 
         pass
 
-    def _get_player_to_be_killed(self) -> tuple[int, bool, bool]:
-        # we now get an approval chain, we want to vote out the agent with the lowest approval rating?
-        # maybe we want to 
-        # we want to vote out the player with the lowest score.
-        # an approval should not count against a low score
-        votes = [[0 if i == 1 else i for i in p_actions] for p_actions in self.votes.values()]
-        votes = np.sum(votes, axis=0)
+    def _get_player_to_be_killed(self, actions) -> tuple[int, object]:
+        # TODO : actions should be a dict of player: votes
+        infos = {a: {"self_vote" : False, "dead_vote": 0, "viable_vote": 0} for a in actions.keys()}
 
-        min_indices = np.where(votes == min(votes))[0]
-        dead_vote_flag = False
-        tie_vote_flag = False
+        votes = [0] * len(self.possible_agents)
+
+        for player, action in actions.items():
+            pid = int(player.split("_")[-1])
+
+            for i, opinion in enumerate(action):
+                
+                # self_vote
+                if i == pid and opinion == -1:
+                    infos[player]["self_vote"] = True
+
+                # dead_vote
+                if f'player_{i}' in self.dead_agents and opinion == -1:
+                    # maybe we want to possibly have a penalty here, or maybe we dont care
+                    if self.agent_roles[f'player_{i}'] != Roles.WEREWOLF:
+                        infos[player]["dead_vote"] += 1
+                
+                # maybe we want to sum how many viable votes are done
+                if f'player_{i}' in actions.keys() and opinion == -1:
+                    infos[player]["viable_vote"] += 1
+
+                if opinion == -1:
+                    votes[i] += opinion
 
         # if we have a tie, keep the living players and randomly choose between them, report back a tie
+        # TODO: Can we do this calculation in the loop above? Is it better to do it in the loop above?
+        min_indices = np.where(votes == min(votes))[0]
         living_selections = [player for player in min_indices if f'player_{player}' not in self.dead_agents]
-
-        if len(min_indices) > 1:
-            tie_vote_flag = True
-
-
-        if len(living_selections) < len(min_indices):
-            dead_vote_flag = True
 
         # If we have any living selections, lets sampple one
         if len(living_selections) > 0:
-            return random.choice(living_selections), dead_vote_flag, tie_vote_flag
+            return random.choice(living_selections), infos
 
         # keep going down the chain
         for next_best in np.argsort(votes)[len(min_indices):]:
             if f'player_{next_best}' not in self.dead_agents:
-                return next_best, dead_vote_flag, tie_vote_flag
-        print("Did I make it here?")
+                return next_best, infos
         
 
     def _step_day(self, action):
@@ -174,7 +184,7 @@ class raw_env(AECEnv):
         if self._agent_selector.is_last():
             
             if self.world_state['phase'] != Phase.ACCUSATION:
-                agent_id_to_die, was_dead_vote, was_tie_vote = self._get_player_to_be_killed()
+                agent_id_to_die, infos = self._get_player_to_be_killed(self.votes)
                 agent_to_die = self.possible_agents[agent_id_to_die]
 
                 self.terminations[agent_to_die] = True

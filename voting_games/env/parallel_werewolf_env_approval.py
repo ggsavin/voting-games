@@ -26,6 +26,7 @@ REWARDS = {
     "loss": -20,
     "self_vote": -3,
     "dead_vote": -5,
+    "no_viable": -5,
 }
 
 def env(**kwargs):
@@ -101,14 +102,16 @@ class raw_env(ParallelEnv):
 
     # we are keeping track of a random vote needing to be triggered
     # TODO: return the target and voting information on each player
-    def _get_player_to_be_killed(self, actions) -> tuple[int, bool, bool]:
+    def _get_player_to_be_killed(self, actions) -> tuple[int, object]:
         # TODO : We want to know if agents voted for a dead player (that was not an already dead werewolf)
         #        or 
 
         # no_viable_vote : no viable living target (i.e just voted for a dead wolf if villager)
         # dead_vote : voted for a dead player, (does not count if the ggent keeps a negative opinion of a dead player) 
         #   TODO: maybe this should still give a penalty
-        infos = {a: {"self_vote" : False, "dead_vote": 0, "viable_vote": 0} for a in self.actions.keys()}
+        infos = {a: {"self_vote" : False, "dead_vote": 0, "viable_vote": 0} for a in actions.keys()}
+
+        votes = [0] * len(self.possible_agents)
 
         for player, action in actions.items():
             pid = int(player.split("_")[-1])
@@ -127,35 +130,24 @@ class raw_env(ParallelEnv):
                 
                 # maybe we want to sum how many viable votes are done
                 if f'player_{i}' in actions.keys() and opinion == -1:
-                    infos[player]["dead_vote"] += 1
-                    
+                    infos[player]["viable_vote"] += 1
 
-        # we want to vote out the player with the lowest score.
-        # an approval should not count against a low score
-        votes = [[0 if i >= 1 else i for i in p_actions] for p_actions in self.votes.values()]
-        votes = np.sum(votes, axis=0)
-
-        min_indices = np.where(votes == min(votes))[0]
-        dead_vote_flag = False
-        tie_vote_flag = False
+                if opinion == -1:
+                    votes[i] += opinion
 
         # if we have a tie, keep the living players and randomly choose between them, report back a tie
+        # TODO: Can we do this calculation in the loop above? Is it better to do it in the loop above?
+        min_indices = np.where(votes == min(votes))[0]
         living_selections = [player for player in min_indices if f'player_{player}' not in self.dead_agents]
-
-        if len(min_indices) > 1:
-            tie_vote_flag = True
-
-        if len(living_selections) < len(min_indices):
-            dead_vote_flag = True
 
         # If we have any living selections, lets sampple one
         if len(living_selections) > 0:
-            return random.choice(living_selections), dead_vote_flag, tie_vote_flag
+            return random.choice(living_selections), infos
 
         # keep going down the chain
         for next_best in np.argsort(votes)[len(min_indices):]:
             if f'player_{next_best}' not in self.dead_agents:
-                return next_best, dead_vote_flag, tie_vote_flag
+                return next_best, infos
         
     def _check_for_winner(self):
         winners = None
@@ -191,20 +183,18 @@ class raw_env(ParallelEnv):
         truncations = {a: False for a in self.agents}
 
         self.world_state['votes'] = copy.deepcopy(actions)
-        target, dead_vote, tie_vote  = self._get_player_to_be_killed(actions)
+        target, infos  = self._get_player_to_be_killed(actions)
 
         if self.world_state['phase'] != Phase.ACCUSATION:
             
             # add target to the dead agents
             self.dead_agents.append(f'player_{target}')
-
             # hand out dead reward to the agent this round
             rewards[f'player_{target}'] += REWARDS["death"]
 
             # updating these lists
             self.world_state['alive'].remove(f'player_{target}')
             
-
             if self.world_state['phase'] == Phase.NIGHT:
                 self.world_state['killed'].append(f'player_{target}')
             elif self.world_state['phase'] == Phase.VOTING:
@@ -231,6 +221,28 @@ class raw_env(ParallelEnv):
             self.world_state['day'] += 1
         self.world_state['phase'] =  (self.world_state['phase'] + 1) % 3
 
+        # FINISH Rewards
+        # Reminder object of infos is : "self_vote" : False, "dead_vote": 0, "viable_vote": 0
+        for agent, info in infos.items():
+
+            if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
+                raise Exception("Villager should not have voted during the night")
+            
+            if self.history[-1]['phase'] != Phase.ACCUSATION:
+                if info["self_vote"]:
+                    rewards[agent] += REWARDS["self_vote"]
+                
+                if info["viable_vote"] == 0:
+                    rewards[agent] += REWARDS["no_viable"]
+
+                if info["dead_vote"] > 0:
+                    # TODO: Is this too punishing?
+                    rewards[agent] += info["dead_vote"]*REWARDS["dead_vote"]
+                
+                 #  TODO: should we give this every step? or every day shift. and do we want to give i
+                if not winners:
+                    rewards[agent] += REWARDS["day"]
+        
 
         # if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
         #     votes = [len(self.possible_agents)] * len(self.possible_agents)
