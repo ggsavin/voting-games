@@ -24,6 +24,7 @@ REWARDS = {
     "death": -3,
     "win": 25,
     "loss": -20,
+    "dead_wolf": 10, # Maybe not needed ?
     "self_vote": -3,
     "dead_vote": -5,
     "no_viable": -5,
@@ -163,9 +164,17 @@ class raw_env(ParallelEnv):
 
         return winners
     
-    def _get_roles(self, agents):
-        # TODO: we don't want villagers to have any information, unless a werewolf has died
-        return 
+    def _get_roles(self, agent):
+        if self.agent_roles[agent] == Roles.VILLAGER:
+            # If a werewolf is dead, then reveal their role
+            roles = [Roles.VILLAGER] * len(self.possible_agents)
+            for agent in self.possible_agents:
+                if agent in self.dead_agents and agent in self.world_state["werewolves"]:
+                    roles[int(agent.split("_")[-1])] = Roles.WEREWOLF
+        else:
+            # werewolves know the true roles of everyone
+            roles = list(self.agent_roles.values())
+        return roles
     
     def step(self, actions):
         # get votes, kill a target or random person if no legitimate player was voted for.
@@ -173,6 +182,7 @@ class raw_env(ParallelEnv):
         # TODO : Get stats on if we had to randomly kill a living player
         # TODO : A dead werewolf will still get -1. how do we ignore this
 
+        # TODO : do we end up here if a werewolf dies?
         if not actions:
             self.agents = []
             return {}, {}, {}, {}, {}
@@ -205,12 +215,12 @@ class raw_env(ParallelEnv):
 
         # Do we have winners
         winners = self._check_for_winner()
-        if winners:
+        if winners != None:
             self.world_state['winners'] = winners
             terminations = {agent: True for agent in actions.keys()}
 
             # give out winning rewards to winners, and losing rewards to losers
-            for agent in self. actions.keys():
+            for agent in self.agents:
                 rewards[agent] += REWARDS["win"] if self.agent_roles[agent] == winners else REWARDS["loss"]
 
         # votes are in, append snapshot of world state to history
@@ -239,17 +249,12 @@ class raw_env(ParallelEnv):
                     # TODO: Is this too punishing?
                     rewards[agent] += info["dead_vote"]*REWARDS["dead_vote"]
                 
+                if self.agent_roles[f'player_{target}'] == Roles.WEREWOLF and self.agent_roles[agent] == Roles.VILLAGER:
+                    rewards[agent] += REWARDS["dead_wolf"]
+
                  #  TODO: should we give this every step? or every day shift. and do we want to give i
                 if not winners:
                     rewards[agent] += REWARDS["day"]
-        
-
-        # if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
-        #     votes = [len(self.possible_agents)] * len(self.possible_agents)
-        # elif len(self.history) == 1:
-        #     votes = [0] * len(self.possible_agents)
-        # else: 
-        #     votes = [0 if agent not in prev_state['votes'] else prev_state['votes'][agent] for agent in self.possible_agents]
 
         # BUILD OUT OBSERVATIONS #
         action_mask = [agent not in self.dead_agents for agent in self.possible_agents]
@@ -260,7 +265,7 @@ class raw_env(ParallelEnv):
                     "phase": self.history[-1]["phase"],
                     "self_id": int(agent.split('_')[-1]),
                     "player_status": action_mask,
-                    "roles": [Roles.VILLAGER] * len(self.possible_agents) if self.agent_roles[agent] == Roles.VILLAGER else list(self.agent_roles.values()),
+                    "roles": self._get_roles(agent),
                     "votes": self.history[-1]['votes']
                 },
                 "action_mask": action_mask
@@ -308,12 +313,8 @@ class raw_env(ParallelEnv):
             "winners": None,
         }
         self.history = [copy.deepcopy(self.world_state)]
-
         self.votes = {agent: [] for agent in self.agents}
-
-        self._cumulative_rewards = {agent: 0 for agent in self.agents}
         self.rewards = {agent: 0 for agent in self.agents}
-
         self.terminations = {agent: False for agent in self.agents}
         self.truncations = {agent: False for agent in self.agents}
         self.infos = {agent: {} for agent in self.agents}
@@ -337,7 +338,7 @@ if __name__ == "__main__":
     env.reset()
 
     while env.agents:
-        actions = {agent: env.action_space(agent).sample().tolist() for agent in env.agents}  # this is where you would insert your policy
+        actions = {agent: env.action_space(agent).sample().tolist() for agent in env.agents if not (env.world_state["phase"] == Phase.NIGHT and env.agent_roles[agent] == Roles.VILLAGER)}  # this is where you would insert your policy
         env.render()
         observations, rewards, terminations, truncations, infos = env.step(actions)
     env.render() # post game render
