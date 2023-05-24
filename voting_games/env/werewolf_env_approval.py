@@ -215,6 +215,8 @@ class raw_env(AECEnv):
 
             # figure out rewards for everyone 
             # extra logic for night turn with villagers not voting, so not getting rewards
+
+            # we can use infos here
             for agent in self.agents:
                 if agent == agent_to_die:
                     self.rewards[agent] = REWARDS["death"]
