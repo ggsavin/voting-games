@@ -319,6 +319,25 @@ class raw_env(ParallelEnv):
         self.truncations = {agent: False for agent in self.agents}
         self.infos = {agent: {} for agent in self.agents}
 
+        # lets create observations here and return a whole step return
+        action_mask = [agent not in self.dead_agents for agent in self.possible_agents]
+        observations = {
+            agent: {
+                    "observation" : {
+                    "day" : self.history[-1]["day"],
+                    "phase": self.history[-1]["phase"],
+                    "self_id": int(agent.split('_')[-1]),
+                    "player_status": action_mask,
+                    "roles": self._get_roles(agent),
+                    "votes": self.history[-1]['votes']
+                },
+                "action_mask": action_mask
+            }
+            for agent in self.agents
+        }
+
+        return observations, rewards, terminations, truncations, infos
+
 
 def random_policy(observation, agent):
     # these are the other wolves. we cannot vote for them either
