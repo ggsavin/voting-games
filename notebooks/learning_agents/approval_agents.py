@@ -75,10 +75,10 @@ class SequentialAgent(torch.nn.Module):
         # we multiply the entropy, and we add the log_probs together
         # TODO: multiple values for critic. should I average?
         return action, torch.sum(probs.log_prob(action)), torch.prod(probs.entropy()), torch.mean(self.critic(x))
+    
 
     def _layer_init(self, layer, std=np.sqrt(2), bias_const=0.0):
         torch.nn.init.orthogonal_(layer.weight, std)
         torch.nn.init.constant_(layer.bias, bias_const)
         return layer
-    
     

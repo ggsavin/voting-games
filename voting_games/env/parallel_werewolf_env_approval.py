@@ -176,6 +176,13 @@ class raw_env(ParallelEnv):
             roles = list(self.agent_roles.values())
         return roles
     
+    def _get_votes(self, agent):
+        if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
+            votes = {agent: [0 for _ in range(0,len(self.possible_agents))] for agent in self.possible_agents}
+        else: 
+            votes = {agent: [0 for _ in range(0, len(self.possible_agents))] if agent not in self.history[-1]['votes'] else self.history[-1]['votes'][agent] for agent in self.possible_agents}
+        
+        return votes
     def step(self, actions):
         # get votes, kill a target or random person if no legitimate player was voted for.
         # TODO : Penalty for no legitimate target
@@ -191,8 +198,13 @@ class raw_env(ParallelEnv):
         rewards = {a: 0 for a in self.agents}
         infos = {a: {} for a in self.agents}
         truncations = {a: False for a in self.agents}
+        terminations = {a: False for a in self.agents}
 
+        # if its nighttime, we will add 0 votes for all agents. All asleep
+        # if its nighttime, villagers do not see votes
         self.world_state['votes'] = copy.deepcopy(actions)
+
+
         target, infos  = self._get_player_to_be_killed(actions)
 
         if self.world_state['phase'] != Phase.ACCUSATION:
@@ -211,13 +223,13 @@ class raw_env(ParallelEnv):
                 self.world_state['executed'].append(f'player_{target}')
 
         # WIN CONDITIONS #
-        terminations = {agent: agent == f'player_{target}' for agent in actions.keys()}
+        terminations = {agent: agent == f'player_{target}' for agent in self.agents}
 
         # Do we have winners
         winners = self._check_for_winner()
         if winners != None:
             self.world_state['winners'] = winners
-            terminations = {agent: True for agent in actions.keys()}
+            terminations = {agent: True for agent in self.agents}
 
             # give out winning rewards to winners, and losing rewards to losers
             for agent in self.agents:
@@ -258,6 +270,8 @@ class raw_env(ParallelEnv):
 
         # BUILD OUT OBSERVATIONS #
         action_mask = [agent not in self.dead_agents for agent in self.possible_agents]
+
+        # villagers only see everyone voting 0 at night
         observations = {
             agent: {
                     "observation" : {
@@ -266,7 +280,7 @@ class raw_env(ParallelEnv):
                     "self_id": int(agent.split('_')[-1]),
                     "player_status": action_mask,
                     "roles": self._get_roles(agent),
-                    "votes": self.history[-1]['votes']
+                    "votes": self._get_votes(agent)
                 },
                 "action_mask": action_mask
             }
@@ -309,11 +323,11 @@ class raw_env(ParallelEnv):
             "executed": [],
             "werewolves": [agent for agent in self.agents if self.agent_roles[agent] == Roles.WEREWOLF],
             "villagers": [agent for agent in self.agents if self.agent_roles[agent] == Roles.VILLAGER],
-            "votes": {agent: [] for agent in self.agents},
+            "votes": {agent: [0]*len(self.possible_agents) for agent in self.agents},
             "winners": None,
         }
         self.history = [copy.deepcopy(self.world_state)]
-        self.votes = {agent: [] for agent in self.agents}
+        self.votes = {agent: [0]*len(self.possible_agents) for agent in self.agents}
         self.rewards = {agent: 0 for agent in self.agents}
         self.terminations = {agent: False for agent in self.agents}
         self.truncations = {agent: False for agent in self.agents}
@@ -336,9 +350,21 @@ class raw_env(ParallelEnv):
             for agent in self.agents
         }
 
-        return observations, rewards, terminations, truncations, infos
+        return observations, self.rewards, self.terminations, self.truncations, self.infos
 
 
+    def convert_obs(self, observation):
+        
+        if len(observation["votes"].keys()) != len(observation["player_status"]):
+            raise Exception()
+        
+        return  np.asarray([observation['day']] + \
+        [observation['phase']] + \
+        [observation['self_id']] + \
+        [int(status) for status in observation['player_status']] + \
+        [role for role in observation['roles']] + \
+        [i for sublist in observation["votes"].values() for i in sublist])
+    
 def random_policy(observation, agent):
     # these are the other wolves. we cannot vote for them either
     available_actions = list(range(len(observation['observation']['player_status'])))
