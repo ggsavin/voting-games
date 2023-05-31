@@ -9,7 +9,9 @@ class SequentialAgent(torch.nn.Module):
         self.critic = torch.nn.Sequential(
             self._layer_init(torch.nn.Linear(obs_size+1, 256)),
             torch.nn.Tanh(),
-            self._layer_init(torch.nn.Linear(256,256)),
+            self._layer_init(torch.nn.Linear(256,512)),
+            torch.nn.Tanh(),
+            self._layer_init(torch.nn.Linear(512,256)),
             torch.nn.Tanh(),
             self._layer_init(torch.nn.Linear(256,1), std=1.0),
         )
@@ -17,7 +19,9 @@ class SequentialAgent(torch.nn.Module):
         self.actor = torch.nn.Sequential(
             self._layer_init(torch.nn.Linear(obs_size+1, 256)),
             torch.nn.Tanh(),
-            self._layer_init(torch.nn.Linear(256,256)),
+            self._layer_init(torch.nn.Linear(256,512)),
+            torch.nn.Tanh(),
+            self._layer_init(torch.nn.Linear(512,256)),
             torch.nn.Tanh(),
             self._layer_init(torch.nn.Linear(256, approval_states), std=0.01),
         )
