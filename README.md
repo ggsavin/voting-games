@@ -48,3 +48,11 @@ https://www.sciencedirect.com/science/article/pii/S037722172100850X
 - ** USE AN LSTM, or something to allow history in observation? **
 - look at possibly keeping a counterfactual model of what the agent might be
 - change accusation phases
+
+
+
+____
+Need to revamp environment
+maybe keep player positions as roles, but change IDs around randomly?
+
+- wolves need to vote the same way during the accusation and actual voting

@@ -77,11 +77,11 @@ class raw_env(ParallelEnv):
                         # "time_step": Discrete(int(num_agents/2), start=1), TODO: Make this depend on a phase amount, so we can have
                         # multiple accusation phases if needed
                         "phase": Discrete(3),
-                        "self_id": Discrete(num_agents), # TODO: FINISH THIS
+                        "self_id": Discrete(num_agents), # TODO: FINISH THIS # now hot encode this
                         "player_status": Box(low=0, high=1, shape=(num_agents,), dtype=bool), # Is player alive or dead
                         "roles": Box(low=0, high=1, shape=(num_agents,), dtype=int), # 0 - villager, 1 - werewolf 
                         "votes" : Dict({
-                            name: Box(low=-1, high=1, shape=(num_agents,), dtype=int) for name in self.agents}),
+                            name: Box(low=0, high=num_agents+1, shape=(num_agents,)) for name in self.agents}),
                     }),
                     "action_mask": Box(low=0, high=1, shape=(num_agents,), dtype=bool)
                 }
