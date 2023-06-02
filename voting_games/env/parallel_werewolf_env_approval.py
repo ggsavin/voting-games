@@ -43,7 +43,7 @@ class raw_env(ParallelEnv):
         "name": "werewolf_v1"
     }
 
-    def __init__(self, num_agents=5, werewolves=1):
+    def __init__(self, num_agents=5, werewolves=1, num_accusations=1):
         super().__init__()
 
         assert werewolves < num_agents, f"The number of werewolves should be less than the number of players ({num_agents})"
@@ -53,6 +53,7 @@ class raw_env(ParallelEnv):
         self.possible_agents = self.agents[:]
         self.possible_roles = [Roles.WEREWOLF] * werewolves + [Roles.VILLAGER] * (num_agents - werewolves)
         self.agent_roles = { name : role for name, role in zip(self.agents, self.possible_roles)}
+        self.num_accusation_steps = num_accusations
 
         self.world_state = {
             "day": 1,
@@ -97,9 +98,6 @@ class raw_env(ParallelEnv):
 
     def action_space(self, agent: str) -> Space:
         return self.action_spaces[agent]
-    
-    def reset():
-        pass
 
     # we are keeping track of a random vote needing to be triggered
     # TODO: return the target and voting information on each player
