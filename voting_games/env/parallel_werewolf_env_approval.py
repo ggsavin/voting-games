@@ -273,8 +273,8 @@ class raw_env(ParallelEnv):
         observations = {
             agent: {
                     "observation" : {
-                    "day" : self.history[-1]["day"],
-                    "phase": self.history[-1]["phase"],
+                    "day" : self.world_state["day"],
+                    "phase": self.world_state["phase"],
                     "self_id": int(agent.split('_')[-1]),
                     "player_status": action_mask,
                     "roles": self._get_roles(agent),

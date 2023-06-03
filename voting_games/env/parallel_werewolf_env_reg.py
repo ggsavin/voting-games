@@ -202,7 +202,6 @@ class raw_env(ParallelEnv):
         # if its nighttime, villagers do not see votes
         self.world_state['votes'] = copy.deepcopy(actions)
 
-
         target, infos  = self._get_player_to_be_killed(actions)
 
         if self.world_state['phase'] != Phase.ACCUSATION:
@@ -273,8 +272,8 @@ class raw_env(ParallelEnv):
         observations = {
             agent: {
                     "observation" : {
-                    "day" : self.history[-1]["day"],
-                    "phase": self.history[-1]["phase"],
+                    "day" : self.world_state["day"],
+                    "phase": self.world_state["phase"],
                     "self_id": int(agent.split('_')[-1]),
                     "player_status": action_mask,
                     "roles": self._get_roles(agent),
@@ -381,10 +380,11 @@ if __name__ == "__main__":
     env = raw_env()
 
     observations, rewards, terminations, truncations, infos = env.reset()
+    env.render()
     while env.agents:
         actions = {agent: env.action_space(agent).sample() for agent in env.agents if not (env.world_state["phase"] == Phase.NIGHT and env.agent_roles[agent] == Roles.VILLAGER)}  # this is where you would insert your policy
-        env.render()
         observations, rewards, terminations, truncations, infos = env.step(actions)
+        env.render()
     env.render() # post game render
 
 print("Done")
