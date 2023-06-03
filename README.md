@@ -56,3 +56,9 @@ Need to revamp environment
 maybe keep player positions as roles, but change IDs around randomly?
 
 - wolves need to vote the same way during the accusation and actual voting
+
+---
+https://npitsillos.github.io/blog/2021/recurrent-ppo/
+https://wandb.ai/sb3/no-vel-envs/reports/PPO-vs-RecurrentPPO-aka-PPO-LSTM-on-environments-with-masked-velocity-SB3-Contrib---VmlldzoxOTI4NjE4
+https://blog.floydhub.com/long-short-term-memory-from-zero-to-hero-with-pytorch/
+https://cnvrg.io/pytorch-lstm/
