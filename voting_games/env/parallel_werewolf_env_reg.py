@@ -238,7 +238,7 @@ class raw_env(ParallelEnv):
         # UPDATE TIME OF DAY AND PHASE # 
         if self.world_state['phase'] == Phase.NIGHT:
             self.world_state['day'] += 1
-        self.world_state['phase'] =  (self.world_state['phase'] + 1) % 3
+        self.world_state['phase'] =  Phase((self.world_state['phase'] + 1) % len(Phase))
 
         # FINISH Rewards
         # Reminder object of infos is : "self_vote" : False, "dead_vote": 0, "viable_vote": 0
@@ -292,6 +292,12 @@ class raw_env(ParallelEnv):
             self.agents = []
 
         return observations, rewards, terminations, truncations, infos
+
+    def _game_phase_iterator(self):
+        phase = Phase(0)
+        while True:
+            yield phase
+            phase = Phase((phase + 1) % len(Phase))
 
     def render(self, mode: str = "human"):
         """
