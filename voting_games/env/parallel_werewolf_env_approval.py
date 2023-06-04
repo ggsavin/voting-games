@@ -58,6 +58,7 @@ class raw_env(ParallelEnv):
         self.world_state = {
             "day": 1,
             "phase": Phase.ACCUSATION,
+            "round": 0,
             "alive": self.agents.copy(),
             "killed": [],
             "executed": [],
@@ -296,10 +297,12 @@ class raw_env(ParallelEnv):
 
     def _game_phase_iterator(self):
         phase = Phase(0)
+        accusation_round = 0
         while True:
-            yield phase
+            yield phase, accusation_round
             phase = Phase((phase + 1) % len(Phase))
-            
+            accusation_round = (accusation_round + 1) % self.num_accusation_steps
+
     def render(self, mode: str = "human"):
         """
         Renders the environment. In human mode, it prints to the terminal
@@ -322,6 +325,7 @@ class raw_env(ParallelEnv):
         self.world_state = {
             "day": 1,
             "phase": Phase.ACCUSATION,
+            "round": 0,
             "alive": self.agents.copy(),
             "killed": [],
             "executed": [],
