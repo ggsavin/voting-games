@@ -62,3 +62,12 @@ https://npitsillos.github.io/blog/2021/recurrent-ppo/
 https://wandb.ai/sb3/no-vel-envs/reports/PPO-vs-RecurrentPPO-aka-PPO-LSTM-on-environments-with-masked-velocity-SB3-Contrib---VmlldzoxOTI4NjE4
 https://blog.floydhub.com/long-short-term-memory-from-zero-to-hero-with-pytorch/
 https://cnvrg.io/pytorch-lstm/
+
+
+
+---
+For LSTM even better :
+
+https://npitsillos.github.io/blog/2021/recurrent-ppo/
+https://github.com/MarcoMeter/recurrent-ppo-truncated-bptt/blob/main/buffer.py
+https://github.com/MarcoMeter/recurrent-ppo-truncated-bptt/blob/main/model.py
