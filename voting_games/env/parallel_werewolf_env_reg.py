@@ -369,7 +369,7 @@ class raw_env(ParallelEnv):
         [observation['self_id']] + \
         [int(status) for status in observation['player_status']] + \
         [role for role in observation['roles']] + \
-        [i for sublist in observation["votes"].values() for i in sublist])
+        list(observation["votes"].values()))
     
 def random_policy(observation, agent):
     # these are the other wolves. we cannot vote for them either
