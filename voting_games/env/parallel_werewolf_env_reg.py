@@ -21,13 +21,14 @@ class Phase(enum.IntEnum):
 
 REWARDS = {
     "day": -1,
-    "death": -3,
+    "death": -4,
     "win": 25,
     "loss": -20,
     # "dead_wolf": 10, # Maybe not needed ?
     "self_vote": -3,
     "dead_vote": -5,
     "no_viable": -5,
+    "no_sleep": -5,
 }
 
 def env(**kwargs):
@@ -112,8 +113,8 @@ class raw_env(ParallelEnv):
         # no_viable_vote : no viable living target (i.e just voted for a dead wolf if villager)
         # dead_vote : voted for a dead player, (does not count if the ggent keeps a negative opinion of a dead player) 
         #   TODO: maybe this should still give a penalty
-        infos = {a: {"self_vote" : False, "dead_vote": False, "viable_vote": 0} for a in actions.keys()}
-
+        infos = {a: {"self_vote" : False, "dead_vote": False, "viable_vote": 0, "did_not_sleep": False} for a in actions.keys()}
+        
         votes = np.array([0] * len(self.possible_agents))
 
         for player, action in actions.items():
@@ -130,7 +131,8 @@ class raw_env(ParallelEnv):
             if f'player_{action}' in actions.keys():
                 infos[player]["viable_vote"] = True
 
-            votes[action] += 1
+            if not (self.agent_roles[player] == Roles.VILLAGER and self.world_state['phase'] == Phase.NIGHT):
+                votes[action] += 1
 
         # if we have a tie, keep the living players and randomly choose between them, report back a tie
         # TODO: Can we do this calculation in the loop above? Is it better to do it in the loop above?
@@ -181,6 +183,7 @@ class raw_env(ParallelEnv):
             votes = {agent: len(self.possible_agents) if agent not in self.history[-1]['votes'] else self.history[-1]['votes'][agent] for agent in self.possible_agents}
         
         return votes
+    
     def step(self, actions):
         # get votes, kill a target or random person if no legitimate player was voted for.
         # TODO : Penalty for no legitimate target
@@ -244,19 +247,24 @@ class raw_env(ParallelEnv):
         # Reminder object of infos is : "self_vote" : False, "dead_vote": 0, "viable_vote": 0
         for agent, info in infos.items():
 
-            if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
-                raise Exception("Villager should not have voted during the night")
+            # TODO : Consider a sleep action that we need villagers to learn to do>
+            # if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
+            #     # penalize
+            #     raise Exception("Villager should not have voted during the night")
             
             if self.history[-1]['phase'] != Phase.ACCUSATION:
-                if info["self_vote"]:
-                    rewards[agent] += REWARDS["self_vote"]
-                
-                if info["viable_vote"] == 0:
-                    rewards[agent] += REWARDS["no_viable"]
 
-                if info["dead_vote"] > 0:
-                    # TODO: Is this too punishing?
-                    rewards[agent] += info["dead_vote"]*REWARDS["dead_vote"]
+                # reward 
+                if not (self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT):
+                    if info["self_vote"]:
+                        rewards[agent] += REWARDS["self_vote"]
+                    
+                    if info["viable_vote"] == 0:
+                        rewards[agent] += REWARDS["no_viable"]
+
+                    if info["dead_vote"] > 0:
+                        # TODO: Is this too punishing?
+                        rewards[agent] += info["dead_vote"]*REWARDS["dead_vote"]
                 
                 # if self.agent_roles[f'player_{target}'] == Roles.WEREWOLF and self.agent_roles[agent] == Roles.VILLAGER:
                 #     rewards[agent] += REWARDS["dead_wolf"]
