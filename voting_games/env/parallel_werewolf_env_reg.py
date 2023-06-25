@@ -21,14 +21,14 @@ class Phase(enum.IntEnum):
 
 REWARDS = {
     "day": -1,
-    "death": -4,
-    "win": 25,
-    "loss": -20,
+    "death": -1,
+    "win": 5,
+    "loss": -5,
     # "dead_wolf": 10, # Maybe not needed ?
-    "self_vote": -3,
-    "dead_vote": -5,
-    "no_viable": -5,
-    "no_sleep": -5,
+    "self_vote": -1,
+    "dead_vote": -1,
+    "no_viable": -1,
+    "no_sleep": -1,
 }
 
 def env(**kwargs):
