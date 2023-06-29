@@ -21,13 +21,13 @@ class Phase(enum.IntEnum):
 
 REWARDS = {
     "day": -1,
-    "death": -3,
-    "win": 25,
-    "loss": -20,
-    # "dead_wolf": 10, # Maybe not needed ?
-    "self_vote": -3,
-    "dead_vote": -5,
-    "no_viable": -5,
+    "death": -1,
+    "win": 10,
+    "loss": -5,
+    "dead_wolf": 10, # Maybe not needed ?
+    "self_vote": -1,
+    "dead_vote": -1,
+    "no_viable": -1,
 }
 
 def env(**kwargs):
@@ -260,10 +260,10 @@ class raw_env(ParallelEnv):
                     # TODO: Is this too punishing?
                     rewards[agent] += info["dead_vote"]*REWARDS["dead_vote"]
                 
-                # if self.agent_roles[f'player_{target}'] == Roles.WEREWOLF and self.agent_roles[agent] == Roles.VILLAGER:
-                #     rewards[agent] += REWARDS["dead_wolf"]
+                if self.agent_roles[f'player_{target}'] == Roles.WEREWOLF and self.agent_roles[agent] == Roles.VILLAGER:
+                    rewards[agent] += REWARDS["dead_wolf"]
 
-                 #  TODO: should we give this every step? or every day shift. and do we want to give i
+                 #  TODO: Do this every day, not every phase
                 if not winners:
                     rewards[agent] += REWARDS["day"]
 
