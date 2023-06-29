@@ -103,7 +103,7 @@ class ApprovalRecurrentAgent(torch.nn.Module):
         # policy output
         self.policies_out = torch.nn.ModulesList()
         for agent in num_actions:
-            actor_branch = self._layer_init(torch.nn.Linear(in_features=config['hidden_mlp_size'], out_features=config['approval_states'])
+            actor_branch = self._layer_init(torch.nn.Linear(in_features=config['hidden_mlp_size'], out_features=config['approval_states']), std=0.01)
             self.policies_out.append(actor_branch)
         # value output
         self.value_out = self._layer_init(torch.nn.Linear(config['hidden_mlp_size'], 1), std=1.0)
@@ -139,7 +139,6 @@ class ApprovalRecurrentAgent(torch.nn.Module):
         value = self.value_out(h_value).reshape(-1)
 
         # policy
-        policy = self.policy_out(h_policy)
-        policy = torch.distributions.Categorical(logits=policy)
+        policies = [torch.distributions.Categorical(logits=branch(h_policy)) for branch in self.policies_out]
 
-        return policy, value, recurrent_cell
+        return policies, value, recurrent_cell
