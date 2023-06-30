@@ -78,8 +78,6 @@ class raw_env(ParallelEnv):
                 {
                     "observation": Dict({
                         "day": Discrete(int(num_agents/2), start=1),
-                        # "time_step": Discrete(int(num_agents/2), start=1), TODO: Make this depend on a phase amount, so we can have
-                        # multiple accusation phases if needed
                         "phase": Discrete(3),
                         "self_id": Discrete(num_agents), # TODO: FINISH THIS # now hot encode this
                         "player_status": Box(low=0, high=1, shape=(num_agents,), dtype=bool), # Is player alive or dead
@@ -95,6 +93,8 @@ class raw_env(ParallelEnv):
 
         self._agent_selector = agent_selector(self.agents)
         self.agent_selection = self._agent_selector.reset()
+
+        self.game_phase_tracker = self._game_phase_iterator()
 
     def observation_space(self, agent: str) -> Space:
         return self.observation_spaces[agent]
@@ -365,6 +365,8 @@ class raw_env(ParallelEnv):
             for agent in self.agents
         }
 
+        self.game_phase_tracker = self._game_phase_iterator()
+        
         return observations, self.rewards, self.terminations, self.truncations, self.infos
 
 
