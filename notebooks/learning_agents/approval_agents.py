@@ -88,7 +88,7 @@ class SequentialAgent(torch.nn.Module):
 
 
 class ApprovalRecurrentAgent(torch.nn.Module):
-    def __init__(self, config:dict, num_actions, obs_size=None):
+    def __init__(self, config:dict, num_players, obs_size=None):
         super().__init__()
 
         # recurrent layer
@@ -102,7 +102,7 @@ class ApprovalRecurrentAgent(torch.nn.Module):
 
         # policy output
         self.policies_out = torch.nn.ModulesList()
-        for agent in num_actions:
+        for agent in num_players:
             actor_branch = self._layer_init(torch.nn.Linear(in_features=config['hidden_mlp_size'], out_features=config['approval_states']), std=0.01)
             self.policies_out.append(actor_branch)
         # value output
