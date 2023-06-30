@@ -101,8 +101,8 @@ class ApprovalRecurrentAgent(torch.nn.Module):
         self.value_hidden = self._layer_init(torch.nn.Linear(config['hidden_mlp_size'], config['hidden_mlp_size']))
 
         # policy output
-        self.policies_out = torch.nn.ModulesList()
-        for agent in num_players:
+        self.policies_out = torch.nn.ModuleList()
+        for _ in range(num_players):
             actor_branch = self._layer_init(torch.nn.Linear(in_features=config['hidden_mlp_size'], out_features=config['approval_states']), std=0.01)
             self.policies_out.append(actor_branch)
         # value output
