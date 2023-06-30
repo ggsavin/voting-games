@@ -142,3 +142,19 @@ class ApprovalRecurrentAgent(torch.nn.Module):
         policies = [torch.distributions.Categorical(logits=branch(h_policy)) for branch in self.policies_out]
 
         return policies, value, recurrent_cell
+    
+    def _convert_policy_action_to_game_action(self, policy_action):
+        """
+        0 -> -1 
+        1 -> 0
+        2 -> 1
+
+        We will just subtract 1 from the items as the predicted classes are 0,1,2
+        """
+        return torch.tensor(policy_action) - 1
+    
+    def get_action_from_policies(self, policies):
+        policy_action = [policy.sample() for policy in policies]
+        game_action = self._convert_policy_action_to_game_action(policy_action)
+
+        return policy_action, game_action
