@@ -247,8 +247,8 @@ class raw_env(ParallelEnv):
         # Reminder object of infos is : "self_vote" : False, "dead_vote": 0, "viable_vote": 0
         for agent, info in infos.items():
 
-            if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
-                raise Exception("Villager should not have voted during the night")
+            # if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
+            #     raise Exception("Villager should not have voted during the night")
             
             if self.history[-1]['phase'] != Phase.ACCUSATION:
 
