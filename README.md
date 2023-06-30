@@ -71,3 +71,13 @@ For LSTM even better :
 https://npitsillos.github.io/blog/2021/recurrent-ppo/
 https://github.com/MarcoMeter/recurrent-ppo-truncated-bptt/blob/main/buffer.py
 https://github.com/MarcoMeter/recurrent-ppo-truncated-bptt/blob/main/model.py
+
+
+### 
+
+Track KL Divergence
+
+Behavioral Agents
+- [ ] Revenge Villager (votes for up to x people who voted for them)
+- [ ] Punishing Villager (votes for people with the most dissaprovals)
+- [ ] Forgiving Villager (puts another villager neutral if that villager made them neutral or positive after voting for them)
