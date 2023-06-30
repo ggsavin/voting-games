@@ -77,6 +77,8 @@ https://github.com/MarcoMeter/recurrent-ppo-truncated-bptt/blob/main/model.py
 
 Track KL Divergence
 
+- [ ] Create tests for the wolf environments
+
 Behavioral Agents
 - [ ] Revenge Villager (votes for up to x people who voted for them)
 - [ ] Punishing Villager (votes for people with the most dissaprovals)
