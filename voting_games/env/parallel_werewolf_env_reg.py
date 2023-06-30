@@ -25,6 +25,7 @@ REWARDS = {
     "win": 10,
     "loss": -5,
     "dead_wolf": 5,
+    "dead_villager": -3,
     "self_vote": -1,
     "dead_vote": -1,
     "no_viable": -1,
@@ -41,7 +42,7 @@ class raw_env(ParallelEnv):
 
     metadata = {
         "render_modes" : ["human"],
-        "name": "werewolf_v1"
+        "name": "werewolf_plurality_v1"
     }
 
     def __init__(self, num_agents=5, werewolves=1, num_accusations=1):
@@ -266,10 +267,10 @@ class raw_env(ParallelEnv):
                         # TODO: Is this too punishing?
                         rewards[agent] += info["dead_vote"]*REWARDS["dead_vote"]
                 
-                if self.agent_roles[f'player_{target}'] == Roles.WEREWOLF and self.agent_roles[agent] == Roles.VILLAGER:
-                    rewards[agent] += REWARDS["dead_wolf"]
+                    if self.agent_roles[f'player_{target}'] == Roles.WEREWOLF and self.agent_roles[agent] == Roles.VILLAGER:
+                        rewards[agent] += REWARDS["dead_wolf"]
 
-                 #  TODO: should we give this every step? or every day shift. and do we want to give i
+                #  TODO: Do this every day, not every phase
                 if not winners:
                     rewards[agent] += REWARDS["day"]
 
