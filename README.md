@@ -73,7 +73,7 @@ https://github.com/MarcoMeter/recurrent-ppo-truncated-bptt/blob/main/buffer.py
 https://github.com/MarcoMeter/recurrent-ppo-truncated-bptt/blob/main/model.py
 
 
-### 
+### Other stuff to do
 
 Track KL Divergence
 
