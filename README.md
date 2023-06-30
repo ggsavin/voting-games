@@ -18,9 +18,6 @@ A custom simplified ultimate werewolf environment is available, along with noteb
         - [ ] MLFlow
         - [ ] Neptune
         - [ ] AIM.io
-    - [ ] Experiment with adding further roles
-    - [ ] Experiment with an additional information layer, so agents have more to work with
-    - [ ] What would a communication layer on top of this look like?
 
 ### Directions to explore:
 
@@ -83,3 +80,6 @@ Behavioral Agents
 - [ ] Revenge Villager (votes for up to x people who voted for them)
 - [ ] Punishing Villager (votes for people with the most dissaprovals)
 - [ ] Forgiving Villager (puts another villager neutral if that villager made them neutral or positive after voting for them)
+
+
+- Do we care about rounds being in the observation to users?

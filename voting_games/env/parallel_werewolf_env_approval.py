@@ -398,5 +398,3 @@ if __name__ == "__main__":
         env.render()
         observations, rewards, terminations, truncations, infos = env.step(actions)
     env.render() # post game render
-
-print("Done")
