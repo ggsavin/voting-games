@@ -56,10 +56,13 @@ class raw_env(ParallelEnv):
         self.agent_roles = { name : role for name, role in zip(self.agents, self.possible_roles)}
         self.num_accusation_steps = num_accusations
 
+        self.game_phase_tracker = self._game_phase_iterator()
+        day, phase, accusation_round = next(self.game_phase_tracker)
+
         self.world_state = {
-            "day": 1,
-            "phase": Phase.ACCUSATION,
-            "round": 0,
+            "day": day,
+            "phase": phase,
+            "round": accusation_round,
             "alive": self.agents.copy(),
             "killed": [],
             "executed": [],
@@ -92,8 +95,6 @@ class raw_env(ParallelEnv):
 
         self._agent_selector = agent_selector(self.agents)
         self.agent_selection = self._agent_selector.reset()
-
-        self.game_phase_tracker = self._game_phase_iterator()
 
     def observation_space(self, agent: str) -> Space:
         return self.observation_spaces[agent]
@@ -239,9 +240,11 @@ class raw_env(ParallelEnv):
         self.history.append(copy.deepcopy(self.world_state))
 
         # UPDATE TIME OF DAY AND PHASE # 
-        if self.world_state['phase'] == Phase.NIGHT:
-            self.world_state['day'] += 1
-        self.world_state['phase'] =  Phase((self.world_state['phase'] + 1) % len(Phase))
+        # TODO : Maybe just update these in the game phase tracker directly>
+        day, phase, accusation_round = next(self.game_phase_tracker)
+        self.world_state['phase'] = phase
+        self.world_state['day'] = day
+        self.world_state['round'] = accusation_round
 
         # FINISH Rewards
         # Reminder object of infos is : "self_vote" : False, "dead_vote": 0, "viable_vote": 0
@@ -299,12 +302,23 @@ class raw_env(ParallelEnv):
         return observations, rewards, terminations, truncations, infos
 
     def _game_phase_iterator(self):
+        day = 1
         phase = Phase(0)
         accusation_round = 0
         while True:
-            yield phase, accusation_round
-            phase = Phase((phase + 1) % len(Phase))
-            accusation_round = (accusation_round + 1) % self.num_accusation_steps
+            yield day, phase, accusation_round
+
+            # do not roll over Phase until accusation roles over in accusation
+            if phase == Phase.ACCUSATION:
+                accusation_round = (accusation_round + 1) % self.num_accusation_steps
+
+            # we looped out of accusation rounds, should move the phase out of accusation
+            if accusation_round == 0:
+                # if the next phase out of here is 
+                if phase + 1 == len(Phase):
+                    day += 1
+            
+                phase = Phase((phase + 1) % len(Phase))
 
     def render(self, mode: str = "human"):
         """
@@ -325,10 +339,13 @@ class raw_env(ParallelEnv):
         random.shuffle(self.possible_roles)
         self.agent_roles = { name : role for name, role in zip(self.agents, self.possible_roles)}
 
+        self.game_phase_tracker = self._game_phase_iterator()
+        day, phase, accusation_round = next(self.game_phase_tracker)
+        
         self.world_state = {
-            "day": 1,
-            "phase": Phase.ACCUSATION,
-            "round": 0,
+            "day": day,
+            "phase": phase,
+            "round": accusation_round,
             "alive": self.agents.copy(),
             "killed": [],
             "executed": [],
@@ -360,7 +377,7 @@ class raw_env(ParallelEnv):
             }
             for agent in self.agents
         }
-        
+
         self.game_phase_tracker = self._game_phase_iterator()
 
         return observations, self.rewards, self.terminations, self.truncations, self.infos
@@ -392,7 +409,7 @@ if __name__ == "__main__":
 
     # api_test(raw_env(), num_cycles=100, verbose_progress=True)
 
-    env = raw_env()
+    env = raw_env(num_accusations=5)
     env.reset()
 
     while env.agents:
