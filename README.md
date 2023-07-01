@@ -83,3 +83,8 @@ Behavioral Agents
 
 
 - Do we care about rounds being in the observation to users?
+
+
+## Current Problems
+
+Training PPO frequently leads to NaNs and this instability is something we have been exploring by trying to change hyperparameters of the model, the training and the environment. There are quite a few posts about this [here](https://github.com/hill-a/stable-baselines/issues/340), [here](https://stable-baselines3.readthedocs.io/en/master/guide/checking_nan.html) and more if you look up Nans RL PPO training
