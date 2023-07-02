@@ -238,7 +238,7 @@ class raw_env(ParallelEnv):
 
             # give out winning rewards to winners, and losing rewards to losers
             for agent in self.agents:
-                rewards[agent] += REWARDS["win"] if self.agent_roles[agent] == winners else REWARDS["loss"]
+                rewards[agent] += self.rewards["win"] if self.agent_roles[agent] == winners else self.rewards["loss"]
 
         # votes are in, append snapshot of world state to history
         self.history.append(copy.deepcopy(self.world_state))
@@ -264,21 +264,21 @@ class raw_env(ParallelEnv):
                 # reward 
                 if not (self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT):
                     if info["self_vote"]:
-                        rewards[agent] += REWARDS["self_vote"]
+                        rewards[agent] += self.rewards["self_vote"]
                     
                     if info["viable_vote"] == 0:
-                        rewards[agent] += REWARDS["no_viable"]
+                        rewards[agent] += self.rewards["no_viable"]
 
                     if info["dead_vote"] > 0:
                         # TODO: Is this too punishing?
-                        rewards[agent] += info["dead_vote"]*REWARDS["dead_vote"]
+                        rewards[agent] += info["dead_vote"]*self.rewards["dead_vote"]
                 
                     if self.agent_roles[f'player_{target}'] == Roles.WEREWOLF and self.agent_roles[agent] == Roles.VILLAGER:
-                        rewards[agent] += REWARDS["dead_wolf"]
+                        rewards[agent] += self.rewards["dead_wolf"]
 
                 #  TODO: Do this every day, not every phase
-                if not winners:
-                    rewards[agent] += REWARDS["day"]
+                if not winners and (self.world_state['day'] != self.history[-1]['day']):
+                    rewards[agent] += self.rewards["day"]
 
         # BUILD OUT OBSERVATIONS #
         action_mask = [agent not in self.dead_agents for agent in self.possible_agents]
@@ -362,11 +362,6 @@ class raw_env(ParallelEnv):
             "winners": None,
         }
         self.history = [copy.deepcopy(self.world_state)]
-        self.votes = {agent: len(self.possible_agents)+1 for agent in self.agents}
-        self.rewards = {agent: 0 for agent in self.agents}
-        self.terminations = {agent: False for agent in self.agents}
-        self.truncations = {agent: False for agent in self.agents}
-        self.infos = {agent: {} for agent in self.agents}
 
         # lets create observations here and return a whole step return
         action_mask = [agent not in self.dead_agents for agent in self.possible_agents]
@@ -387,6 +382,10 @@ class raw_env(ParallelEnv):
 
         self.game_phase_tracker = self._game_phase_iterator()
 
+        rewards = {agent: 0 for agent in self.agents}
+        terminations = {agent: False for agent in self.agents}
+        truncations = {agent: False for agent in self.agents}
+        infos = {agent: {} for agent in self.agents}
         return observations, self.rewards, self.terminations, self.truncations, self.infos
 
 
