@@ -353,7 +353,7 @@ class PPOTrainer:
             mlflow.log_params(self.config["config_training"]["model"])
             mlflow.log_params(self.config["config_game"]['gameplay'])
 
-            loop = tqdm.tqdm(range(self.config["config_training"]["training"]["updates"]))
+            loop = tqdm.tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
 
             for tid, _ in enumerate(loop):
                 # train 100 times
@@ -361,13 +361,16 @@ class PPOTrainer:
                     # print(f'Playing games with our trained agent after {epid} epochs')
                     loop.set_description("Playing games and averaging score")
                     wins = []
-                    for _ in range(10):
+
+                    score_gathering = tqdm.tqdm(range(10), position=1, leave=False)
+                    for _ in score_gathering:
                         wins.append(play_recurrent_game(self.env, 
                                                         random_coordinated_single_wolf, 
                                                         self.agent, 
                                                         num_times=100,
                                                         hidden_state_size=self.config["config_training"]["model"]["recurrent_hidden_size"]))
-                    
+                        score_gathering.set_description(f'Avg wins with current policy : {np.mean(wins)}')
+
                     mlflow.log_metric("avg_wins/100", np.mean(wins))
 
                 loop.set_description("Filling buffer")
