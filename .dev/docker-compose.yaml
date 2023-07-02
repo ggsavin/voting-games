@@ -1,2 +1,8 @@
 version: "3.7"
 
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow
+    ports: 
+      - "5000:5000"
+    command: mlflow server -h 0.0.0.0
