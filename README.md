@@ -89,3 +89,7 @@ Behavioral Agents
 
 Training PPO frequently leads to NaNs and this instability is something we have been exploring by trying to change hyperparameters of the model, the training and the environment. There are quite a few posts about this [here](https://github.com/hill-a/stable-baselines/issues/340), [here](https://stable-baselines3.readthedocs.io/en/master/guide/checking_nan.html) and more if you look up Nans RL PPO training
 - Maybe Entropy Coefficient is way too high? Needs to be lowered significantly?
+
+
+Another Comment found:
+· Learned initial state: Large loss terms are caused in the first few time steps as a result of initializing the hidden state as zeroes thereby rendering the model to focus less on the actual sequence. Training the initial state as a variable can improve performance.

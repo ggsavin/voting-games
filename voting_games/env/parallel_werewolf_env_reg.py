@@ -386,7 +386,7 @@ class raw_env(ParallelEnv):
         terminations = {agent: False for agent in self.agents}
         truncations = {agent: False for agent in self.agents}
         infos = {agent: {} for agent in self.agents}
-        return observations, self.rewards, self.terminations, self.truncations, self.infos
+        return observations, rewards, terminations, truncations, infos
 
 
     def convert_obs(self, observation):

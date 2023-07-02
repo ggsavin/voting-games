@@ -1,8 +1,8 @@
 import numpy as np
 import torch
 
-class PluralityRecurrentAgent(torch.nn.Module):
-    def __init__(self, config:dict, num_actions, obs_size=None):
+class ApprovalRecurrentAgent(torch.nn.Module):
+    def __init__(self, config:dict, num_players, obs_size=None):
         super().__init__()
 
         # recurrent layer
@@ -15,11 +15,15 @@ class PluralityRecurrentAgent(torch.nn.Module):
         self.value_hidden = self._layer_init(torch.nn.Linear(config['hidden_mlp_size'], config['hidden_mlp_size']))
 
         # policy output
-        self.policy_out = self._layer_init(torch.nn.Linear(config['hidden_mlp_size'], num_actions), std=0.01)
-
+        self.policies_out = torch.nn.ModuleList()
+        for _ in range(num_players):
+            actor_branch = self._layer_init(torch.nn.Linear(in_features=config['hidden_mlp_size'], out_features=config['approval_states']), std=0.01)
+            self.policies_out.append(actor_branch)
         # value output
         self.value_out = self._layer_init(torch.nn.Linear(config['hidden_mlp_size'], 1), std=1.0)
-    
+
+        self.num_players = num_players
+
     def _layer_init(self, layer, std=np.sqrt(2), bias_const=0.0):
         torch.nn.init.orthogonal_(layer.weight, std)
         # torch.nn.init.constant_(layer.bias, bias_const)
@@ -51,9 +55,22 @@ class PluralityRecurrentAgent(torch.nn.Module):
         value = self.value_out(h_value).reshape(-1)
 
         # policy
-        policy = self.policy_out(h_policy)
-        policy = torch.distributions.Categorical(logits=policy)
+        policies = [torch.distributions.Categorical(logits=branch(h_policy)) for branch in self.policies_out]
 
-        return policy, value, recurrent_cell
+        return policies, value, recurrent_cell
     
+    def _convert_policy_action_to_game_action(self, policy_action):
+        """
+        0 -> -1 
+        1 -> 0
+        2 -> 1
+
+        We will just subtract 1 from the items as the predicted classes are 0,1,2
+        """
+        return torch.tensor(policy_action) - 1
     
+    def get_action_from_policies(self, policies):
+        policy_action = [policy.sample() for policy in policies]
+        game_action = self._convert_policy_action_to_game_action(policy_action)
+
+        return policy_action, game_action
