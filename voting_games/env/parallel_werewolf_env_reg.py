@@ -45,7 +45,7 @@ class raw_env(ParallelEnv):
         "name": "werewolf_plurality_v1"
     }
 
-    def __init__(self, num_agents=5, werewolves=1, num_accusations=1):
+    def __init__(self, num_agents=5, werewolves=1, num_accusations=1, rewards=REWARDS):
         super().__init__()
 
         assert werewolves < num_agents, f"The number of werewolves should be less than the number of players ({num_agents})"
@@ -93,6 +93,9 @@ class raw_env(ParallelEnv):
             )
             for name in self.agents
         }
+
+        self.rewards = rewards
+        assert all(k in rewards for k in ("day","death", "win", "loss", "dead_wolf", "dead_villager", "self_vote", "dead_vote", "no_viable", "no_sleep"))
 
         self._agent_selector = agent_selector(self.agents)
         self.agent_selection = self._agent_selector.reset()
@@ -214,7 +217,7 @@ class raw_env(ParallelEnv):
             # add target to the dead agents
             self.dead_agents.append(f'player_{target}')
             # hand out dead reward to the agent this round
-            rewards[f'player_{target}'] += REWARDS["death"]
+            rewards[f'player_{target}'] += self.rewards["death"]
 
             # updating these lists
             self.world_state['alive'].remove(f'player_{target}')
