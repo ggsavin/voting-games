@@ -22,13 +22,13 @@ class PluralityRecurrentAgent(torch.nn.Module):
     
     def _layer_init(self, layer, std=np.sqrt(2), bias_const=0.0):
         torch.nn.init.orthogonal_(layer.weight, std)
-        # torch.nn.init.constant_(layer.bias, bias_const)
+        torch.nn.init.constant_(layer.bias, bias_const)
         return layer
 
     def _rec_layer_init(self, layer, std=np.sqrt(2), bias_const=0.0):
         for name, param in layer.named_parameters():
-            # if "bias" in name:
-                # torch.nn.init.constant_(param, bias_const)
+            if "bias" in name:
+                torch.nn.init.constant_(param, bias_const)
             if "weight" in name:
                 torch.nn.init.orthogonal_(param, std)
         return layer
@@ -44,16 +44,15 @@ class PluralityRecurrentAgent(torch.nn.Module):
         h = torch.relu(self.fc_joint(h))
 
         # Split for Value and Policy
-        h_value = torch.relu(self.value_hidden(h))
-        h_policy = torch.relu(self.policy_hidden(h))
+        h_value = torch.tanh(self.value_hidden(h))
+        h_policy = torch.tanh(self.policy_hidden(h))
 
         # value
         value = self.value_out(h_value).reshape(-1)
 
-        # policy
+        # policy # testing softmax here
         policy = self.policy_out(h_policy)
         policy = torch.distributions.Categorical(logits=policy)
 
         return policy, value, recurrent_cell
-    
     

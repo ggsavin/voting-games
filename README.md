@@ -93,3 +93,22 @@ Training PPO frequently leads to NaNs and this instability is something we have 
 
 Another Comment found:
 · Learned initial state: Large loss terms are caused in the first few time steps as a result of initializing the hidden state as zeroes thereby rendering the model to focus less on the actual sequence. Training the initial state as a variable can improve performance.
+
+
+
+Is detaching the way to go?
+https://discuss.pytorch.org/t/initialization-of-first-hidden-state-in-lstm-and-truncated-bptt/58384/5
+
+
+https://github.com/seungeunrho/minimalRL/blob/master/ppo-lstm.py
+THis example detaches it, also uses detaching in the hidden states, and also uses a smooth_l1_loss to the loss, it also uses a fully connected layer before the LSTM
+THey also divide the reward by 100
+
+
+https://neptune.ai/blog/understanding-gradient-clipping-and-how-it-can-fix-exploding-gradients-problem
+
+How is the unrolling happening? 
+Should we just take a single episode and use that for 
+
+
+- [ ] Try using dead_villager to punish villagers for killing another villager

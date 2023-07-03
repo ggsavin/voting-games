@@ -13,52 +13,6 @@ from notebooks.learning_agents.plurality_agents import PluralityRecurrentAgent
 
 from voting_games.werewolf_env_v0 import plurality_env, plurality_Phase, plurality_Role
 
-config_training = {
-    "model": {
-        "recurrent_layers": 1, # 1,2 (2)
-        "recurrent_hidden_size": 128, # 64-128-256-512 (4)
-        "mlp_size": 128, # 64-128-256-512 (4)
-    },
-    "training" : {
-        "batch_size": 32, # 32-64-128-256-512-1024 (6)
-        "epochs": 3, # 4,5,6,7,8,9,10 (7)
-        "updates": 10, # 1000 (1)
-        "buffer_games_per_update": 10, # 50-100-200 (3)
-        "clip_range": 0.2, # 0.1,0.2,0.3 (3)
-        "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)
-        "max_grad_norm": 0.5, 
-        "beta": 0.01, # entropy loss multiplier # 0.1, 0.05, 0.01, 0.005, 0.001
-        "learning_rate": 0.0001, # 0.001, 0.0005, 0.0001, 0.00005, 0.00001
-        "adam_eps": 1e-8, # 1e-8, 1e-7. 1e-6 
-        "gamma": 0.99, # 0.99
-        "gae_lambda": 0.95, #0.95-0.99
-    }
-}
-
-config_game = {
-    "rewards": {
-        "day": -1,
-        "player_death": -1,
-        "player_win": 10,
-        "player_loss": -5,
-        "self_vote": -1,
-        "dead_vote": -1,
-        "dead_wolf": 5,
-        "no_viable_vote": -1,
-        "no_sleep": -1,
-    },
-    "gameplay": {
-        "accusation_phases": 1, # 2,3
-        "num_agents": 10,
-        "num_werewolves": 2,
-    }
-}
-
-config = {
-    "config_game": config_game,
-    "config_training": config_training,
-}
-
 def random_coordinated_wolf(env, action=None):
     villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])
     wolves_remaining = set(env.world_state["werewolves"]) & set(env.world_state['alive'])
@@ -253,7 +207,7 @@ def calc_minibatch_loss(agent: PluralityRecurrentAgent, samples: dict, clip_rang
 
     # TODO:Consider checking for NAans anywhere. we cant have these. also do this in the model itself
     # if torch.isnan(tensor).any(): print(f"{label} contains NaN values")
-    policies, values, _ = agent(samples['observations'], (samples['hxs'], samples['cxs']))
+    policies, values, _ = agent(samples['observations'], (samples['hxs'].detach(), samples['cxs'].detach()))
     
     # log_probs, entropies = [], []
     log_probs = policies.log_prob(samples['actions'])
@@ -338,7 +292,10 @@ class PPOTrainer:
                                                 "hidden_mlp_size": self.config["config_training"]["model"]["mlp_size"]},
                                                 num_actions=self.env.action_space("player_0").n,
                                                 obs_size=obs_size)
-        self.optimizer = torch.optim.Adam(self.agent.parameters(), lr=0.0001, eps=1e-5)
+        
+        self.optimizer = torch.optim.Adam(self.agent.parameters(), 
+                                          lr=self.config["config_training"]["training"]["learning_rate"], 
+                                          eps=self.config["config_training"]["training"]["adam_eps"])
 
         # setup mlflow run if we are using it
 
@@ -357,7 +314,7 @@ class PPOTrainer:
 
             for tid, _ in enumerate(loop):
                 # train 100 times
-                if tid % 2 == 0:
+                if tid % 10 == 0:
                     # print(f'Playing games with our trained agent after {epid} epochs')
                     loop.set_description("Playing games and averaging score")
                     wins = []
@@ -403,6 +360,58 @@ class PPOTrainer:
 
         # torch.save(self.agent, f"rnn_agent_{self.run_id}")
 
+config_training = {
+    "model": {
+        "recurrent_layers": 1, # 1,2 (2)
+        "recurrent_hidden_size": 128, # 64-128-256-512 (4)
+        "mlp_size": 128, # 64-128-256-512 (4)
+    },
+    "training" : {
+        "batch_size": 128, # 32-64-128-256-512-1024 (6)
+        "epochs": 3, # 4,5,6,7,8,9,10 (7)
+        "updates": 101, # 1000 (1)
+        "buffer_games_per_update": 200, # 50-100-200 (3)
+        "clip_range": 0.1, # 0.1,0.2,0.3 (3)
+        "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)
+        "max_grad_norm": 0.5, 
+        "beta": 0.01, # entropy loss multiplier # 0.1, 0.05, 0.01, 0.005, 0.001
+        "learning_rate": 0.0001, # 0.001, 0.0005, 0.0001, 0.00005, 0.00001
+        "adam_eps": 1e-5, # 1e-8, 1e-7. 1e-6, 1e-5
+        "gamma": 0.99, # 0.99
+        "gae_lambda": 0.95, #0.95-0.99
+    }
+}
 
-trainer = PPOTrainer(config=config,run_id="Plurality", mlflow_uri="http://mlflow:5000")
-trainer.train()
+config_game = {
+    "rewards": {
+        "day": -1,
+        "player_death": -1,
+        "player_win": 10,
+        "player_loss": -5,
+        "self_vote": -1,
+        "dead_vote": -1,
+        "dead_wolf": 5,
+        "no_viable_vote": -1,
+        "no_sleep": -1,
+    },
+    "gameplay": {
+        "accusation_phases": 2, # 2,3
+        "num_agents": 10,
+        "num_werewolves": 2,
+    }
+}
+
+config = {
+    "config_game": config_game,
+    "config_training": config_training,
+}
+
+try:
+    trainer = PPOTrainer(config=config,run_id="Plurality", mlflow_uri="http://mlflow:5000")
+    trainer.train()
+except ValueError as e:
+    print("Probably a nan error")
+    if ("nan" in str(e)):
+        print("It was value errors")
+finally:
+    print("All done")

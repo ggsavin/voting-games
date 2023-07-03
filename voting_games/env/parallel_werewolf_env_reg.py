@@ -21,14 +21,14 @@ class Phase(enum.IntEnum):
 
 REWARDS = {
     "day": -1,
-    "death": -1,
-    "win": 10,
-    "loss": -5,
+    "player_death": -1,
+    "player_win": 10,
+    "player_loss": -5,
     "dead_wolf": 5,
-    "dead_villager": -3,
+    "dead_villager": -1,
     "self_vote": -1,
     "dead_vote": -1,
-    "no_viable": -1,
+    "no_viable_vote": -1,
     "no_sleep": -1,
 }
 
@@ -95,7 +95,7 @@ class raw_env(ParallelEnv):
         }
 
         self.rewards = rewards
-        assert all(k in rewards for k in ("day","death", "win", "loss", "dead_wolf", "dead_villager", "self_vote", "dead_vote", "no_viable", "no_sleep"))
+        assert all(k in rewards for k in ("day","player_death", "player_win", "player_loss", "dead_wolf", "dead_villager", "self_vote", "dead_vote", "no_viable_vote", "no_sleep"))
 
         self._agent_selector = agent_selector(self.agents)
         self.agent_selection = self._agent_selector.reset()
@@ -217,7 +217,7 @@ class raw_env(ParallelEnv):
             # add target to the dead agents
             self.dead_agents.append(f'player_{target}')
             # hand out dead reward to the agent this round
-            rewards[f'player_{target}'] += self.rewards["death"]
+            rewards[f'player_{target}'] += self.rewards["player_death"]
 
             # updating these lists
             self.world_state['alive'].remove(f'player_{target}')
@@ -238,7 +238,7 @@ class raw_env(ParallelEnv):
 
             # give out winning rewards to winners, and losing rewards to losers
             for agent in self.agents:
-                rewards[agent] += self.rewards["win"] if self.agent_roles[agent] == winners else self.rewards["loss"]
+                rewards[agent] += self.rewards["player_win"] if self.agent_roles[agent] == winners else self.rewards["player_loss"]
 
         # votes are in, append snapshot of world state to history
         self.history.append(copy.deepcopy(self.world_state))
@@ -267,7 +267,7 @@ class raw_env(ParallelEnv):
                         rewards[agent] += self.rewards["self_vote"]
                     
                     if info["viable_vote"] == 0:
-                        rewards[agent] += self.rewards["no_viable"]
+                        rewards[agent] += self.rewards["no_viable_vote"]
 
                     if info["dead_vote"] > 0:
                         # TODO: Is this too punishing?
