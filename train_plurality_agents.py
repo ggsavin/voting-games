@@ -369,7 +369,7 @@ config_training = {
     "training" : {
         "batch_size": 128, # 32-64-128-256-512-1024 (6)
         "epochs": 3, # 4,5,6,7,8,9,10 (7)
-        "updates": 101, # 1000 (1)
+        "updates": 201, # 1000 (1)
         "buffer_games_per_update": 200, # 50-100-200 (3)
         "clip_range": 0.1, # 0.1,0.2,0.3 (3)
         "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)
@@ -382,6 +382,7 @@ config_training = {
     }
 }
 
+
 config_game = {
     "rewards": {
         "day": -1,
@@ -389,6 +390,7 @@ config_game = {
         "player_win": 10,
         "player_loss": -5,
         "self_vote": -1,
+        "dead_villager": -1,
         "dead_vote": -1,
         "dead_wolf": 5,
         "no_viable_vote": -1,
@@ -406,12 +408,17 @@ config = {
     "config_training": config_training,
 }
 
-try:
-    trainer = PPOTrainer(config=config,run_id="Plurality", mlflow_uri="http://mlflow:5000")
-    trainer.train()
-except ValueError as e:
-    print("Probably a nan error")
-    if ("nan" in str(e)):
-        print("It was value errors")
-finally:
-    print("All done")
+finished_one = False
+for _ in range(50):
+    try:
+        trainer = PPOTrainer(config=config,run_id="Plurality", mlflow_uri="http://mlflow:5000")
+        trainer.train()
+        finished_one = True
+    except ValueError as e:
+        print("Probably a nan error")
+        if ("nan" in str(e)):
+            print("It was value errors")
+        print("Trying again")
+    finally:
+        if finished_one == True:
+            break
