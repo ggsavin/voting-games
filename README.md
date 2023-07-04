@@ -1,7 +1,23 @@
-# voting-games
+# RL and voting in Social Deduction Games
 
-A custom simplified ultimate werewolf environment is available, along with notebooks and scripts trying to observe emergent behavior
+## What is this project trying to achieve?
 
+Provide a simplified environment for SGDs that employ voting mechanisms as their main interaction space
+
+
+
+## TODOs:
+
+- [ ] Plurality Voting
+- [ ] Approval Voting
+- [ ] Ranked Choice Voting
+
+- [ ] Hardcoded behavioral agents
+- [ ] PPO
+- [ ] COMA
+- [ ] QMIX
+
+https://en.wikipedia.org/wiki/Learning_to_rank
 
 ### TODOs:
     - [ ] Cleanup Environment

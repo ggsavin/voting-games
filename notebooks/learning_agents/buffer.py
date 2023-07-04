@@ -107,7 +107,7 @@ class RecurrentRolloutBuffer():
                 "observations": observations[batch_index]
             }
 
-class ApprovalRolloutBuffer():
+class ReplayBuffer():
     
     def __init__(self, buffer_size: int, gamma: float, gae_lambda: float):
         '''
