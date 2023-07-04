@@ -322,7 +322,7 @@ class PPOTrainer:
             mlflow.log_params(self.config["config_training"]["training"])
             mlflow.log_params(self.config["config_training"]["model"])
 
-            loop = tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
+            loop = tqdm.tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
 
             for tid, _ in enumerate(loop):
                 # train 100 times
@@ -339,7 +339,7 @@ class PPOTrainer:
                                                         num_times=100,
                                                         hidden_state_size=self.config["config_training"]["model"]["recurrent_hidden_size"]))
                         score_gathering.set_description(f'Avg wins with current policy : {np.mean(wins)}')
-                        
+
                     mlflow.log_metric("avg_wins/100", np.mean(wins))
 
                 loop.set_description("Filling buffer")
@@ -375,6 +375,7 @@ config_training = {
         "recurrent_layers": 1, # 1,2 (2)
         "recurrent_hidden_size": 256, # 64-128-256-512 (4)
         "mlp_size": 256, # 64-128-256-512 (4)
+        "approval_states": 3,
     },
     "training" : {
         "batch_size": 128, # 32-64-128-256-512-1024 (6)
