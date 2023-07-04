@@ -5,6 +5,9 @@
 Provide a simplified environment for SGDs that employ voting mechanisms as their main interaction space
 
 
+Ranking 
+https://towardsdatascience.com/learning-to-rank-a-complete-guide-to-ranking-using-machine-learning-4c9688d370d4
+
 
 ## TODOs:
 
