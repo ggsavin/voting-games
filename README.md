@@ -3,12 +3,17 @@
 ## What is this project trying to achieve?
 
 Provide an SGD environment where voting is a core mechanism so we can study how agents learn given different parameters and hopefully make inferences based on the voting mechanisms in play.
- 
 
 
 Ranking 
 https://towardsdatascience.com/learning-to-rank-a-complete-guide-to-ranking-using-machine-learning-4c9688d370d4
 
+
+Questions we would like to answer?
+
+- [ ] Can agents learn in an implicit communication style SGD?
+- [ ] How does the number of accusation rounds impact their ability to learn?
+- [ ] Are there differences in agents between voting mechanisms?
 
 ## TODOs:
 
@@ -17,7 +22,6 @@ https://towardsdatascience.com/learning-to-rank-a-complete-guide-to-ranking-usin
 - [ ] Ranked Choice Voting
 
 - [ ] Hardcoded behavioral agents
-- [ ] PPO
 - [ ] COMA
 - [ ] QMIX
 
@@ -29,15 +33,15 @@ https://en.wikipedia.org/wiki/Learning_to_rank
     - [ ] Update the environment to have two rounds of voting, 
           allowing villagers a chance to be influenced by eachother
     - [ ] Experiment with Different RL Libraries & Algorithms
-        - [ ] Stable-Baselines3
         - [ ] Ray/RLlib
         - [ ] Tianshou
-        - [ ] CleanRL
+        - [ ] COMA
+        - [ ] QMIX
+        - [ ] QTRAN
+
     - [ ] Set up experimentation metrics
-        - [ ] Weights and Biases
         - [ ] MLFlow
-        - [ ] Neptune
-        - [ ] AIM.io
+        - [ ] 
 
 ### Directions to explore:
 
@@ -46,7 +50,6 @@ https://en.wikipedia.org/wiki/Learning_to_rank
     - [ ] Re-train agents with 
         - [ ] different model
         - [ ] different rewards (what should these be?)
-        - [ ] Environment now shows dead werewolves actual roles
     - [ ] Visualize games even better
 
 
