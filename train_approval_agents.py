@@ -8,8 +8,8 @@ sys.path.append('../')
 import tqdm
 import random
 
-from notebooks.learning_agents.buffer import ApprovalRolloutBuffer
-from notebooks.learning_agents.approval_agents import ApprovalRecurrentAgent
+from notebooks.learning_agents.buffer import ReplayBuffer
+from notebooks.learning_agents.actor_critic_model import ActorCriticAgent
 
 from voting_games.werewolf_env_v0 import pare, pare_Phase, pare_Role
 
@@ -212,7 +212,7 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
     
     return wins
 
-def calc_minibatch_loss(agent: ApprovalRecurrentAgent, samples: dict, clip_range: float, beta: float, v_loss_coef: float, optimizer):
+def calc_minibatch_loss(agent: ActorCriticAgent, samples: dict, clip_range: float, beta: float, v_loss_coef: float, optimizer):
 
     # TODO:Consider checking for NAans anywhere. we cant have these. also do this in the model itself
     # if torch.isnan(tensor).any(): print(f"{label} contains NaN values")
@@ -296,7 +296,7 @@ class PPOTrainer:
         obs_size= env.convert_obs(observations['player_0']['observation']).shape[-1]
 
         # Initialize Buffer
-        self.buffer = ApprovalRolloutBuffer(buffer_size=10, gamma=0.99, gae_lambda=0.95)
+        self.buffer = ReplayBuffer(buffer_size=10, gamma=0.99, gae_lambda=0.95)
 
         # Initialize Model & Optimizer
         self.agent = ActorCriticAgent({"rec_hidden_size": self.config["config_training"]["model"]["recurrent_hidden_size"], 
@@ -377,6 +377,7 @@ config_training = {
         "recurrent_layers": 1, # 1,2 (2)
         "recurrent_hidden_size": 256, # 64-128-256-512 (4)
         "mlp_size": 256, # 64-128-256-512 (4)
+        "num_votes": 10,
         "approval_states": 3,
     },
     "training" : {
