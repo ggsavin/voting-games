@@ -8,8 +8,8 @@ sys.path.append('../')
 import tqdm
 import random
 
-from notebooks.learning_agents.buffer import RecurrentRolloutBuffer
-from notebooks.learning_agents.plurality_agents import PluralityRecurrentAgent
+from notebooks.learning_agents.buffer import ReplayBuffer
+from notebooks.learning_agents.actor_critic_model import ActorCriticAgent
 
 from voting_games.werewolf_env_v0 import plurality_env, plurality_Phase, plurality_Role
 
@@ -92,18 +92,18 @@ def fill_recurrent_buffer(buffer, env, config:dict, wolf_policy, villager_agent)
                 recurrent_cell = magent_obs[villager]["hcxs"][-1]
                 
                 # ensure that the obs is of size (batch,seq,inputs)
-                # this needs to be updated
-                policy, value, recurrent_cell = villager_agent(obs, recurrent_cell)
-                action = policy.sample()
+                # we only have one policy, but to keep the same agent structure, we have "policies"
+                policies, value, recurrent_cell = villager_agent(obs, recurrent_cell)
+                policy_action, game_action = villager_agent.get_action_from_policies(policies, voting_type="plurality")
                 
-                actions[villager] = action.item()
+                actions[villager] = game_action.item()
 
                 # can store some stuff 
                 magent_obs[villager]["obs"].append(obs)
-                magent_obs[villager]["actions"].append(action)
+                magent_obs[villager]["actions"].append(policy_action)
 
                 # how do we get these
-                magent_obs[villager]["logprobs"].append(policy.log_prob(action))
+                magent_obs[villager]["logprobs"].append(torch.stack([policy.log_prob(action) for policy, action in zip(policies, policy_action)], dim=1).reshape(-1))
                 magent_obs[villager]["values"].append(value)
 
                 #store the next recurrent cells
@@ -170,10 +170,10 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
                 recurrent_cell = magent_obs[villager]["hcxs"][-1]
                 
                 # ensure that the obs is of size (batch,seq,inputs)
-                policy, value, recurrent_cell = villager_agent(obs, recurrent_cell)
-                action = policy.sample()
-                
-                actions[villager] = action.item()
+                # we only have one policy, but to keep the same agent structure, we have "policies"
+                policies, value, recurrent_cell = villager_agent(obs, recurrent_cell)
+                _, game_action = villager_agent.get_action_from_policies(policies, voting_type="plurality")
+                actions[villager] = game_action.item()
 
                 #store the next recurrent cells
                 magent_obs[villager]["hcxs"].append(recurrent_cell)
@@ -203,21 +203,25 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
     
     return wins
 
-def calc_minibatch_loss(agent: PluralityRecurrentAgent, samples: dict, clip_range: float, beta: float, v_loss_coef: float, optimizer):
+def calc_minibatch_loss(agent: ActorCriticAgent, samples: dict, clip_range: float, beta: float, v_loss_coef: float, optimizer):
 
     # TODO:Consider checking for NAans anywhere. we cant have these. also do this in the model itself
     # if torch.isnan(tensor).any(): print(f"{label} contains NaN values")
     policies, values, _ = agent(samples['observations'], (samples['hxs'].detach(), samples['cxs'].detach()))
     
-    # log_probs, entropies = [], []
-    log_probs = policies.log_prob(samples['actions'])
-    entropies = policies.entropy() # need to sum if we have more than 1 action
+    log_probs, entropies = [], []
+    for i, policy_head in enumerate(policies):
+        # append the log_probs for 1 -> n other agent opinions
+        log_probs.append(policy_head.log_prob(samples['actions'][:,i]))
+        entropies.append(policy_head.entropy())
+    log_probs = torch.stack(log_probs, dim=1)
+    entropies = torch.stack(entropies, dim=1).sum(1).reshape(-1)
     
     ratio = torch.exp(log_probs - samples['logprobs'])
 
     # normalize advantages
     norm_advantage = (samples["advantages"] - samples["advantages"].mean()) / (samples["advantages"].std() + 1e-8)
-    # normalized_advantage = normalized_advantage.unsqueeze(1).repeat(1, len(self.action_space_shape)) # Repeat is necessary for multi-discrete action spaces
+    norm_advantage = norm_advantage.unsqueeze(1).repeat(1, 1)
 
     # policy loss w/ surrogates
     surr1 = norm_advantage * ratio
@@ -284,14 +288,17 @@ class PPOTrainer:
         obs_size= env.convert_obs(observations['player_0']['observation']).shape[-1]
 
         # Initialize Buffer
-        self.buffer = RecurrentRolloutBuffer(buffer_size=10, gamma=0.99, gae_lambda=0.95)
+        self.buffer = ReplayBuffer(buffer_size=10, gamma=0.99, gae_lambda=0.95)
 
         # Initialize Model & Optimizer
-        self.agent = PluralityRecurrentAgent({"rec_hidden_size": self.config["config_training"]["model"]["recurrent_hidden_size"], 
-                                                "rec_layers": self.config["config_training"]["model"]["recurrent_layers"], 
-                                                "hidden_mlp_size": self.config["config_training"]["model"]["mlp_size"]},
-                                                num_actions=self.env.action_space("player_0").n,
-                                                obs_size=obs_size)
+        # needs to be set appropriately for plurality, where approval states lines up
+        self.agent = ActorCriticAgent({"rec_hidden_size": self.config["config_training"]["model"]["recurrent_hidden_size"], 
+                                        "rec_layers": self.config["config_training"]["model"]["recurrent_layers"], 
+                                        "hidden_mlp_size": self.config["config_training"]["model"]["mlp_size"],
+                                        "num_votes": self.config["config_training"]["model"]["num_votes"],
+                                        "approval_states": self.config["config_training"]["model"]["approval_states"]},
+                                        num_players=self.config["config_game"]["gameplay"]["num_agents"],
+                                        obs_size=obs_size)
         
         self.optimizer = torch.optim.Adam(self.agent.parameters(), 
                                           lr=self.config["config_training"]["training"]["learning_rate"], 
@@ -312,13 +319,15 @@ class PPOTrainer:
 
             loop = tqdm.tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
 
+            # if the average wins when we do periodic checks of the models scoring is above the save threshold, we save or overwrite the model
+            model_save_threshold = 50.0
+
             for tid, _ in enumerate(loop):
-                # train 100 times
+
                 if tid % 10 == 0:
                     # print(f'Playing games with our trained agent after {epid} epochs')
                     loop.set_description("Playing games and averaging score")
                     wins = []
-
                     score_gathering = tqdm.tqdm(range(10), position=1, leave=False)
                     for _ in score_gathering:
                         wins.append(play_recurrent_game(self.env, 
@@ -329,6 +338,9 @@ class PPOTrainer:
                         score_gathering.set_description(f'Avg wins with current policy : {np.mean(wins)}')
 
                     mlflow.log_metric("avg_wins/100", np.mean(wins))
+                    if np.mean(wins) > model_save_threshold:
+                        model_save_threshold = int(np.mean(wins))
+                        torch.save(self.agent.state_dict(), f'plurality_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{model_save_threshold}')
 
                 loop.set_description("Filling buffer")
                 # fill buffer
@@ -365,11 +377,13 @@ config_training = {
         "recurrent_layers": 1, # 1,2 (2)
         "recurrent_hidden_size": 128, # 64-128-256-512 (4)
         "mlp_size": 128, # 64-128-256-512 (4)
+        "num_votes": 1,
+        "approval_states": 10 # this is tied to the number of players
     },
     "training" : {
         "batch_size": 128, # 32-64-128-256-512-1024 (6)
         "epochs": 3, # 4,5,6,7,8,9,10 (7)
-        "updates": 201, # 1000 (1)
+        "updates": 301, # 1000 (1)
         "buffer_games_per_update": 200, # 50-100-200 (3)
         "clip_range": 0.1, # 0.1,0.2,0.3 (3)
         "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)

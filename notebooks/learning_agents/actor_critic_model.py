@@ -1,13 +1,14 @@
 import numpy as np
 import torch
 
-class ApprovalRecurrentAgent(torch.nn.Module):
+class ActorCriticAgent(torch.nn.Module):
     def __init__(self, config:dict, num_players, obs_size=None):
         super().__init__()
 
-        # recurrent layer
-        # TODO: Do I want 2 here?
-        self.recurrent_layer = self._rec_layer_init(torch.nn.LSTM(obs_size, config['rec_hidden_size'], num_layers=config['rec_layers'], batch_first=True))
+        self.recurrent_layer = self._rec_layer_init(
+            torch.nn.LSTM(obs_size, config['rec_hidden_size'], 
+                          num_layers=config['rec_layers'], 
+                          batch_first=True))
 
         # hidden layers
         self.fc_joint = self._layer_init(torch.nn.Linear(config['rec_hidden_size'], config['hidden_mlp_size']))
@@ -16,9 +17,12 @@ class ApprovalRecurrentAgent(torch.nn.Module):
 
         # policy output
         self.policies_out = torch.nn.ModuleList()
-        for _ in range(num_players):
-            actor_branch = self._layer_init(torch.nn.Linear(in_features=config['hidden_mlp_size'], out_features=config['approval_states']), std=0.01)
+        for _ in range(config["num_votes"]):
+            actor_branch = self._layer_init(torch.nn.Linear(in_features=config['hidden_mlp_size'], 
+                                                            out_features=config['approval_states']),
+                                                            std=0.01)
             self.policies_out.append(actor_branch)
+
         # value output
         self.value_out = self._layer_init(torch.nn.Linear(config['hidden_mlp_size'], 1), std=1.0)
 
@@ -59,18 +63,23 @@ class ApprovalRecurrentAgent(torch.nn.Module):
 
         return policies, value, recurrent_cell
     
-    def _convert_policy_action_to_game_action(self, policy_action):
+    def _convert_approval_policy_action_to_game_action(self, policy_action):
         """
-        0 -> -1 
-        1 -> 0
-        2 -> 1
-
-        We will just subtract 1 from the items as the predicted classes are 0,1,2
+        Function for the approval game that maps the outputted classes to associated approval voting values
+            Class | Approval Value
+            0     | -1
+            1     |  0
+            2     |  1
         """
         return torch.tensor(policy_action) - 1
     
-    def get_action_from_policies(self, policies):
+    def get_action_from_policies(self, policies, voting_type="approval"):
         policy_action = [policy.sample() for policy in policies]
-        game_action = self._convert_policy_action_to_game_action(policy_action)
+        if voting_type == "approval":
+            game_action = self._convert_policy_action_to_game_action(policy_action)
+        elif voting_type == "plurality":
+            game_action = policy_action[0]
+        else:
+            raise ValueError("voting type not implemented!")
 
         return policy_action, game_action

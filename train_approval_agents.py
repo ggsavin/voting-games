@@ -104,7 +104,7 @@ def fill_recurrent_buffer(buffer, env, config:dict, wolf_policy, villager_agent)
                 # this needs to be updated
                 policies, value, recurrent_cell = villager_agent(obs, recurrent_cell)
                 
-                policy_action, game_action = villager_agent.get_action_from_policies(policies)
+                policy_action, game_action = villager_agent.get_action_from_policies(policies, voting_type="approval")
                 actions[villager] = game_action.tolist()
 
                 # can store some stuff 
@@ -216,7 +216,7 @@ def calc_minibatch_loss(agent: ApprovalRecurrentAgent, samples: dict, clip_range
 
     # TODO:Consider checking for NAans anywhere. we cant have these. also do this in the model itself
     # if torch.isnan(tensor).any(): print(f"{label} contains NaN values")
-    policies, values, _ = agent(samples['observations'], (samples['hxs'], samples['cxs']))
+    policies, values, _ = agent(samples['observations'], (samples['hxs'].detach(), samples['cxs'].detach()))
     
     log_probs, entropies = [], []
     for i, policy_head in enumerate(policies):
@@ -299,9 +299,10 @@ class PPOTrainer:
         self.buffer = ApprovalRolloutBuffer(buffer_size=10, gamma=0.99, gae_lambda=0.95)
 
         # Initialize Model & Optimizer
-        self.agent = ApprovalRecurrentAgent({"rec_hidden_size": self.config["config_training"]["model"]["recurrent_hidden_size"], 
+        self.agent = ActorCriticAgent({"rec_hidden_size": self.config["config_training"]["model"]["recurrent_hidden_size"], 
                                                 "rec_layers": self.config["config_training"]["model"]["recurrent_layers"], 
                                                 "hidden_mlp_size": self.config["config_training"]["model"]["mlp_size"],
+                                                "num_votes": self.config["config_training"]["model"]["num_votes"],
                                                 "approval_states": self.config["config_training"]["model"]["approval_states"]},
                                                 num_players=self.config["config_game"]["gameplay"]["num_agents"],
                                                 obs_size=obs_size)
@@ -321,6 +322,7 @@ class PPOTrainer:
             
             mlflow.log_params(self.config["config_training"]["training"])
             mlflow.log_params(self.config["config_training"]["model"])
+            mlflow.log_params(self.config["config_game"]['gameplay'])
 
             loop = tqdm.tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
 
