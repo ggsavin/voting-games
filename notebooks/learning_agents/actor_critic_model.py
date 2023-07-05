@@ -27,6 +27,7 @@ class ActorCriticAgent(torch.nn.Module):
         self.value_out = self._layer_init(torch.nn.Linear(config['hidden_mlp_size'], 1), std=1.0)
 
         self.num_players = num_players
+        self.num_votes = config["num_votes"]
 
     def _layer_init(self, layer, std=np.sqrt(2), bias_const=0.0):
         torch.nn.init.orthogonal_(layer.weight, std)

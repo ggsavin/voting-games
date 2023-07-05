@@ -5,7 +5,16 @@ from buffer import ReplayBuffer, fill_recurrent_buffer
 import mlflow
 import tqdm
 import copy
+import enum
 
+class Roles(enum.IntEnum):
+    VILLAGER = 0
+    WEREWOLF = 1
+
+class Phase(enum.IntEnum):
+    ACCUSATION = 0
+    VOTING = 1
+    NIGHT = 2
 
 class PPOTrainer:
     def __init__(self, env, config:dict, wolf_policy, run_id:str="run", device:torch.device=torch.device("cpu"), mlflow_uri:str=None) -> None:
@@ -169,7 +178,7 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
             day = observations[list(observations)[0]]['observation']['day']
             phase = observations[list(observations)[0]]['observation']['phase']
             
-            if wolf_brain['day'] != day or wolf_brain['phase'] == pare_Phase.NIGHT:
+            if wolf_brain['day'] != day or wolf_brain['phase'] == Phase.NIGHT:
                 wolf_brain = {'day': day, 'phase': phase, 'action': None}
             
             for wolf in wolves:
@@ -183,7 +192,7 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
 
         ## Fill bigger buffer, keeping in mind sequence
         winner = env.world_state['winners']
-        if winner == pare_Role.VILLAGER:
+        if winner == Roles.VILLAGER:
             wins += 1
 
         # loop.set_description(f"Villagers won {wins} out of a total of {num_times} games")
@@ -210,7 +219,7 @@ def calc_minibatch_loss(agent: ActorCriticAgent, samples: dict, clip_range: floa
     norm_advantage = (samples["advantages"] - samples["advantages"].mean()) / (samples["advantages"].std() + 1e-8)
 
     # need to repeat for amount of shape of policies (this way we know how many policy heads we need to watch out for)
-        norm_advantage = norm_advantage.unsqueeze(1).repeat(1, None)
+    norm_advantage = norm_advantage.unsqueeze(1).repeat(1, agent.num_votes)
 
     # policy loss w/ surrogates
     surr1 = norm_advantage * ratio

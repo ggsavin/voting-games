@@ -5,11 +5,9 @@ import copy
 import mlflow
 import sys
 sys.path.append('../')
-import tqdm
 import random
 
-from notebooks.learning_agents.buffer import ReplayBuffer
-from notebooks.learning_agents.actor_critic_model import ActorCriticAgent
+from notebooks.learning_agents.trainer import PPOTrainer
 
 from voting_games.werewolf_env_v0 import pare, pare_Phase, pare_Role
 
@@ -120,9 +118,16 @@ env = pare(num_agents=config["config_game"]["gameplay"]["num_agents"],
 finished_one = False
 for _ in range(50):
     try:
-        trainer = PPOTrainer(config=config,run_id="Approval", mlflow_uri="http://mlflow:5000")
+        trainer = PPOTrainer(env,
+                             config=config,
+                             wolf_policy=random_wolf,
+                             run_id="Approval",
+                             device=torch.device("cpu"),
+                             mlflow_uri="http://mlflow:5000")
+        
         trainer.train()
         finished_one = True
+        
     except ValueError as e:
         if ("nan" in str(e)):
             print("It was value errors, trying again")

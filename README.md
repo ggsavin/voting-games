@@ -2,7 +2,8 @@
 
 ## What is this project trying to achieve?
 
-Provide a simplified environment for SGDs that employ voting mechanisms as their main interaction space
+Provide an SGD environment where voting is a core mechanism so we can study how agents learn given different parameters and hopefully make inferences based on the voting mechanisms in play.
+ 
 
 
 Ranking 
