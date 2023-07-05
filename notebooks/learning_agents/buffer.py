@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import copy
 
 class ReplayBuffer():
     
@@ -105,4 +106,93 @@ class ReplayBuffer():
                 "hxs": torch.swapaxes(torch.cat(hxs)[batch_index],0,1),
                 "cxs": torch.swapaxes(torch.cat(cxs)[batch_index],0,1),
                 "observations": observations[batch_index]
-            } 
+            }
+
+
+@torch.no_grad()
+def fill_recurrent_buffer(buffer, env, config:dict, wolf_policy, villager_agent, voting_type=None):
+
+    buffer.reset(gamma=config["training"]["gamma"], gae_lambda=config["training"]["gae_lambda"])
+    
+    for _ in range(config["training"]["buffer_games_per_update"]):
+        ## Play the game 
+        next_observations, rewards, terminations, truncations, infos = env.reset()
+        # init recurrent stuff for actor and critic to 0 as well
+        magent_obs = {agent: {'obs': [], 
+                              'rewards': [], 
+                              'actions': [], 
+                              'logprobs': [], 
+                              'values': [], 
+                              'terms': [],
+
+                              # obs size, and 1,1,64 as we pass batch first
+                              'hcxs': [(torch.zeros((1,1,config["model"]["recurrent_hidden_size"]), dtype=torch.float32), 
+                                        torch.zeros((1,1,config["model"]["recurrent_hidden_size"]), dtype=torch.float32))]
+                    } for agent in env.agents if not env.agent_roles[agent]}
+        
+        wolf_brain = {'day': 1, 'phase': 0, 'action': None}
+        while env.agents:
+            observations = copy.deepcopy(next_observations)
+            actions = {}
+
+            villagers = set(env.agents) & set(env.world_state["villagers"])
+            wolves = set(env.agents) & set(env.world_state["werewolves"])
+
+            # villager steps
+                # villagers actions
+            for villager in villagers:
+                #torch.tensor(env.convert_obs(observations['player_0']['observation']), dtype=torch.float)
+                torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
+                obs = torch.unsqueeze(torch_obs, 0)
+
+                # TODO: Testing this, we may need a better way to pass in villagers
+                recurrent_cell = magent_obs[villager]["hcxs"][-1]
+                
+                # ensure that the obs is of size (batch,seq,inputs)
+                # we only have one policy, but to keep the same agent structure, we have "policies"
+                policies, value, recurrent_cell = villager_agent(obs, recurrent_cell)
+                policy_action, game_action = villager_agent.get_action_from_policies(policies, voting_type=voting_type)
+                
+                # only difference is the game_action here between this and approval
+                if voting_type == "plurality":
+                    actions[villager] = game_action.item()
+                elif voting_type == "approval":
+                    actions[villager] = game_action.tolist()
+
+                # can store some stuff 
+                magent_obs[villager]["obs"].append(obs)
+                magent_obs[villager]["actions"].append(policy_action)
+
+                # how do we get these
+                magent_obs[villager]["logprobs"].append(torch.stack([policy.log_prob(action) for policy, action in zip(policies, policy_action)], dim=1).reshape(-1))
+                magent_obs[villager]["values"].append(value)
+
+                #store the next recurrent cells
+                magent_obs[villager]["hcxs"].append(recurrent_cell)
+
+
+            # wolf steps
+            day = observations[list(observations)[0]]['observation']['day']
+            phase = observations[list(observations)[0]]['observation']['phase']
+
+            if wolf_brain['day'] != day or wolf_brain['phase'] == plurality_Phase.NIGHT:
+                wolf_brain = {'day': day, 'phase': phase, 'action': None}
+
+            for wolf in wolves:
+                action = wolf_policy(env, wolf, action=wolf_brain['action'])
+                wolf_brain['action'] = action
+                actions[wolf] = action
+
+            # actions = actions | wolf_policy(env)
+        
+            next_observations, rewards, terminations, truncations, infos = env.step(actions)
+
+            for villager in villagers:
+                magent_obs[villager]["rewards"].append(rewards[villager])
+                magent_obs[villager]["terms"].append(terminations[villager])
+
+        ## Fill bigger buffer, keeping in mind sequence
+        for agent in magent_obs:
+            buffer.add_replay(magent_obs[agent])
+    
+    return buffer

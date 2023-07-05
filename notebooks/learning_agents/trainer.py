@@ -1,9 +1,14 @@
 import torch
 import numpy as np
-import Approval
+from actor_critic_model import ActorCriticAgent
+from buffer import ReplayBuffer, fill_recurrent_buffer
+import mlflow
+import tqdm
+import copy
+
 
 class PPOTrainer:
-    def __init__(self, env, config:dict, run_id:str="run", device:torch.device=torch.device("cpu"), mlflow_uri:str=None) -> None:
+    def __init__(self, env, config:dict, wolf_policy, run_id:str="run", device:torch.device=torch.device("cpu"), mlflow_uri:str=None) -> None:
         """Initializes all needed training components.
         Arguments:
             config {dict} -- Configuration and hyperparameters of the environment, trainer and model.
@@ -15,7 +20,8 @@ class PPOTrainer:
         self.device = device
         self.run_id = run_id
         self.mlflow_uri = mlflow_uri
-        self.env = env
+        self.env = None
+        self.wolf_policy = wolf_policy
 
         # we are not using schedules yet
         # self.lr_schedule = config["learning_rate_schedule"]
@@ -23,59 +29,74 @@ class PPOTrainer:
         # self.cr_schedule = config["clip_range_schedule"]
 
         # Initialize Environment
-        env = pare(num_agents=self.config["config_game"]["gameplay"]["num_agents"], werewolves=self.config["config_game"]["gameplay"]["num_werewolves"])
         self.env = env
         
-        observations, rewards, terminations, truncations, infos = env.reset()
+        observations, _, _, _, _ = env.reset()
         obs_size= env.convert_obs(observations['player_0']['observation']).shape[-1]
 
         # Initialize Buffer
-        self.buffer = RolloutBuffer(buffer_size=10, gamma=0.99, gae_lambda=0.95)
+        self.buffer = ReplayBuffer(buffer_size=10, 
+                                   gamma=self.config["config_training"]["training"]["gamma"], 
+                                   gae_lambda=self.config["config_training"]["training"]["gae_lambda"])
 
         # Initialize Model & Optimizer
-        self.agent = ApprovalRecurrentAgent({"rec_hidden_size": self.config["config_training"]["model"]["recurrent_hidden_size"], 
-                                                "rec_layers": self.config["config_training"]["model"]["recurrent_layers"], 
-                                                "hidden_mlp_size": self.config["config_training"]["model"]["mlp_size"],
-                                                "approval_states": self.config["config_training"]["model"]["approval_states"]},
-                                                num_players=self.config["config_game"]["gameplay"]["num_agents"],
-                                                obs_size=obs_size)
-        self.optimizer = torch.optim.Adam(self.agent.parameters(), lr=0.0001, eps=1e-5)
+        # needs to be set appropriately for plurality, where approval states lines up
+        self.agent = ActorCriticAgent({"rec_hidden_size": self.config["config_training"]["model"]["recurrent_hidden_size"], 
+                                        "rec_layers": self.config["config_training"]["model"]["recurrent_layers"], 
+                                        "hidden_mlp_size": self.config["config_training"]["model"]["mlp_size"],
+                                        "num_votes": self.config["config_training"]["model"]["num_votes"],
+                                        "approval_states": self.config["config_training"]["model"]["approval_states"]},
+                                        num_players=self.config["config_game"]["gameplay"]["num_agents"],
+                                        obs_size=obs_size)
+        
+        self.optimizer = torch.optim.Adam(self.agent.parameters(), 
+                                          lr=self.config["config_training"]["training"]["learning_rate"], 
+                                          eps=self.config["config_training"]["training"]["adam_eps"])
 
         # setup mlflow run if we are using it
 
-    def train(self, idx: int):
+    def train(self):
         if self.mlflow_uri:
             mlflow.set_tracking_uri(self.mlflow_uri)
 
-        name = f'{self.run_id}_{idx}'
+        name = f'{self.run_id}'
         with mlflow.start_run(run_name=name):
             
             mlflow.log_params(self.config["config_training"]["training"])
             mlflow.log_params(self.config["config_training"]["model"])
+            mlflow.log_params(self.config["config_game"]['gameplay'])
 
-            loop = tqdm(range(self.config["config_training"]["training"]["updates"]))
+            loop = tqdm.tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
+
+            # if the average wins when we do periodic checks of the models scoring is above the save threshold, we save or overwrite the model
+            model_save_threshold = 50.0
 
             for tid, _ in enumerate(loop):
-                # train 100 times
-                if tid % 2 == 0:
+
+                if tid % 10 == 0:
                     # print(f'Playing games with our trained agent after {epid} epochs')
                     loop.set_description("Playing games and averaging score")
                     wins = []
-                    for _ in range(10):
+                    score_gathering = tqdm.tqdm(range(10), position=1, leave=False)
+                    for _ in score_gathering:
                         wins.append(play_recurrent_game(self.env, 
-                                                        random_wolf, 
+                                                        self.wolf_policy, 
                                                         self.agent, 
-                                                        num_times=50,
+                                                        num_times=100,
                                                         hidden_state_size=self.config["config_training"]["model"]["recurrent_hidden_size"]))
-                    
-                    mlflow.log_metric("avg_wins/50", np.mean(wins))
+                        score_gathering.set_description(f'Avg wins with current policy : {np.mean(wins)}')
+
+                    mlflow.log_metric("avg_wins/100", np.mean(wins))
+                    if np.mean(wins) > model_save_threshold:
+                        model_save_threshold = int(np.mean(wins))
+                        torch.save(self.agent.state_dict(), f'plurality_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{model_save_threshold}')
 
                 loop.set_description("Filling buffer")
                 # fill buffer
                 buff = fill_recurrent_buffer(self.buffer, 
                                              self.env,
                                              self.config["config_training"],
-                                             random_wolf, 
+                                             self.wolf_policy, 
                                              self.agent)
 
                 # train info will hold our metrics
@@ -88,7 +109,8 @@ class PPOTrainer:
                                                               batch, 
                                                               clip_range=self.config['config_training']["training"]['clip_range'], 
                                                               beta=self.config['config_training']["training"]['beta'], 
-                                                              v_loss_coef=self.config['config_training']["training"]['value_loss_coefficient'], 
+                                                              v_loss_coef=self.config['config_training']["training"]['value_loss_coefficient'],
+                                                              grad_norm=self.config['config_training']["training"]['max_grad_norm'],
                                                               optimizer=self.optimizer))
 
                 train_stats = np.mean(train_info, axis=0)
@@ -96,3 +118,128 @@ class PPOTrainer:
                 mlflow.log_metric("value loss", train_stats[1])
                 mlflow.log_metric("total loss", train_stats[2])
                 mlflow.log_metric("entropy loss", train_stats[3])
+
+
+@torch.no_grad()
+def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_state_size=None, voting_type=None):
+    
+    wins = 0
+    # loop = tqdm(range(num_times))
+    for _ in range(num_times):
+        ## Play the game 
+        next_observations, rewards, terminations, truncations, infos = env.reset()
+        # init recurrent stuff for actor and critic to 0 as well
+        magent_obs = {agent: {'obs': [], 
+                              # obs size, and 1,1,64 as we pass batch first
+                              'hcxs': [(torch.zeros((1,1,hidden_state_size), dtype=torch.float32), torch.zeros((1,1,hidden_state_size), dtype=torch.float32))],
+                    } for agent in env.agents if not env.agent_roles[agent]}
+        
+
+        wolf_brain = {'day': 1, 'phase': 0, 'action': None}
+
+        while env.agents:
+            observations = copy.deepcopy(next_observations)
+            actions = {}
+
+            villagers = set(env.agents) & set(env.world_state["villagers"])
+            wolves = set(env.agents) & set(env.world_state["werewolves"])
+
+            # villagers actions
+            for villager in villagers:
+                #torch.tensor(env.convert_obs(observations['player_0']['observation']), dtype=torch.float)
+                torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
+                obs = torch.unsqueeze(torch_obs, 0)
+
+                # TODO: Testing this, we may need a better way to pass in villagers
+                recurrent_cell = magent_obs[villager]["hcxs"][-1]
+                
+                # ensure that the obs is of size (batch,seq,inputs)
+                policies, _, recurrent_cell = villager_agent(obs, recurrent_cell)
+                _, game_action = villager_agent.get_action_from_policies(policies, voting_type=voting_type)
+
+                if voting_type == "plurality":
+                    actions[villager] = game_action.item()
+                elif voting_type == "approval":
+                    actions[villager] = game_action.tolist()
+
+                #store the next recurrent cells
+                magent_obs[villager]["hcxs"].append(recurrent_cell)
+
+            # wolf steps
+            day = observations[list(observations)[0]]['observation']['day']
+            phase = observations[list(observations)[0]]['observation']['phase']
+            
+            if wolf_brain['day'] != day or wolf_brain['phase'] == pare_Phase.NIGHT:
+                wolf_brain = {'day': day, 'phase': phase, 'action': None}
+            
+            for wolf in wolves:
+                action = wolf_policy(env, wolf, action=wolf_brain['action'])
+                wolf_brain['action'] = action
+                actions[wolf] = action
+
+            # actions = actions | wolf_policy(env)
+        
+            next_observations, _, _, _, _ = env.step(actions)
+
+        ## Fill bigger buffer, keeping in mind sequence
+        winner = env.world_state['winners']
+        if winner == pare_Role.VILLAGER:
+            wins += 1
+
+        # loop.set_description(f"Villagers won {wins} out of a total of {num_times} games")
+    
+    return wins
+
+def calc_minibatch_loss(agent: ActorCriticAgent, samples: dict, clip_range: float, beta: float, v_loss_coef: float, grad_norm: float, optimizer):
+
+    # TODO:Consider checking for NAans anywhere. we cant have these. also do this in the model itself
+    # if torch.isnan(tensor).any(): print(f"{label} contains NaN values")
+    policies, values, _ = agent(samples['observations'], (samples['hxs'].detach(), samples['cxs'].detach()))
+    
+    log_probs, entropies = [], []
+    for i, policy_head in enumerate(policies):
+        # append the log_probs for 1 -> n other agent opinions
+        log_probs.append(policy_head.log_prob(samples['actions'][:,i]))
+        entropies.append(policy_head.entropy())
+    log_probs = torch.stack(log_probs, dim=1)
+    entropies = torch.stack(entropies, dim=1).sum(1).reshape(-1)
+    
+    ratio = torch.exp(log_probs - samples['logprobs'])
+
+    # normalize advantages
+    norm_advantage = (samples["advantages"] - samples["advantages"].mean()) / (samples["advantages"].std() + 1e-8)
+
+    # need to repeat for amount of shape of policies (this way we know how many policy heads we need to watch out for)
+        norm_advantage = norm_advantage.unsqueeze(1).repeat(1, None)
+
+    # policy loss w/ surrogates
+    surr1 = norm_advantage * ratio
+    surr2 = norm_advantage * torch.clamp(ratio, 1.0 - clip_range, 1.0 + clip_range)
+    policy_loss = torch.min(surr1, surr2)
+    policy_loss = policy_loss.mean()
+
+    # Value  function loss
+    clipped_values = samples["values"] + (values - samples["values"]).clamp(min=-clip_range, max=clip_range)
+    vf_loss = torch.max((values - samples['returns']) ** 2, (clipped_values - samples["returns"]) ** 2)
+    vf_loss = vf_loss.mean()
+
+    # Entropy Bonus
+    entropy_loss = entropies.mean()
+
+    # Complete loss
+    loss = -(policy_loss - v_loss_coef * vf_loss + beta * entropy_loss)
+
+
+    # TODO : do i reset the LR here? do I want to?
+
+    # Compute gradients
+    optimizer.zero_grad()
+    loss.backward()
+    torch.nn.utils.clip_grad_norm_(agent.parameters(), max_norm=grad_norm)
+    optimizer.step()
+
+    
+    return [policy_loss.cpu().data.numpy(),     # policy loss
+            vf_loss.cpu().data.numpy(),         # value loss
+            loss.cpu().data.numpy(),            # total loss
+            entropy_loss.cpu().data.numpy()]    # entropy loss
