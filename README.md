@@ -24,6 +24,7 @@ Questions we would like to answer?
 - [ ] Hardcoded behavioral agents
 - [ ] COMA
 - [ ] QMIX
+- [ ] MADDPG w/ STG
 
 https://en.wikipedia.org/wiki/Learning_to_rank
 
