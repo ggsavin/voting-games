@@ -274,9 +274,9 @@ class raw_env(ParallelEnv):
                         rewards[agent] += self.rewards["dead_wolf"]
 
                     # maybe too punishing?
-                    if self.agent_roles[f'player_{target}'] == Roles.VILLAGER and self.agent_roles[agent] == Roles.VILLAGER:
-                        rewards += self.rewards["dead_villager"]
-                        
+                    # if self.agent_roles[f'player_{target}'] == Roles.VILLAGER and self.agent_roles[agent] == Roles.VILLAGER:
+                    #    rewards[agent] += self.rewards["dead_villager"]
+
                 #  TODO: Do this every day, not every phase
                 if not winners and (self.world_state['day'] != self.history[-1]['day']):
                     rewards[agent] += self.rewards["day"]
