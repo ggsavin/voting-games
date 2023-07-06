@@ -9,6 +9,13 @@ Ranking
 https://towardsdatascience.com/learning-to-rank-a-complete-guide-to-ranking-using-machine-learning-4c9688d370d4
 
 
+Experiment with:
+Normalization layers
+Reward Normalization (divide by a big number)
+MLP to take in the first obs layer
+one-shot the voting from the plurality agents
+
+
 Questions we would like to answer?
 
 - [ ] Can agents learn in an implicit communication style SGD?
