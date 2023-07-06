@@ -12,6 +12,8 @@ https://towardsdatascience.com/learning-to-rank-a-complete-guide-to-ranking-usin
 Experiment with:
 Normalization layers
 Reward Normalization (divide by a big number)
+MLP to take in the first obs layer
+one-shot the voting from the plurality agents
 
 
 Questions we would like to answer?
