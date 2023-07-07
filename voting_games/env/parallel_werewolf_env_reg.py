@@ -182,6 +182,7 @@ class raw_env(ParallelEnv):
     # TODO: make these the plurality votes
     def _get_votes(self, agent):
         # important point : num_agents + 1 is the null vote
+        # just make the votes for villagers at night always num_agents + 1 for everyone
         if self.agent_roles[agent] == Roles.VILLAGER and self.history[-1]['phase'] == Phase.NIGHT:
             votes = {agent: len(self.possible_agents) for agent in self.possible_agents}
         else:
