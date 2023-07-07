@@ -384,8 +384,6 @@ class raw_env(ParallelEnv):
             for agent in self.agents
         }
 
-        self.game_phase_tracker = self._game_phase_iterator()
-
         rewards = {agent: 0 for agent in self.agents}
         terminations = {agent: False for agent in self.agents}
         truncations = {agent: False for agent in self.agents}
@@ -419,13 +417,47 @@ def random_policy(observation, agent):
 if __name__ == "__main__":
 
     # api_test(raw_env(), num_cycles=100, verbose_progress=True)
+    print("Testing a 10 player game with 1 accusation phase")
+    env = raw_env(num_agents=10, werewolves=2, num_accusations=1)
+    observations, _, _, _, _ = env.reset()
 
-    env = raw_env(num_accusations=1)
+    # getting list of villagers and werewolves
+    print("Testing a game")
+    villagers = list(set(env.agents) & set(env.world_state["villagers"]))
+    wolves = list(set(env.agents) & set(env.world_state["werewolves"]))
 
-    observations, rewards, terminations, truncations, infos = env.reset()
-    env.render()
-    while env.agents:
-        actions = {agent: env.action_space(agent).sample() for agent in env.agents if not (env.world_state["phase"] == Phase.NIGHT and env.agent_roles[agent] == Roles.VILLAGER)}  # this is where you would insert your policy
-        observations, rewards, terminations, truncations, infos = env.step(actions)
-        env.render()
-    env.render() # post game render
+    print("Day 1, Accusation 1")
+    # check that observations look ok, and that env.history looks ok
+    v_actions = {v: int(villagers[-1].split("_")[-1]) for v in villagers}
+    w_actions = {w: int(villagers[0].split("_")[-1]) for w in wolves}
+
+    observations, _, _, _, _ = env.step(w_actions | v_actions)
+
+    print("Day 1, Vote 1")
+
+    v_actions = {v: int(villagers[-2].split("_")[-1]) for v in villagers}
+    w_actions = {w: int(villagers[1].split("_")[-1]) for w in wolves}
+
+    observations, _, _, _, _ = env.step(w_actions | v_actions)
+
+    print("Day 1, Night 1")
+
+    villagers = list(set(env.agents) & set(env.world_state["villagers"]))
+    wolves = list(set(env.agents) & set(env.world_state["werewolves"]))
+
+    v_actions = {v: int(villagers[-1].split("_")[-1]) for v in villagers}
+    w_actions = {w: int(villagers[0].split("_")[-1]) for w in wolves}
+
+    observations, _, _, _, _ = env.step(w_actions | v_actions)
+
+    print("Accusation phase #2")
+
+
+        
+
+    # env.render()
+    # while env.agents:
+    #     actions = {agent: env.action_space(agent).sample() for agent in env.agents if not (env.world_state["phase"] == Phase.NIGHT and env.agent_roles[agent] == Roles.VILLAGER)}  # this is where you would insert your policy
+    #     observations, rewards, terminations, truncations, infos = env.step(actions)
+    #     env.render()
+    # env.render() # post game render

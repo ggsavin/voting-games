@@ -381,8 +381,6 @@ class raw_env(ParallelEnv):
             for agent in self.agents
         }
 
-        self.game_phase_tracker = self._game_phase_iterator()
-
         rewards = {agent: 0 for agent in self.agents}
         terminations = {agent: False for agent in self.agents}
         truncations = {agent: False for agent in self.agents}
