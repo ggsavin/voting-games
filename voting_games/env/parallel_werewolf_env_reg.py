@@ -403,57 +403,60 @@ class raw_env(ParallelEnv):
         [role for role in observation['roles']] + \
         list(observation["votes"].values()))
     
-def random_policy(observation, agent):
-    # these are the other wolves. we cannot vote for them either
-    available_actions = list(range(len(observation['observation']['player_status'])))
-    # dead players
-    action_mask = observation['action_mask']
 
-    legal_actions = [action for action,is_alive,is_wolf in zip(available_actions, action_mask, observation['observation']['roles']) if is_alive and not is_wolf]
-    # wolves don't vote for other wolves. will select another villager at random
-    action = random.choice(legal_actions)
-    return action
+def random_single_target_villager(env, agent):
+    targets = set(env.world_state["alive"]) - set([agent])
+    return int(random.choice(list(targets)).split("_")[-1])
+
+# random_coordinated_wolf(env)
+def random_agent_action(env, agent, action=None):
+   return env.action_space(agent).sample()
+
+def random_coordinated_single_wolf(env, agent, action=None):
+    villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])
+    return action if action != None else int(random.choice(list(villagers_remaining)).split("_")[-1])
 
 if __name__ == "__main__":
 
     # api_test(raw_env(), num_cycles=100, verbose_progress=True)
-    print("Testing a 10 player game with 1 accusation phase")
     env = raw_env(num_agents=10, werewolves=2, num_accusations=1)
-    observations, _, _, _, _ = env.reset()
+    num_times = 1
 
-    # getting list of villagers and werewolves
-    print("Testing a game")
-    villagers = list(set(env.agents) & set(env.world_state["villagers"]))
-    wolves = list(set(env.agents) & set(env.world_state["werewolves"]))
+    game_replays = []
+    state_buffer = []
+    for _ in range(num_times):
+        observations, rewards, terminations, truncations, infos = env.reset()
+        wolf_brain = { 'day': 1, 'phase': 0, 'action': None }
+        state_buffer.append(copy.deepcopy(env.world_state))
+        while env.agents:
+            
+            env.world_state
+            villagers = set(env.agents) & set(env.world_state["villagers"])
+            wolves = set(env.agents) & set(env.world_state["werewolves"])
 
-    print("Day 1, Accusation 1")
-    # check that observations look ok, and that env.history looks ok
-    v_actions = {v: int(villagers[-1].split("_")[-1]) for v in villagers}
-    w_actions = {w: int(villagers[0].split("_")[-1]) for w in wolves}
+            v_actions = {villager: random_agent_action(env, villager) for villager in villagers}
 
-    observations, _, _, _, _ = env.step(w_actions | v_actions)
+            day = observations[list(observations)[0]]['observation']['day']
+            phase = observations[list(observations)[0]]['observation']['phase']
 
-    print("Day 1, Vote 1")
+            if wolf_brain['day'] != day or wolf_brain['phase'] == Phase.NIGHT:
+                wolf_brain = {'day': day, 'phase': phase, 'action': None}
+            
+            w_actions = {}
+            for wolf in wolves:
+                action = random_coordinated_single_wolf(env, wolf, action=wolf_brain['action'])
+                wolf_brain['action'] = action
+                w_actions[wolf] = action
 
-    v_actions = {v: int(villagers[-2].split("_")[-1]) for v in villagers}
-    w_actions = {w: int(villagers[1].split("_")[-1]) for w in wolves}
+            actions = v_actions | w_actions
 
-    observations, _, _, _, _ = env.step(w_actions | v_actions)
+            env.world_state
 
-    print("Day 1, Night 1")
-
-    villagers = list(set(env.agents) & set(env.world_state["villagers"]))
-    wolves = list(set(env.agents) & set(env.world_state["werewolves"]))
-
-    v_actions = {v: int(villagers[-1].split("_")[-1]) for v in villagers}
-    w_actions = {w: int(villagers[0].split("_")[-1]) for w in wolves}
-
-    observations, _, _, _, _ = env.step(w_actions | v_actions)
-
-    print("Accusation phase #2")
-
-
+            next_observations, _, _, _, _ = env.step(actions)
+            state_buffer.append(copy.deepcopy(env.world_state))
+        game_replays.append(copy.deepcopy(env.history))
         
+    print("Done")
 
     # env.render()
     # while env.agents:
