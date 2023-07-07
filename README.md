@@ -36,6 +36,15 @@ Questions we would like to answer?
 https://en.wikipedia.org/wiki/Learning_to_rank
 
 ### TODOs:
+
+To improve the learning agents maybe we can do the following:
+    - penalize villagers for killing a villager
+    - give a winning reward for villager wins to villagers that died during the game
+    - layer normalization (before or aafter lstm?)
+    - maybe add a fully connected layer before the lstm
+
+
+
     - [ ] Cleanup Environment
     - [ ] Improve Rendering for human observations
     - [ ] Update the environment to have two rounds of voting, 
