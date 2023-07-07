@@ -454,6 +454,7 @@ if __name__ == "__main__":
 
             next_observations, _, _, _, _ = env.step(actions)
             state_buffer.append(copy.deepcopy(env.world_state))
+
         game_replays.append(copy.deepcopy(env.history))
         
     print("Done")
