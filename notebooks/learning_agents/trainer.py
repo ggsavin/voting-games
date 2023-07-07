@@ -142,10 +142,8 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
                               # obs size, and 1,1,64 as we pass batch first
                               'hcxs': [(torch.zeros((1,1,hidden_state_size), dtype=torch.float32), torch.zeros((1,1,hidden_state_size), dtype=torch.float32))],
                     } for agent in env.agents if not env.agent_roles[agent]}
-        
-
-        wolf_brain = {'day': 1, 'phase': 0, 'action': None}
-
+    
+        wolf_action = None
         while env.agents:
             observations = copy.deepcopy(next_observations)
             actions = {}
@@ -175,20 +173,19 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
                 magent_obs[villager]["hcxs"].append(recurrent_cell)
 
             # wolf steps
-            day = observations[list(observations)[0]]['observation']['day']
-            phase = observations[list(observations)[0]]['observation']['phase']
-            
-            if wolf_brain['day'] != day or wolf_brain['phase'] == Phase.NIGHT:
-                wolf_brain = {'day': day, 'phase': phase, 'action': None}
-            
+            phase = env.world_state['phase']
             for wolf in wolves:
-                action = wolf_policy(env, wolf, action=wolf_brain['action'])
-                wolf_brain['action'] = action
-                actions[wolf] = action
-
-            # actions = actions | wolf_policy(env)
+                wolf_action = wolf_policy(env, wolf, action=wolf_action)
+                actions[wolf] = wolf_action
         
             next_observations, _, _, _, _ = env.step(actions)
+            
+            # clear the wolf action if needed
+            if env.world_state['phase'] == Phase.NIGHT:
+                wolf_action = None
+            
+            if env.world_state['phase'] == Phase.ACCUSATION and phase == Phase.NIGHT:
+                wolf_action = None
 
         ## Fill bigger buffer, keeping in mind sequence
         winner = env.world_state['winners']
