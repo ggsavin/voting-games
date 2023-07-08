@@ -61,8 +61,8 @@ def random_agent_action(env, agent, action=None):
 config_training = {
     "model": {
         "recurrent_layers": 1, # 1,2 (2)
-        "recurrent_hidden_size": 256, # 64-128-256-512 (4)
-        "mlp_size": 256, # 64-128-256-512 (4)
+        "recurrent_hidden_size": 128, # 64-128-256-512 (4)
+        "mlp_size": 128, # 64-128-256-512 (4)
         "num_votes": 10,
         "approval_states": 3,
     },
@@ -122,9 +122,9 @@ for _ in range(50):
                              wolf_policy=random_wolf,
                              run_id="Approval",
                              device=torch.device("cpu"),
-                             mlflow_uri="http://mlflow:5000"
+                             mlflow_uri="http://mlflow:5000",
                              )
-        trainer.train(voting_type="approval")
+        trainer.train(voting_type="approval", save_threshold=25)
         finished_one = True
     except ValueError as e:
         if ("nan" in str(e)):

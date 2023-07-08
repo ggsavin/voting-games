@@ -64,7 +64,7 @@ class PPOTrainer:
 
         # setup mlflow run if we are using it
 
-    def train(self, voting_type=None):
+    def train(self, voting_type=None, save_threshold=50.0):
         if self.mlflow_uri:
             mlflow.set_tracking_uri(self.mlflow_uri)
 
@@ -78,7 +78,7 @@ class PPOTrainer:
             loop = tqdm.tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
 
             # if the average wins when we do periodic checks of the models scoring is above the save threshold, we save or overwrite the model
-            model_save_threshold = 50.0
+            # model_save_threshold = 50.0
 
             for tid, _ in enumerate(loop):
 
@@ -97,9 +97,9 @@ class PPOTrainer:
                         score_gathering.set_description(f'Avg wins with current policy : {np.mean(wins)}')
 
                     mlflow.log_metric("avg_wins/100", np.mean(wins))
-                    if np.mean(wins) > model_save_threshold:
-                        model_save_threshold = int(np.mean(wins))
-                        torch.save(self.agent.state_dict(), f'plurality_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{model_save_threshold}')
+                    if np.mean(wins) > save_threshold:
+                        save_threshold = int(np.mean(wins))
+                        torch.save(self.agent.state_dict(), f'approval_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{save_threshold}')
 
                 loop.set_description("Filling buffer")
                 # fill buffer
