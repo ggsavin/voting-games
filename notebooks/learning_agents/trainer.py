@@ -40,7 +40,7 @@ class PPOTrainer:
         # Initialize Environment
         self.env = env
         
-        observations, _, _, _, _ = env.reset()
+        observations, _, _, _, _ = self.env.reset()
         obs_size= env.convert_obs(observations['player_0']['observation']).shape[-1]
 
         # Initialize Buffer
@@ -64,7 +64,7 @@ class PPOTrainer:
 
         # setup mlflow run if we are using it
 
-    def train(self):
+    def train(self, voting_type=None):
         if self.mlflow_uri:
             mlflow.set_tracking_uri(self.mlflow_uri)
 
@@ -92,7 +92,8 @@ class PPOTrainer:
                                                         self.wolf_policy, 
                                                         self.agent, 
                                                         num_times=100,
-                                                        hidden_state_size=self.config["config_training"]["model"]["recurrent_hidden_size"]))
+                                                        hidden_state_size=self.config["config_training"]["model"]["recurrent_hidden_size"],
+                                                        voting_type=voting_type))
                         score_gathering.set_description(f'Avg wins with current policy : {np.mean(wins)}')
 
                     mlflow.log_metric("avg_wins/100", np.mean(wins))
@@ -106,7 +107,8 @@ class PPOTrainer:
                                              self.env,
                                              self.config["config_training"],
                                              self.wolf_policy, 
-                                             self.agent)
+                                             self.agent,
+                                             voting_type=voting_type)
 
                 # train info will hold our metrics
                 train_info = []

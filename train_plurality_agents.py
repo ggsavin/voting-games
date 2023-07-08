@@ -104,16 +104,15 @@ env = plurality_env(num_agents=config["config_game"]["gameplay"]["num_agents"],
                     )
 
 finished_one = False
-for _ in range(50):
+for _ in range(2):
     try:
         trainer = PPOTrainer(env,
                              config=config,
                              wolf_policy=random_coordinated_single_wolf,
-                             run_id="Plurality",
+                             run_id="Plurality_v2",
                              device=torch.device("cpu"),
                              mlflow_uri="http://mlflow:5000")
-
-        trainer.train()
+        trainer.train(voting_type="plurality")
         finished_one = True
     except ValueError as e:
         print("Probably a nan error")

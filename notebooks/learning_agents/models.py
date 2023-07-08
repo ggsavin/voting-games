@@ -77,7 +77,7 @@ class ActorCriticAgent(torch.nn.Module):
     def get_action_from_policies(self, policies, voting_type="approval"):
         policy_action = [policy.sample() for policy in policies]
         if voting_type == "approval":
-            game_action = self._convert_policy_action_to_game_action(policy_action)
+            game_action = self._convert_approval_policy_action_to_game_action(policy_action)
         elif voting_type == "plurality":
             game_action = policy_action[0]
         else:
