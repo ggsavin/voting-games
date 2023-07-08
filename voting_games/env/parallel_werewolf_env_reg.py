@@ -421,40 +421,38 @@ if __name__ == "__main__":
 
     # api_test(raw_env(), num_cycles=100, verbose_progress=True)
     env = raw_env(num_agents=10, werewolves=2, num_accusations=1)
+    env.reset()
     num_times = 1
 
     game_replays = []
     state_buffer = []
     for _ in range(num_times):
         observations, rewards, terminations, truncations, infos = env.reset()
-        wolf_brain = { 'day': 1, 'phase': 0, 'action': None }
+        wolf_action = None
         state_buffer.append(copy.deepcopy(env.world_state))
         while env.agents:
             
-            env.world_state
             villagers = set(env.agents) & set(env.world_state["villagers"])
             wolves = set(env.agents) & set(env.world_state["werewolves"])
 
             v_actions = {villager: random_agent_action(env, villager) for villager in villagers}
 
-            day = observations[list(observations)[0]]['observation']['day']
-            phase = observations[list(observations)[0]]['observation']['phase']
-
-            if wolf_brain['day'] != day or wolf_brain['phase'] == Phase.NIGHT:
-                wolf_brain = {'day': day, 'phase': phase, 'action': None}
-            
+            phase = env.world_state['phase']
             w_actions = {}
             for wolf in wolves:
-                action = random_coordinated_single_wolf(env, wolf, action=wolf_brain['action'])
-                wolf_brain['action'] = action
-                w_actions[wolf] = action
+                wolf_action = random_coordinated_single_wolf(env, wolf, action=wolf_action)
+                w_actions[wolf] = wolf_action
 
             actions = v_actions | w_actions
 
-            env.world_state
-
             next_observations, _, _, _, _ = env.step(actions)
             state_buffer.append(copy.deepcopy(env.world_state))
+
+            if env.world_state['phase'] == Phase.NIGHT:
+                wolf_action = None
+            
+            if env.world_state['phase'] == Phase.ACCUSATION and phase == Phase.NIGHT:
+                wolf_action = None           
 
         game_replays.append(copy.deepcopy(env.history))
         
