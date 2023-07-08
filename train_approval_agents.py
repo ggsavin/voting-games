@@ -8,8 +8,7 @@ sys.path.append('../')
 import random
 
 from notebooks.learning_agents.trainer import PPOTrainer
-
-from voting_games.werewolf_env_v0 import pare, pare_Phase, pare_Role
+from voting_games.werewolf_env_v0 import pare
 
 def random_wolf(env, agent, action=None):
     if action != None:

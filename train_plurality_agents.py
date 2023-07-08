@@ -8,7 +8,7 @@ sys.path.append('../')
 import random
 
 from notebooks.learning_agents.trainer import PPOTrainer
-from voting_games.werewolf_env_v0 import plurality_env, plurality_Phase, plurality_Role
+from voting_games.werewolf_env_v0 import plurality_env
 
 def random_coordinated_wolf(env, action=None):
     villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])

@@ -1,7 +1,7 @@
 import torch
 import numpy as np
-from actor_critic_model import ActorCriticAgent
-from buffer import ReplayBuffer, fill_recurrent_buffer
+from notebooks.learning_agents.models import ActorCriticAgent
+from notebooks.learning_agents.buffer import ReplayBuffer
 import mlflow
 import tqdm
 import copy
