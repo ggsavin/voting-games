@@ -99,7 +99,7 @@ class PPOTrainer:
                     mlflow.log_metric("avg_wins/100", np.mean(wins))
                     if np.mean(wins) > save_threshold:
                         save_threshold = int(np.mean(wins))
-                        torch.save(self.agent.state_dict(), f'approval_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{save_threshold}')
+                        torch.save(self.agent.state_dict(), f'{voting_type}_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{save_threshold}')
 
                 loop.set_description("Filling buffer")
                 # fill buffer
