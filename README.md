@@ -41,6 +41,7 @@ To improve the learning agents maybe we can do the following:
     - penalize villagers for killing a villager
     - give a winning reward for villager wins to villagers that died during the game
     - layer normalization (before or aafter lstm?)
+        - It's still advisable to do so because your randomly initialised weights may not be able to get along with feature scale very well, and may cause the activations to saturate.
     - maybe add a fully connected layer before the lstm
 
 
