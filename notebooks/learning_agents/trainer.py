@@ -317,7 +317,7 @@ def fill_recurrent_buffer_scaled_rewards(buffer, env, config:dict, wolf_policy, 
             # wolf steps
             phase = env.world_state['phase']
             for wolf in wolves:
-                wolf_action = wolf_policy(env, wolf, action=wolf_policy)
+                wolf_action = wolf_policy(env, wolf, action=wolf_action)
                 actions[wolf] = wolf_action
 
             # actions = actions | wolf_policy(env)
@@ -335,9 +335,18 @@ def fill_recurrent_buffer_scaled_rewards(buffer, env, config:dict, wolf_policy, 
             if env.world_state['phase'] == Phase.ACCUSATION and phase == Phase.NIGHT:
                 wolf_action = None
 
+        ## Update the end_game rewards for villagers that died before the end
+        max_game_rounds = max([len(magent_obs[villager]['rewards']) for villager in magent_obs.keys()])
+        a_villager_who_made_it_to_end = [villager for villager in magent_obs.keys() if len(magent_obs[villager]['rewards']) == max_game_rounds][0]
+        reward_at_max_round = magent_obs[a_villager_who_made_it_to_end]['rewards'][-1]
+        for villager in villagers:
+            magent_obs[villager]['rewards'][-1] += reward_at_max_round * (max_game_rounds - len(magent_obs[villager]['rewards']))
+
         ## Fill bigger buffer, keeping in mind sequence
         for agent in magent_obs:
             buffer.add_replay(magent_obs[agent])
+
+        
     
     return buffer
 
@@ -407,7 +416,7 @@ def fill_recurrent_buffer(buffer, env, config:dict, wolf_policy, villager_agent,
             # wolf steps
             phase = env.world_state['phase']
             for wolf in wolves:
-                wolf_action = wolf_policy(env, wolf, action=wolf_policy)
+                wolf_action = wolf_policy(env, wolf, action=wolf_action)
                 actions[wolf] = wolf_action
 
             # actions = actions | wolf_policy(env)
