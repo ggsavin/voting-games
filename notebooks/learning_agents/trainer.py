@@ -103,7 +103,7 @@ class PPOTrainer:
 
                 loop.set_description("Filling buffer")
                 # fill buffer
-                buff = fill_recurrent_buffer(self.buffer, 
+                buff = fill_recurrent_buffer_scaled_rewards(self.buffer, 
                                              self.env,
                                              self.config["config_training"],
                                              self.wolf_policy, 
@@ -325,7 +325,8 @@ def fill_recurrent_buffer_scaled_rewards(buffer, env, config:dict, wolf_policy, 
             next_observations, rewards, terminations, truncations, infos = env.step(actions)
 
             for villager in villagers:
-                magent_obs[villager]["rewards"].append(rewards[villager])
+                # dividing rewards by 100
+                magent_obs[villager]["rewards"].append(rewards[villager]/100.0)
                 magent_obs[villager]["terms"].append(terminations[villager])
 
             # update wolf_action appropriately
@@ -340,7 +341,7 @@ def fill_recurrent_buffer_scaled_rewards(buffer, env, config:dict, wolf_policy, 
         a_villager_who_made_it_to_end = [villager for villager in magent_obs.keys() if len(magent_obs[villager]['rewards']) == max_game_rounds][0]
         reward_at_max_round = magent_obs[a_villager_who_made_it_to_end]['rewards'][-1]
         for villager in villagers:
-            magent_obs[villager]['rewards'][-1] += reward_at_max_round * (max_game_rounds - len(magent_obs[villager]['rewards']))
+            magent_obs[villager]['rewards'][-1] += reward_at_max_round * (0.9**(max_game_rounds - len(magent_obs[villager]['rewards'])))
 
         ## Fill bigger buffer, keeping in mind sequence
         for agent in magent_obs:
