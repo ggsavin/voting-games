@@ -69,7 +69,7 @@ config_training = {
     "training" : {
         "batch_size": 128, # 32-64-128-256-512-1024 (6)
         "epochs": 3, # 4,5,6,7,8,9,10 (7)
-        "updates": 301, # 1000 (1)
+        "updates": 501, # 1000 (1)
         "buffer_games_per_update": 250, # 50-100-200 (3)
         "clip_range": 0.1, # 0.1,0.2,0.3 (3)
         "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)
