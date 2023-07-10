@@ -35,6 +35,9 @@ Questions we would like to answer?
 
 https://en.wikipedia.org/wiki/Learning_to_rank
 
+
+ssh -L 9999:localhost:5000 A.B.C.D
+
 ### TODOs:
 
 To improve the learning agents maybe we can do the following:
