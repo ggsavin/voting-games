@@ -5,12 +5,19 @@ class ActorCriticAgentMLPFirst(torch.nn.Module):
     def __init__(self, config:dict, num_players, obs_size=None):
         super().__init__()
 
+        # embedding layer
+        self.fc_front = self._layer_init(torch.nn.Linear(obs_size, config['front_mlp_size']))
+        self.front_norm = self._layer_init(torch.nn.LayerNorm(config['front_mlp_size']))
+
         self.recurrent_layer = self._rec_layer_init(
-            torch.nn.LSTM(obs_size, config['rec_hidden_size'], 
+            torch.nn.LSTM(config['front_mlp_size'], config['rec_hidden_size'], 
                           num_layers=config['rec_layers'], 
                           batch_first=True))
 
         # hidden layers
+        self.fc_front = self._layer_init(torch.nn.Linear(obs_size, config['front_mlp_size']))
+
+        # TODO: do i want to shrink these?
         self.fc_joint = self._layer_init(torch.nn.Linear(config['rec_hidden_size'], config['hidden_mlp_size']))
         self.policy_hidden = self._layer_init(torch.nn.Linear(config['hidden_mlp_size'], config['hidden_mlp_size']))
         self.value_hidden = self._layer_init(torch.nn.Linear(config['hidden_mlp_size'], config['hidden_mlp_size']))
@@ -31,13 +38,13 @@ class ActorCriticAgentMLPFirst(torch.nn.Module):
 
     def _layer_init(self, layer, std=np.sqrt(2), bias_const=0.0):
         torch.nn.init.orthogonal_(layer.weight, std)
-        # torch.nn.init.constant_(layer.bias, bias_const)
+        torch.nn.init.constant_(layer.bias, bias_const)
         return layer
 
     def _rec_layer_init(self, layer, std=np.sqrt(2), bias_const=0.0):
         for name, param in layer.named_parameters():
-            # if "bias" in name:
-                # torch.nn.init.constant_(param, bias_const)
+            if "bias" in name:
+                torch.nn.init.constant_(param, bias_const)
             if "weight" in name:
                 torch.nn.init.orthogonal_(param, std)
         return layer
@@ -45,8 +52,14 @@ class ActorCriticAgentMLPFirst(torch.nn.Module):
     
     def forward(self, x, recurrent_cell: torch.tensor):
 
+        # pass through the front mlp 
+        h = torch.relu(self.fc_front(x))
+
+        # normalize 
+        h = self.front_norm(h)
+
         # pass  through the Recurrence Layer
-        h, recurrent_cell = self.recurrent_layer(torch.unsqueeze(x,1), recurrent_cell)
+        h, recurrent_cell = self.recurrent_layer(torch.unsqueeze(h,1), recurrent_cell)
         h = torch.squeeze(h,1)
 
         # Pass through a hidden layer
