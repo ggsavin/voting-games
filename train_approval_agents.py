@@ -61,16 +61,16 @@ def random_agent_action(env, agent, action=None):
 config_training = {
     "model": {
         "recurrent_layers": 1, # 1,2 (2)
-        "recurrent_hidden_size": 128, # 64-128-256-512 (4)
-        "mlp_size": 128, # 64-128-256-512 (4)
+        "recurrent_hidden_size": 256, # 64-128-256-512 (4)
+        "mlp_size": 256, # 64-128-256-512 (4)
         "num_votes": 10,
         "approval_states": 3,
     },
     "training" : {
-        "batch_size": 128, # 32-64-128-256-512-1024 (6)
-        "epochs": 3, # 4,5,6,7,8,9,10 (7)
+        "batch_size": 256, # 32-64-128-256-512-1024 (6)
+        "epochs": 5, # 4,5,6,7,8,9,10 (7)
         "updates": 501, # 1000 (1)
-        "buffer_games_per_update": 250, # 50-100-200 (3)
+        "buffer_games_per_update": 500, # 50-100-200 (3)
         "clip_range": 0.1, # 0.1,0.2,0.3 (3)
         "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)
         "max_grad_norm": 0.5, 
@@ -97,7 +97,7 @@ config_game = {
         "no_sleep": -1,
     },
     "gameplay": {
-        "accusation_phases": 2, # 2,3
+        "accusation_phases": 3, # 2,3
         "num_agents": 10,
         "num_werewolves": 2,
     }
@@ -120,7 +120,7 @@ for _ in range(50):
         trainer = PPOTrainer(env,
                              config=config,
                              wolf_policy=random_wolf,
-                             run_id="Approval",
+                             run_id="Approval_256",
                              device=torch.device("cpu"),
                              mlflow_uri="http://mlflow:5000",
                              )
