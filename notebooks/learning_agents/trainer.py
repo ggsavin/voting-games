@@ -52,7 +52,8 @@ class PPOTrainer:
         # needs to be set appropriately for plurality, where approval states lines up
         self.agent = ActorCriticAgent({"rec_hidden_size": self.config["config_training"]["model"]["recurrent_hidden_size"], 
                                         "rec_layers": self.config["config_training"]["model"]["recurrent_layers"], 
-                                        "hidden_mlp_size": self.config["config_training"]["model"]["mlp_size"],
+                                        "joint_mlp_size": self.config["config_training"]["model"]["joint_mlp_size"],
+                                        "split_mlp_size": self.config["config_training"]["model"]["split_mlp_size"], 
                                         "num_votes": self.config["config_training"]["model"]["num_votes"],
                                         "approval_states": self.config["config_training"]["model"]["approval_states"]},
                                         num_players=self.config["config_game"]["gameplay"]["num_agents"],
@@ -198,7 +199,7 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
     
     return wins
 
-def calc_minibatch_loss(agent: ActorCriticAgent, samples: dict, clip_range: float, beta: float, v_loss_coef: float, grad_norm: float, optimizer):
+def calc_minibatch_loss(agent, samples: dict, clip_range: float, beta: float, v_loss_coef: float, grad_norm: float, optimizer):
 
     # TODO:Consider checking for NAans anywhere. we cant have these. also do this in the model itself
     # if torch.isnan(tensor).any(): print(f"{label} contains NaN values")

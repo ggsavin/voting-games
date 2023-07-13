@@ -62,7 +62,8 @@ config_training = {
     "model": {
         "recurrent_layers": 1, # 1,2 (2)
         "recurrent_hidden_size": 256, # 64-128-256-512 (4)
-        "mlp_size": 256, # 64-128-256-512 (4)
+        "joint_mlp_size": 256, # 64-128-256-512 (4)
+        "split_mlp_size": 256,
         "num_votes": 10,
         "approval_states": 3,
     },
