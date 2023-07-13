@@ -113,7 +113,8 @@ class PPOTrainer:
 
                 # train info will hold our metrics
                 train_info = []
-                loop.set_description("Epoch Training")
+                # TODO List how many items we are training on
+                loop.set_description(f'Epoch Training on {self.buffer.games}')
                 for _ in range(self.config['config_training']["training"]['epochs']):
                     # run through batches and train network
                     for batch in buff.get_minibatch_generator(self.config['config_training']["training"]['batch_size']):

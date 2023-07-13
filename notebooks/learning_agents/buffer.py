@@ -25,6 +25,8 @@ class ReplayBuffer():
         self.gamma = gamma 
         self.gae_lambda = gae_lambda
 
+        self.games = 0
+
         self.reset(gamma=gamma, gae_lambda=gae_lambda)
 
     def reset(self, gamma: float, gae_lambda: float):
@@ -44,6 +46,8 @@ class ReplayBuffer():
         self.gamma = gamma 
         self.gae_lambda = gae_lambda
 
+        self.games = 0
+
     def add_replay(self, game) -> bool:
          
          self.rewards.append(game['rewards'])
@@ -58,6 +62,8 @@ class ReplayBuffer():
              
          self.advantages.append(advantages)
          self.returns.append(returns)
+
+         self.games += len(game['rewards'])
 
          return True
     
