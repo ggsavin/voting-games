@@ -89,7 +89,7 @@ config_game = {
     "gameplay": {
         "accusation_phases": 3, # 2,3
         "num_agents": 15,
-        "num_werewolves": 2,
+        "num_werewolves": 3,
     }
 }
 

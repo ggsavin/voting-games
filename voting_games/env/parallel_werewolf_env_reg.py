@@ -404,6 +404,11 @@ class raw_env(ParallelEnv):
         [role for role in observation['roles']] + \
         list(observation["votes"].values()))
     
+    
+    def convert_as_much_one_hot(self, observation):
+        if len(observation["votes"].keys()) != len(observation["player_status"]):
+            raise Exception()
+    
 
 def random_single_target_villager(env, agent):
     targets = set(env.world_state["alive"]) - set([agent])
