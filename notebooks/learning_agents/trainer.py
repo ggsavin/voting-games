@@ -42,7 +42,8 @@ class PPOTrainer:
         self.env = env
         
         observations, _, _, _, _ = self.env.reset()
-        obs_size= env.convert_obs(observations['player_0']['observation']).shape[-1]
+        # obs_size= env.convert_obs(observations['player_0']['observation']).shape[-1]
+        obs_size = convert_obs_to_one_hot(observations['player_0']['observation'], voting_type="plurality").shape[-1]
 
         # Initialize Buffer
         self.buffer = ReplayBuffer(buffer_size=10, 
@@ -289,7 +290,8 @@ def fill_recurrent_buffer_scaled_rewards(buffer, env, config:dict, wolf_policy, 
                 # villagers actions
             for villager in villagers:
                 #torch.tensor(env.convert_obs(observations['player_0']['observation']), dtype=torch.float)
-                torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
+                #torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
+                torch_obs = convert_obs_to_one_hot(observations[villager]['observation'], voting_type=voting_type)
                 obs = torch.unsqueeze(torch_obs, 0)
 
                 # TODO: Testing this, we may need a better way to pass in villagers
@@ -389,7 +391,8 @@ def fill_recurrent_buffer(buffer, env, config:dict, wolf_policy, villager_agent,
                 # villagers actions
             for villager in villagers:
                 #torch.tensor(env.convert_obs(observations['player_0']['observation']), dtype=torch.float)
-                torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
+                #torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
+                torch_obs = convert_obs_to_one_hot(observations[villager]['observation'], voting_type=voting_type)
                 obs = torch.unsqueeze(torch_obs, 0)
 
                 # TODO: Testing this, we may need a better way to pass in villagers

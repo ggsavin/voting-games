@@ -38,7 +38,7 @@ def convert_obs_to_one_hot(observation, voting_type=None):
         raise Exception()
     
     # phase length
-    day = torch.tensor(observation['day'])
+    day = torch.tensor([observation['day']])
 
     # we can make the phase a one hot, hardcoded 3 phases
     # phase = torch.tensor(observation['phase'])
@@ -55,6 +55,6 @@ def convert_obs_to_one_hot(observation, voting_type=None):
     if voting_type == "approval":
         votes = torch.nn.functional.one_hot(torch.tensor(list(observation['votes'].values())) + 1, num_classes=3).reshape(-1)
     elif voting_type == "plurality":
-        votes = torch.nn.functional.one_hot(torch.tensor(list(observation['votes'].values())), num_classes=len(observation['roles'])).reshape(-1)
+        votes = torch.nn.functional.one_hot(torch.tensor(list(observation['votes'].values())), num_classes=len(observation['roles'])+ 1).reshape(-1)
 
-    return torch.cat(day, phase, self_id, player_status, votes)
+    return torch.cat((day, phase, self_id, player_status, votes)).float()
