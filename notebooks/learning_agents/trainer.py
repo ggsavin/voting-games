@@ -2,6 +2,7 @@ import torch
 import numpy as np
 from notebooks.learning_agents.models import ActorCriticAgent
 from notebooks.learning_agents.buffer import ReplayBuffer
+from utils import convert_obs_to_one_hot
 import mlflow
 import tqdm
 import copy
