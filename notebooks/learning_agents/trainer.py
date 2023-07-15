@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from notebooks.learning_agents.models import ActorCriticAgent
 from notebooks.learning_agents.buffer import ReplayBuffer
-from utils import convert_obs_to_one_hot
+from notebooks.learning_agents.utils import convert_obs_to_one_hot
 import mlflow
 import tqdm
 import copy
@@ -159,7 +159,8 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
             # villagers actions
             for villager in villagers:
                 #torch.tensor(env.convert_obs(observations['player_0']['observation']), dtype=torch.float)
-                torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
+                # torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
+                torch_obs = convert_obs_to_one_hot(observations[villager]['observation'], voting_type=voting_type)
                 obs = torch.unsqueeze(torch_obs, 0)
 
                 # TODO: Testing this, we may need a better way to pass in villagers
