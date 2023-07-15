@@ -400,14 +400,6 @@ class raw_env(ParallelEnv):
         [role for role in observation['roles']] + \
         [i for sublist in observation["votes"].values() for i in sublist])
     
-    def convert_as_much_one_hot(self, observation):
-
-        if len(observation["votes"].keys()) != len(observation["player_status"]):
-            raise Exception()
-        
-        
-
-    
 def random_policy(observation, agent):
     # these are the other wolves. we cannot vote for them either
     available_actions = list(range(len(observation['observation']['player_status'])))
