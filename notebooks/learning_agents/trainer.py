@@ -219,6 +219,16 @@ def calc_minibatch_loss(agent, samples: dict, clip_range: float, beta: float, v_
     
     ratio = torch.exp(log_probs - samples['logprobs'])
 
+    # TODO : Get clip_fractions and KL stats up as well
+            # with torch.no_grad():
+            #     # calculate approx_kl http://joschu.net/blog/kl-approx.html
+            #     old_approx_kl = (-logratio).mean()
+            #     approx_kl = ((ratio - 1) - logratio).mean()
+            #     clip_fracs += [
+            #         ((ratio - 1.0).abs() > clip_coef).float().mean().item()
+            #     ]
+
+
     # normalize advantages
     norm_advantage = (samples["advantages"] - samples["advantages"].mean()) / (samples["advantages"].std() + 1e-8)
 
