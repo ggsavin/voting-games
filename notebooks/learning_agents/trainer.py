@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from notebooks.learning_agents.models import ActorCriticAgent
 from notebooks.learning_agents.buffer import ReplayBuffer
-from notebooks.learning_agents.utils import convert_obs_to_one_hot
+from notebooks.learning_agents.utils import convert_obs
 import mlflow
 import tqdm
 import copy
@@ -18,7 +18,7 @@ class Phase(enum.IntEnum):
     NIGHT = 2
 
 class PPOTrainer:
-    def __init__(self, env, config:dict, wolf_policy, run_id:str="run", device:torch.device=torch.device("cpu"), mlflow_uri:str=None) -> None:
+    def __init__(self, env, config:dict, wolf_policy, run_id:str="run", device:torch.device=torch.device("cpu"), mlflow_uri:str=None, voting_type:str=None) -> None:
         """Initializes all needed training components.
         Arguments:
             config {dict} -- Configuration and hyperparameters of the environment, trainer and model.
@@ -43,7 +43,7 @@ class PPOTrainer:
         
         observations, _, _, _, _ = self.env.reset()
         # obs_size= env.convert_obs(observations['player_0']['observation']).shape[-1]
-        obs_size = convert_obs_to_one_hot(observations['player_0']['observation'], voting_type="plurality").shape[-1]
+        obs_size = convert_obs(observations['player_0']['observation'], voting_type=voting_type).shape[-1]
 
         # Initialize Buffer
         self.buffer = ReplayBuffer(buffer_size=10, 
@@ -161,7 +161,7 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
             for villager in villagers:
                 #torch.tensor(env.convert_obs(observations['player_0']['observation']), dtype=torch.float)
                 # torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
-                torch_obs = convert_obs_to_one_hot(observations[villager]['observation'], voting_type=voting_type)
+                torch_obs = convert_obs(observations[villager]['observation'], voting_type=voting_type)
                 obs = torch.unsqueeze(torch_obs, 0)
 
                 # TODO: Testing this, we may need a better way to pass in villagers
@@ -291,7 +291,7 @@ def fill_recurrent_buffer_scaled_rewards(buffer, env, config:dict, wolf_policy, 
             for villager in villagers:
                 #torch.tensor(env.convert_obs(observations['player_0']['observation']), dtype=torch.float)
                 #torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
-                torch_obs = convert_obs_to_one_hot(observations[villager]['observation'], voting_type=voting_type)
+                torch_obs = convert_obs(observations[villager]['observation'], voting_type=voting_type)
                 obs = torch.unsqueeze(torch_obs, 0)
 
                 # TODO: Testing this, we may need a better way to pass in villagers
@@ -392,7 +392,7 @@ def fill_recurrent_buffer(buffer, env, config:dict, wolf_policy, villager_agent,
             for villager in villagers:
                 #torch.tensor(env.convert_obs(observations['player_0']['observation']), dtype=torch.float)
                 #torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
-                torch_obs = convert_obs_to_one_hot(observations[villager]['observation'], voting_type=voting_type)
+                torch_obs = convert_obs(observations[villager]['observation'], voting_type=voting_type)
                 obs = torch.unsqueeze(torch_obs, 0)
 
                 # TODO: Testing this, we may need a better way to pass in villagers

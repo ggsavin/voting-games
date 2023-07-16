@@ -51,7 +51,7 @@ def random_coordinated_single_wolf(env, agent, action=None):
 config_training = {
     "model": {
         "recurrent_layers": 1, # 1,2 (2)
-        "recurrent_hidden_size": 256, # 64-128-256-512 (4)
+        "recurrent_hidden_size": 128, # 64-128-256-512 (4)
         "joint_mlp_size": 128,
         "split_mlp_size": 128,
         "num_votes": 1,
@@ -87,7 +87,7 @@ config_game = {
         "no_sleep": -1,
     },
     "gameplay": {
-        "accusation_phases": 3, # 2,3
+        "accusation_phases": 2, # 2,3
         "num_agents": 10,
         "num_werewolves": 2,
     }
@@ -110,9 +110,10 @@ for _ in range(50):
         trainer = PPOTrainer(env,
                              config=config,
                              wolf_policy=random_coordinated_single_wolf,
-                             run_id="Plurality_10",
+                             run_id="Plurality_10_no_hot",
                              device=torch.device("cpu"),
-                             mlflow_uri="http://mlflow:5000")
+                             mlflow_uri="http://mlflow:5000",
+                             voting_type="plurality")
         trainer.train(voting_type="plurality", save_threshold=25.0)
         finished_one = True
     except ValueError as e:
