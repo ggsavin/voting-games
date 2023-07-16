@@ -53,14 +53,14 @@ config_training = {
         "recurrent_layers": 1, # 1,2 (2)
         "recurrent_hidden_size": 256, # 64-128-256-512 (4)
         "joint_mlp_size": 128,
-        "split_mlp_size": 64,
+        "split_mlp_size": 128,
         "num_votes": 1,
-        "approval_states": 15 # this is tied to the number of players
+        "approval_states": 10 # this is tied to the number of players
     },
     "training" : {
         "batch_size": 128, # 32-64-128-256-512-1024 (6)
         "epochs": 3, # 4,5,6,7,8,9,10 (7)
-        "updates": 301, # 1000 (1)
+        "updates": 501, # 1000 (1)
         "buffer_games_per_update": 200, # 50-100-200 (3)
         "clip_range": 0.1, # 0.1,0.2,0.3 (3)
         "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)
@@ -88,8 +88,8 @@ config_game = {
     },
     "gameplay": {
         "accusation_phases": 3, # 2,3
-        "num_agents": 15,
-        "num_werewolves": 3,
+        "num_agents": 10,
+        "num_werewolves": 2,
     }
 }
 
@@ -110,7 +110,7 @@ for _ in range(50):
         trainer = PPOTrainer(env,
                              config=config,
                              wolf_policy=random_coordinated_single_wolf,
-                             run_id="Plurality_15",
+                             run_id="Plurality_10",
                              device=torch.device("cpu"),
                              mlflow_uri="http://mlflow:5000")
         trainer.train(voting_type="plurality", save_threshold=25.0)
