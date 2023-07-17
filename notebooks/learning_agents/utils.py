@@ -53,7 +53,7 @@ def convert_obs(observation, voting_type=None, one_hot=False):
     else:
 
         if voting_type == "approval":
-            votes = torch.nn.functional.one_hot(torch.tensor(list(observation['votes'].values())) + 1, num_classes=3).reshape(-1)
+            votes = torch.tensor(list(observation['votes'].values())).reshape(-1)
         elif voting_type == "plurality":
             votes = torch.tensor(list(observation['votes'].values()))
 
