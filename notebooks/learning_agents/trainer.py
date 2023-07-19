@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from notebooks.learning_agents.models import ActorCriticAgent
 from notebooks.learning_agents.buffer import ReplayBuffer
-from notebooks.learning_agents.utils import convert_obs
+from notebooks.learning_agents.utils import convert_obs, play_recurrent_game
 import mlflow
 import tqdm
 import copy
@@ -133,75 +133,6 @@ class PPOTrainer:
                 mlflow.log_metric("value loss", train_stats[1])
                 mlflow.log_metric("total loss", train_stats[2])
                 mlflow.log_metric("entropy loss", train_stats[3])
-
-
-@torch.no_grad()
-def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_state_size=None, voting_type=None):
-    
-    wins = 0
-    # loop = tqdm(range(num_times))
-    for _ in range(num_times):
-        ## Play the game 
-        next_observations, rewards, terminations, truncations, infos = env.reset()
-        # init recurrent stuff for actor and critic to 0 as well
-        magent_obs = {agent: {'obs': [], 
-                              # obs size, and 1,1,64 as we pass batch first
-                              'hcxs': [(torch.zeros((1,1,hidden_state_size), dtype=torch.float32), torch.zeros((1,1,hidden_state_size), dtype=torch.float32))],
-                    } for agent in env.agents if not env.agent_roles[agent]}
-    
-        wolf_action = None
-        while env.agents:
-            observations = copy.deepcopy(next_observations)
-            actions = {}
-
-            villagers = set(env.agents) & set(env.world_state["villagers"])
-            wolves = set(env.agents) & set(env.world_state["werewolves"])
-
-            # villagers actions
-            for villager in villagers:
-                #torch.tensor(env.convert_obs(observations['player_0']['observation']), dtype=torch.float)
-                # torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
-                torch_obs = convert_obs(observations[villager]['observation'], voting_type=voting_type)
-                obs = torch.unsqueeze(torch_obs, 0)
-
-                # TODO: Testing this, we may need a better way to pass in villagers
-                recurrent_cell = magent_obs[villager]["hcxs"][-1]
-                
-                # ensure that the obs is of size (batch,seq,inputs)
-                policies, _, recurrent_cell = villager_agent(obs, recurrent_cell)
-                _, game_action = villager_agent.get_action_from_policies(policies, voting_type=voting_type)
-
-                if voting_type == "plurality":
-                    actions[villager] = game_action.item()
-                elif voting_type == "approval":
-                    actions[villager] = game_action.tolist()
-
-                #store the next recurrent cells
-                magent_obs[villager]["hcxs"].append(recurrent_cell)
-
-            # wolf steps
-            phase = env.world_state['phase']
-            for wolf in wolves:
-                wolf_action = wolf_policy(env, wolf, action=wolf_action)
-                actions[wolf] = wolf_action
-        
-            next_observations, _, _, _, _ = env.step(actions)
-            
-            # clear the wolf action if needed
-            if env.world_state['phase'] == Phase.NIGHT:
-                wolf_action = None
-            
-            if env.world_state['phase'] == Phase.ACCUSATION and phase == Phase.NIGHT:
-                wolf_action = None
-
-        ## Fill bigger buffer, keeping in mind sequence
-        winner = env.world_state['winners']
-        if winner == Roles.VILLAGER:
-            wins += 1
-
-        # loop.set_description(f"Villagers won {wins} out of a total of {num_times} games")
-    
-    return wins
 
 def calc_minibatch_loss(agent, samples: dict, clip_range: float, beta: float, v_loss_coef: float, grad_norm: float, optimizer):
 
