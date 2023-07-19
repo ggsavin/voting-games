@@ -21,6 +21,11 @@
 		}
 	}
 
+	// "runArgs": [
+	// 	"--gpus",
+	// 	"all"
+	// ]
+
 	// Configure tool-specific properties.
 	// "customizations": {},
 
