@@ -91,12 +91,13 @@ class PPOTrainer:
                     wins = []
                     score_gathering = tqdm.tqdm(range(10), position=1, leave=False)
                     for _ in score_gathering:
-                        wins.append(play_recurrent_game(self.env, 
+                        game_wins, game_replays = play_recurrent_game(self.env, 
                                                         self.wolf_policy, 
                                                         self.agent, 
                                                         num_times=100,
                                                         hidden_state_size=self.config["config_training"]["model"]["recurrent_hidden_size"],
-                                                        voting_type=voting_type))
+                                                        voting_type=voting_type)
+                        wins.append(game_wins)
                         score_gathering.set_description(f'Avg wins with current policy : {np.mean(wins)}')
 
                     mlflow.log_metric("avg_wins/100", np.mean(wins))
@@ -106,6 +107,7 @@ class PPOTrainer:
 
                 loop.set_description("Filling buffer")
                 # fill buffer
+                # _scaled_rewards
                 buff = fill_recurrent_buffer_scaled_rewards(self.buffer, 
                                              self.env,
                                              self.config["config_training"],
@@ -227,39 +229,36 @@ def fill_recurrent_buffer_scaled_rewards(buffer, env, config:dict, wolf_policy, 
             villagers = set(env.agents) & set(env.world_state["villagers"])
             wolves = set(env.agents) & set(env.world_state["werewolves"])
 
-            # villager steps
-                # villagers actions
-            for villager in villagers:
-                #torch.tensor(env.convert_obs(observations['player_0']['observation']), dtype=torch.float)
-                #torch_obs = torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float)
-                torch_obs = convert_obs(observations[villager]['observation'], voting_type=voting_type)
-                obs = torch.unsqueeze(torch_obs, 0)
+             ## VILLAGER LOGIC ##
+            v_obs = torch.cat([torch.unsqueeze(torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float), 0) for villager in villagers])
 
-                # TODO: Testing this, we may need a better way to pass in villagers
-                recurrent_cell = magent_obs[villager]["hcxs"][-1]
-                
-                # ensure that the obs is of size (batch,seq,inputs)
-                # we only have one policy, but to keep the same agent structure, we have "policies"
-                policies, value, recurrent_cell = villager_agent(obs, recurrent_cell)
-                policy_action, game_action = villager_agent.get_action_from_policies(policies, voting_type=voting_type)
-                
-                # only difference is the game_action here between this and approval
+            # TODO: maybe this can be sped up? 
+            hxs, cxs = zip(*[(hxs, cxs) for hxs, cxs in [magent_obs[villager]["hcxs"][-1] for villager in villagers]])
+            hxs = torch.swapaxes(torch.cat(hxs),0,1)
+            cxs = torch.swapaxes(torch.cat(cxs),0,1)
+
+            policies, value , cells = villager_agent(v_obs, (hxs, cxs))
+            v_actions = torch.stack([p.sample() for p in policies], dim=1)
+
+            hxs_new, cxs_new = cells
+            hxs_new = torch.swapaxes(hxs_new,1,0)
+            cxs_new = torch.swapaxes(cxs_new,1,0)
+
+            for i, villager in enumerate(villagers):
                 if voting_type == "plurality":
-                    actions[villager] = game_action.item()
+                    actions[villager] = v_actions[i].item()
                 elif voting_type == "approval":
-                    actions[villager] = game_action.tolist()
+                    actions[villager] = (v_actions[i] - 1).tolist()
+                magent_obs[villager]['hcxs'].append((torch.unsqueeze(hxs_new[i], 0), torch.unsqueeze(cxs_new[i], 0)))
 
-                # can store some stuff 
-                magent_obs[villager]["obs"].append(obs)
-                magent_obs[villager]["actions"].append(policy_action)
+
+                # TODO : Update these somehow
+                magent_obs[villager]["obs"].append(torch.unsqueeze(v_obs[i],0))
+                magent_obs[villager]["actions"].append([v_actions[i]])
 
                 # how do we get these
-                magent_obs[villager]["logprobs"].append(torch.stack([policy.log_prob(action) for policy, action in zip(policies, policy_action)], dim=1).reshape(-1))
-                magent_obs[villager]["values"].append(value)
-
-                #store the next recurrent cells
-                magent_obs[villager]["hcxs"].append(recurrent_cell)
-
+                magent_obs[villager]["logprobs"].append(torch.stack([policy.log_prob(action) for policy, action in zip(policies, v_actions[i])], dim=1)[i])
+                magent_obs[villager]["values"].append(torch.unsqueeze(value[i], 0))
 
             # wolf steps
             phase = env.world_state['phase']

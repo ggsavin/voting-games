@@ -124,7 +124,7 @@ for _ in range(50):
                              run_id="Approval_256",
                              device=torch.device("cpu"),
                              mlflow_uri="http://mlflow:5000",
-                             )
+                             voting_type="approval")
         trainer.train(voting_type="approval", save_threshold=25)
         finished_one = True
     except ValueError as e:
