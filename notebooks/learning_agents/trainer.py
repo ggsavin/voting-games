@@ -4,7 +4,13 @@ from notebooks.learning_agents.models import ActorCriticAgent
 from notebooks.learning_agents.buffer import ReplayBuffer
 from notebooks.learning_agents.utils import convert_obs, play_recurrent_game
 import mlflow
-import tqdm
+
+# tqdm disable trick to run this on a server
+from tqdm import tqdm
+from functools import partialmethod
+
+tqdm.__init__ = partialmethod(tqdm.__init__, disable=False)
+
 import copy
 import enum
 
@@ -78,7 +84,7 @@ class PPOTrainer:
             mlflow.log_params(self.config["config_training"]["model"])
             mlflow.log_params(self.config["config_game"]['gameplay'])
 
-            loop = tqdm.tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
+            loop = tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
 
             # if the average wins when we do periodic checks of the models scoring is above the save threshold, we save or overwrite the model
             # model_save_threshold = 50.0
@@ -89,7 +95,7 @@ class PPOTrainer:
                     # print(f'Playing games with our trained agent after {epid} epochs')
                     loop.set_description("Playing games and averaging score")
                     wins = []
-                    score_gathering = tqdm.tqdm(range(10), position=1, leave=False)
+                    score_gathering = tqdm(range(10), position=1, leave=False)
                     for _ in score_gathering:
                         game_wins, game_replays = play_recurrent_game(self.env, 
                                                         self.wolf_policy, 
@@ -103,7 +109,8 @@ class PPOTrainer:
                     mlflow.log_metric("avg_wins/100", np.mean(wins))
                     if np.mean(wins) > save_threshold:
                         save_threshold = int(np.mean(wins))
-                        torch.save(self.agent.state_dict(), f'{voting_type}_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{save_threshold}')
+                        mlflow.pytorch.log_state_dict(self.agent.state_dict(), artifact_path='checkpoint')
+                        # torch.save(self.agent.state_dict(), f'{voting_type}_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{save_threshold}')
 
                 loop.set_description("Filling buffer")
                 # fill buffer
