@@ -42,12 +42,14 @@ The game models a conflict between two groups: an informed minority (the mafiosi
 
 ## Implementation
 
-While there are many routes to take when creating a custom environment, using a popular underlying framework makes reproducibility and reusability trivial. For this werewolf game a simple API standard provided by [PettingZoo](https://pettingzoo.farama.org/) {cite}`terry2021pettingzoo` was chosen. The Farama Foundation which oversees PettingZoo's development is also in charge of mainting the popular Gym (now Gymnasium) RL framework.
-
 ### Pettingzoo
+
+While there are many routes to take when creating a custom environment, using a popular underlying framework makes reproducibility and reusability trivial. For this werewolf game a simple Multi-Agent Reinforcement Learning (MARL) API standard provided by [PettingZoo](https://pettingzoo.farama.org/) {cite}`terry2021pettingzoo` was chosen. The [Farama Foundation](https://farama.org/) which oversees PettingZoo's development is also in charge of mainting the popular [Gym (now Gymnasium)](https://gymnasium.farama.org/) {cite}`towers_gymnasium_2023` RL framework.
+
 
 ### Werewolf
 
 Plurality
 
 Approval
+

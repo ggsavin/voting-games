@@ -64,7 +64,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'voting-game';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Notebooks with MyST Markdown" href="markdown-notebooks.html" />
+    <link rel="next" title="Methodology" href="methodology.html" />
+    <link rel="prev" title="Literature Review" href="literature-review.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -151,15 +152,18 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    Project
+                    COMP 5903 - Voting impact on hidden role games
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="literature-review.html">Literature Review</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">The Game - Werewolf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methodology.html">Methodology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 <li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">The Game - Werewolf</a></li>
 </ul>
 
     </div>
@@ -402,9 +406,9 @@ document.write(`
 </section>
 <section id="implementation">
 <h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading">#</a></h2>
-<p>While there are many routes to take when creating a custom environment, using a popular underlying framework makes reproducibility and reusability trivial. For this werewolf game a simple API standard provided by <a class="reference external" href="https://pettingzoo.farama.org/">PettingZoo</a> <span id="id1">[<a class="reference internal" href="markdown.html#id3" title="J Terry, Benjamin Black, Nathaniel Grammel, Mario Jayakumar, Ananth Hari, Ryan Sullivan, Luis S Santos, Clemens Dieffendahl, Caroline Horsch, Rodrigo Perez-Vicente, and others. Pettingzoo: gym for multi-agent reinforcement learning. Advances in Neural Information Processing Systems, 34:15032–15043, 2021.">TBG+21</a>]</span> was chosen. The Farama Foundation which oversees PettingZoo’s development is also in charge of mainting the popular Gym (now Gymnasium) RL framework.</p>
 <section id="pettingzoo">
 <h3>Pettingzoo<a class="headerlink" href="#pettingzoo" title="Permalink to this heading">#</a></h3>
+<p>While there are many routes to take when creating a custom environment, using a popular underlying framework makes reproducibility and reusability trivial. For this werewolf game a simple Multi-Agent Reinforcement Learning (MARL) API standard provided by <a class="reference external" href="https://pettingzoo.farama.org/">PettingZoo</a> <span id="id1">[<a class="reference internal" href="bibliography.html#id2" title="J Terry, Benjamin Black, Nathaniel Grammel, Mario Jayakumar, Ananth Hari, Ryan Sullivan, Luis S Santos, Clemens Dieffendahl, Caroline Horsch, Rodrigo Perez-Vicente, and others. Pettingzoo: gym for multi-agent reinforcement learning. Advances in Neural Information Processing Systems, 34:15032–15043, 2021.">TBG+21</a>]</span> was chosen. The <a class="reference external" href="https://farama.org/">Farama Foundation</a> which oversees PettingZoo’s development is also in charge of mainting the popular <a class="reference external" href="https://gymnasium.farama.org/">Gym (now Gymnasium)</a> <span id="id2">[<a class="reference internal" href="bibliography.html#id3" title="Mark Towers, Jordan K. Terry, Ariel Kwiatkowski, John U. Balis, Gianluca de Cola, Tristan Deleu, Manuel Goulão, Andreas Kallinteris, Arjun KG, Markus Krimmel, Rodrigo Perez-Vicente, Andrea Pierré, Sander Schulhoff, Jun Jet Tai, Andrew Tan Jin Shen, and Omar G. Younis. Gymnasium. March 2023. URL: https://zenodo.org/record/8127025 (visited on 2023-07-08), doi:10.5281/zenodo.8127026.">TTK+23</a>]</span> RL framework.</p>
 </section>
 <section id="werewolf">
 <h3>Werewolf<a class="headerlink" href="#werewolf" title="Permalink to this heading">#</a></h3>
@@ -446,13 +450,22 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="markdown-notebooks.html"
+       href="literature-review.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Notebooks with MyST Markdown</p>
+        <p class="prev-next-title">Literature Review</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="methodology.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Methodology</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div></div>
   

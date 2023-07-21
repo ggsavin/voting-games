@@ -5,8 +5,8 @@ format: jb-book
 root: intro
 chapters:
 - file: literature-review
-- file: methodology
 - file: voting-game
+- file: methodology
 - file: bibliography
 - file: markdown
 - file: notebooks
