@@ -1,4 +1,4 @@
-# Project
+# COMP 5903 - Voting impact on hidden role games
 
 ## Introduction
 

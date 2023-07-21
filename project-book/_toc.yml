@@ -4,9 +4,10 @@
 format: jb-book
 root: intro
 chapters:
-- file: markdown
-- file: notebooks
-- file: markdown-notebooks
+- file: literature-review
 - file: methodology
 - file: voting-game
 - file: bibliography
+- file: markdown
+- file: notebooks
+- file: markdown-notebooks
