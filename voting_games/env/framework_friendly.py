@@ -60,7 +60,6 @@ class raw_env(ParallelEnv):
     def __init__(self, num_agents=5, werewolves=1, num_accusations=1, rewards=REWARDS):
         super().__init__()
 
-        assert werewolves < num_agents, f"The number of werewolves should be less than the number of players ({num_agents})"
         assert werewolves <= np.sqrt(num_agents), f"The number of werewolves should be less than the square root of agents ({num_agents})"       
 
         self.agents = [f"player_{i}" for i in range(num_agents)]

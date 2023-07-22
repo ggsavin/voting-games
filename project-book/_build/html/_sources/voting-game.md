@@ -50,7 +50,32 @@ While there are many routes to take when creating a custom environment, using a 
 
 ### Werewolf
 
-#### 
+#### Game flow
+
+![gameplay flowchart](images/werewolf-flowchart.svg)
+#### Game state
+
+We keep track of a world state
+```python
+self.world_state = {
+    "day": day,
+    "phase": phase,
+    "round": accusation_round,
+    "alive": self.agents.copy(),
+    "killed": [],
+    "executed": [],
+    "werewolves_remaining": [],
+    "villagers_remaining": [],
+    "votes": {},
+    "winners": None,
+}
+```
+
+
+#### Roles
+
+
+#### Phases
 
 (game-rewards)=
 #### Rewards

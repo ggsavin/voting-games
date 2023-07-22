@@ -218,7 +218,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+      <li><a href="https://github.com/ggsavin/voting-games" target="_blank"
    class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -235,7 +235,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fvoting-game.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Fvoting-game.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -362,7 +362,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pettingzoo">Pettingzoo</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolf">Werewolf</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#game-flow">Game flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#game-state">Game state</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#roles">Roles</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#phases">Phases</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rewards">Rewards</a></li>
 </ul>
 </li>
@@ -417,8 +420,33 @@ document.write(`
 </section>
 <section id="werewolf">
 <h3>Werewolf<a class="headerlink" href="#werewolf" title="Permalink to this heading">#</a></h3>
-<section id="id3">
-<h4><a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h4>
+<section id="game-flow">
+<h4>Game flow<a class="headerlink" href="#game-flow" title="Permalink to this heading">#</a></h4>
+<p><img alt="gameplay flowchart" src="_images/werewolf-flowchart.svg" /></p>
+</section>
+<section id="game-state">
+<h4>Game state<a class="headerlink" href="#game-state" title="Permalink to this heading">#</a></h4>
+<p>We keep track of a world state</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">world_state</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="n">day</span><span class="p">,</span>
+    <span class="s2">&quot;phase&quot;</span><span class="p">:</span> <span class="n">phase</span><span class="p">,</span>
+    <span class="s2">&quot;round&quot;</span><span class="p">:</span> <span class="n">accusation_round</span><span class="p">,</span>
+    <span class="s2">&quot;alive&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+    <span class="s2">&quot;killed&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;executed&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;werewolves_remaining&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;villagers_remaining&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;votes&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s2">&quot;winners&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="roles">
+<h4>Roles<a class="headerlink" href="#roles" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="phases">
+<h4>Phases<a class="headerlink" href="#phases" title="Permalink to this heading">#</a></h4>
 </section>
 <section id="rewards">
 <span id="game-rewards"></span><h4>Rewards<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h4>
@@ -515,7 +543,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pettingzoo">Pettingzoo</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolf">Werewolf</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#game-flow">Game flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#game-state">Game state</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#roles">Roles</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#phases">Phases</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rewards">Rewards</a></li>
 </ul>
 </li>
