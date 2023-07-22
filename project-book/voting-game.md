@@ -53,6 +53,13 @@ While there are many routes to take when creating a custom environment, using a 
 #### Game flow
 
 ![gameplay flowchart](images/werewolf-flowchart.svg)
+
+#### Start of the game
+
+#### Roles and Phases
+
+#### Action Spce and Observation Space
+
 #### Game state
 
 We keep track of a world state
@@ -98,4 +105,5 @@ REWARDS = {
 Plurality
 
 Approval
+
 

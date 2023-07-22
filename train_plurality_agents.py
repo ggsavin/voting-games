@@ -60,7 +60,7 @@ config_training = {
     "training" : {
         "batch_size": 128, # 32-64-128-256-512-1024 (6)
         "epochs": 3, # 4,5,6,7,8,9,10 (7)
-        "updates": 501, # 1000 (1)
+        "updates": 701, # 1000 (1)
         "buffer_games_per_update": 200, # 50-100-200 (3)
         "clip_range": 0.1, # 0.1,0.2,0.3 (3)
         "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)
@@ -105,22 +105,33 @@ env = plurality_env(num_agents=config["config_game"]["gameplay"]["num_agents"],
                     )
 
 finished_one = False
-for _ in range(50):
-    try:
-        trainer = PPOTrainer(env,
-                             config=config,
-                             wolf_policy=random_coordinated_single_wolf,
-                             run_id="Plurality_10_no_hot",
-                             device=torch.device("cpu"),
-                             mlflow_uri="http://mlflow:5000",
-                             voting_type="plurality")
-        trainer.train(voting_type="plurality", save_threshold=25.0)
-        finished_one = True
-    except ValueError as e:
-        print("Probably a nan error")
-        if ("nan" in str(e)):
-            print("It was value errors")
-        print("Trying again")
-    finally:
-        if finished_one == True:
-            break
+
+## loop through accusation phases
+### Run training multiple times, trying to get 3 complete training sessions
+
+accusation_phases = [1,2,3,4]
+
+for accusation_phase_num in accusation_phases:
+    config['config_game']['gameplay']['accusation_phases'] = accusation_phase_num
+
+    completed_training = 0
+    for _ in range(10):
+        try:
+            trainer = PPOTrainer(env,
+                                config=config,
+                                wolf_policy=random_coordinated_single_wolf,
+                                run_id="Plurality_10_{accusation_phase_num}",
+                                device=torch.device("cpu"),
+                                mlflow_uri="http://mlflow:5000",
+                                voting_type="plurality")
+            trainer.train(voting_type="plurality", save_threshold=30.0)
+            completed_training += 1
+        except ValueError as e:
+            print("Probably a nan error")
+            if ("nan" in str(e)):
+                print("It was value errors")
+            print("Trying again")
+        finally:
+            if completed_training >= 2:
+                break
+    
