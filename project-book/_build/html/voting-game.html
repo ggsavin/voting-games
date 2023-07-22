@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>The Game - Werewolf &#8212; Hidden Role Games and Voting</title>
+    <title>Werewolf - The Game &#8212; Hidden Role Games and Voting</title>
   
   
   
@@ -141,8 +141,8 @@ const thebe_selector_output = ".output, .cell_output"
       
     
     
-    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+    <img src="_static/midjourney-werewolves.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/midjourney-werewolves.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
   
   
 </a></div>
@@ -158,7 +158,7 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="literature-review.html">Literature Review</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">The Game - Werewolf</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Werewolf - The Game</a></li>
 <li class="toctree-l1"><a class="reference internal" href="methodology.html">Methodology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 <li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
@@ -347,7 +347,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>The Game - Werewolf</h1>
+    <h1>Werewolf - The Game</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -361,7 +361,11 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#history">History</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pettingzoo">Pettingzoo</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolf">Werewolf</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolf">Werewolf</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rewards">Rewards</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -375,8 +379,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="the-game-werewolf">
-<h1>The Game - Werewolf<a class="headerlink" href="#the-game-werewolf" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="werewolf-the-game">
+<h1>Werewolf - The Game<a class="headerlink" href="#werewolf-the-game" title="Permalink to this heading">#</a></h1>
 <p>Mechanisms employed:</p>
 <ul class="simple">
 <li><p>Hidden Roles</p></li>
@@ -387,8 +391,8 @@ document.write(`
 </ul>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
-<p>Werewolf is a multi player game between two teams comprised of villagers and werewolves. The werewolf team is a hidden subset of the villager team as true villagers cannot tell who the werewolves are.</p>
-<p>Each day players (villagers and werewolves) decide on who amongst them should be executed for the crime of being a werewolf, and at night, the true werewolves kill a helpless villager.</p>
+<p>Werewolf is a multi player game between two competing teams comprised of villagers and werewolves. The werewolf team is a hidden subset of the villager team as true villagers cannot tell who the werewolves are, and must try and deduce their identities.</p>
+<p>Gameplay alternates between day and night phases. During the day, villagers vote on who amongst them should be executed for the crime of being a werewolf, and at night, wolves vote on which helpless villager to kill.</p>
 <p>Once a player dies, they reveal their role to the rest of the team.</p>
 <p>Different versions of the game slightly alter rules, or introduce various new roles with their own special abilities. In our case, we have simplified the game as much as possible to focus on the voting mechanisms used by agents to determine who to execute and kill.</p>
 <p>The game ends when either all the werewolves have been executed, or there are more werewolves than villagers remaining.</p>
@@ -408,12 +412,33 @@ document.write(`
 <h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading">#</a></h2>
 <section id="pettingzoo">
 <h3>Pettingzoo<a class="headerlink" href="#pettingzoo" title="Permalink to this heading">#</a></h3>
+<p><img alt="PettingZoo logo" src="https://pettingzoo.farama.org/_images/pettingzoo-text.png" /></p>
 <p>While there are many routes to take when creating a custom environment, using a popular underlying framework makes reproducibility and reusability trivial. For this werewolf game a simple Multi-Agent Reinforcement Learning (MARL) API standard provided by <a class="reference external" href="https://pettingzoo.farama.org/">PettingZoo</a> <span id="id1">[<a class="reference internal" href="bibliography.html#id2" title="J Terry, Benjamin Black, Nathaniel Grammel, Mario Jayakumar, Ananth Hari, Ryan Sullivan, Luis S Santos, Clemens Dieffendahl, Caroline Horsch, Rodrigo Perez-Vicente, and others. Pettingzoo: gym for multi-agent reinforcement learning. Advances in Neural Information Processing Systems, 34:15032–15043, 2021.">TBG+21</a>]</span> was chosen. The <a class="reference external" href="https://farama.org/">Farama Foundation</a> which oversees PettingZoo’s development is also in charge of mainting the popular <a class="reference external" href="https://gymnasium.farama.org/">Gym (now Gymnasium)</a> <span id="id2">[<a class="reference internal" href="bibliography.html#id3" title="Mark Towers, Jordan K. Terry, Ariel Kwiatkowski, John U. Balis, Gianluca de Cola, Tristan Deleu, Manuel Goulão, Andreas Kallinteris, Arjun KG, Markus Krimmel, Rodrigo Perez-Vicente, Andrea Pierré, Sander Schulhoff, Jun Jet Tai, Andrew Tan Jin Shen, and Omar G. Younis. Gymnasium. March 2023. URL: https://zenodo.org/record/8127025 (visited on 2023-07-08), doi:10.5281/zenodo.8127026.">TTK+23</a>]</span> RL framework.</p>
 </section>
 <section id="werewolf">
 <h3>Werewolf<a class="headerlink" href="#werewolf" title="Permalink to this heading">#</a></h3>
+<section id="id3">
+<h4><a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="rewards">
+<span id="game-rewards"></span><h4>Rewards<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">REWARDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;player_death&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;player_win&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;player_loss&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;dead_wolf&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;dead_villager&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;self_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;dead_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;no_viable_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;no_sleep&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>Plurality</p>
 <p>Approval</p>
+</section>
 </section>
 </section>
 </section>
@@ -489,7 +514,11 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#history">History</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pettingzoo">Pettingzoo</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolf">Werewolf</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolf">Werewolf</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rewards">Rewards</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
