@@ -25,7 +25,7 @@ class Phase(enum.IntEnum):
     NIGHT = 2
 
 class PPOTrainer:
-    def __init__(self, env, config:dict, wolf_policy, run_id:str="run", device:torch.device=torch.device("cpu"), mlflow_uri:str=None, voting_type:str=None) -> None:
+    def __init__(self, env, config:dict, wolf_policy, run_id:str="run", device:torch.device=torch.device("cpu"), voting_type:str=None) -> None:
         """Initializes all needed training components.
         Arguments:
             config {dict} -- Configuration and hyperparameters of the environment, trainer and model.
@@ -36,7 +36,6 @@ class PPOTrainer:
         self.config = config
         self.device = device
         self.run_id = run_id
-        self.mlflow_uri = mlflow_uri
         self.env = None
         self.wolf_policy = wolf_policy
 
@@ -75,81 +74,77 @@ class PPOTrainer:
         # setup mlflow run if we are using it
 
     def train(self, voting_type=None, save_threshold=50.0):
-        if self.mlflow_uri:
-            mlflow.set_tracking_uri(self.mlflow_uri)
 
-        name = f'{self.run_id}'
-        with mlflow.start_run(run_name=name):
-            
-            mlflow.log_params(self.config["config_training"]["training"])
-            mlflow.log_params(self.config["config_training"]["model"])
-            mlflow.log_params(self.config["config_game"]['gameplay'])
+        # TODO: put mlflow logging into a callback
+        mlflow.log_params(self.config["config_training"]["training"])
+        mlflow.log_params(self.config["config_training"]["model"])
+        mlflow.log_params(self.config["config_game"]['gameplay'])
 
-            loop = tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
+        loop = tqdm(range(self.config["config_training"]["training"]["updates"]), position=0)
 
-            # if the average wins when we do periodic checks of the models scoring is above the save threshold, we save or overwrite the model
-            # model_save_threshold = 50.0
+        # if the average wins when we do periodic checks of the models scoring is above the save threshold, we save or overwrite the model
+        # model_save_threshold = 50.0
 
-            for tid, _ in enumerate(loop):
+        for tid, _ in enumerate(loop):
 
-                if tid % 10 == 0:
-                    # print(f'Playing games with our trained agent after {epid} epochs')
-                    loop.set_description("Playing games and averaging score")
-                    wins = []
-                    score_gathering = tqdm(range(10), position=1, leave=False)
-                    replays = []
-                    for _ in score_gathering:
-                        game_wins, game_replays = play_recurrent_game(self.env, 
-                                                        self.wolf_policy, 
-                                                        self.agent, 
-                                                        num_times=100,
-                                                        hidden_state_size=self.config["config_training"]["model"]["recurrent_hidden_size"],
-                                                        voting_type=voting_type)
-                        wins.append(game_wins)
-                        replays.append(game_replays)
-                        score_gathering.set_description(f'Avg wins with current policy : {np.mean(wins)}')
+            if tid % 10 == 0:
+                # print(f'Playing games with our trained agent after {epid} epochs')
+                loop.set_description("Playing games and averaging score")
+                wins = []
+                score_gathering = tqdm(range(10), position=1, leave=False)
+                replays = []
+                for _ in score_gathering:
+                    game_wins, game_replays = play_recurrent_game(self.env, 
+                                                    self.wolf_policy, 
+                                                    self.agent, 
+                                                    num_times=100,
+                                                    hidden_state_size=self.config["config_training"]["model"]["recurrent_hidden_size"],
+                                                    voting_type=voting_type)
+                    wins.append(game_wins)
+                    replays.append(game_replays)
+                    score_gathering.set_description(f'Avg wins with current policy : {np.mean(wins)}')
 
-                    # flatten all of our replays and get our current stats
-                    mlflow.log_metrics(aggregate_stats_from_replays(
-                        [replay for game_replays in replays for replay in game_replays]))
+                # flatten all of our replays and get our current stats
+                mlflow.log_metrics(aggregate_stats_from_replays(
+                    [replay for game_replays in replays for replay in game_replays], voting_type=voting_type))
 
-                    mlflow.log_metric("avg_wins/100", np.mean(wins))
-                    if np.mean(wins) > save_threshold:
-                        save_threshold = int(np.mean(wins))
-                        mlflow.pytorch.log_state_dict(self.agent.state_dict(), artifact_path='checkpoint')
-                        # torch.save(self.agent.state_dict(), f'{voting_type}_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{save_threshold}')
+                mlflow.log_metric("avg_wins/100", np.mean(wins))
+                if np.mean(wins) > save_threshold:
+                    save_threshold = int(np.mean(wins))
+                    mlflow.pytorch.log_state_dict(self.agent.state_dict(), artifact_path='checkpoint')
+                    # torch.save(self.agent.state_dict(), f'{voting_type}_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{save_threshold}')
 
 
-                loop.set_description("Filling buffer")
-                # fill buffer
-                # _scaled_rewards
-                buff = fill_recurrent_buffer_scaled_rewards(self.buffer, 
-                                             self.env,
-                                             self.config["config_training"],
-                                             self.wolf_policy, 
-                                             self.agent,
-                                             voting_type=voting_type)
+            loop.set_description("Filling buffer")
+            # fill buffer
+            # _scaled_rewards
+            buff = fill_recurrent_buffer_scaled_rewards(self.buffer, 
+                                            self.env,
+                                            self.config["config_training"],
+                                            self.wolf_policy, 
+                                            self.agent,
+                                            voting_type=voting_type)
 
-                # train info will hold our metrics
-                train_info = []
-                # TODO List how many items we are training on
-                loop.set_description(f'Epoch Training on {self.buffer.games} games')
-                for _ in range(self.config['config_training']["training"]['epochs']):
-                    # run through batches and train network
-                    for batch in buff.get_minibatch_generator(self.config['config_training']["training"]['batch_size']):
-                        train_info.append(calc_minibatch_loss(self.agent, 
-                                                              batch, 
-                                                              clip_range=self.config['config_training']["training"]['clip_range'], 
-                                                              beta=self.config['config_training']["training"]['beta'], 
-                                                              v_loss_coef=self.config['config_training']["training"]['value_loss_coefficient'],
-                                                              grad_norm=self.config['config_training']["training"]['max_grad_norm'],
-                                                              optimizer=self.optimizer))
+            # train info will hold our metrics
+            train_info = []
+            # TODO List how many items we are training on
+            loop.set_description(f'Epoch Training on {self.buffer.games} games')
+            for _ in range(self.config['config_training']["training"]['epochs']):
+                # run through batches and train network
+                for batch in buff.get_minibatch_generator(self.config['config_training']["training"]['batch_size']):
+                    train_info.append(calc_minibatch_loss(self.agent, 
+                                                            batch, 
+                                                            clip_range=self.config['config_training']["training"]['clip_range'], 
+                                                            beta=self.config['config_training']["training"]['beta'], 
+                                                            v_loss_coef=self.config['config_training']["training"]['value_loss_coefficient'],
+                                                            grad_norm=self.config['config_training']["training"]['max_grad_norm'],
+                                                            optimizer=self.optimizer))
 
-                train_stats = np.mean(train_info, axis=0)
-                mlflow.log_metric("policy loss", train_stats[0])
-                mlflow.log_metric("value loss", train_stats[1])
-                mlflow.log_metric("total loss", train_stats[2])
-                mlflow.log_metric("entropy loss", train_stats[3])
+            train_stats = np.mean(train_info, axis=0)
+            mlflow.log_metric("policy loss", train_stats[0])
+            mlflow.log_metric("value loss", train_stats[1])
+            mlflow.log_metric("total loss", train_stats[2])
+            mlflow.log_metric("entropy loss", train_stats[3])
 
 def calc_minibatch_loss(agent, samples: dict, clip_range: float, beta: float, v_loss_coef: float, grad_norm: float, optimizer):
 

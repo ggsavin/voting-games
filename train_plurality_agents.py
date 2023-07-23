@@ -106,6 +106,18 @@ env = plurality_env(num_agents=config["config_game"]["gameplay"]["num_agents"],
 
 finished_one = False
 
+## mlflow setting
+mlflow.set_tracking_uri("http://mlflow:5000")
+experiment = mlflow.get_experiment_by_name("Plurality Training")
+
+if experiment == None:
+    experiment_id = mlflow.create_experiment(
+        "Plurality Training",
+        tags={"version": "v1", "priority": "P1"},
+    )
+else:
+    experiment_id = experiment.experiment_id
+
 ## loop through accusation phases
 ### Run training multiple times, trying to get 3 complete training sessions
 
@@ -122,10 +134,16 @@ for accusation_phase_num in accusation_phases:
                                 wolf_policy=random_coordinated_single_wolf,
                                 run_id="Plurality_10_{accusation_phase_num}",
                                 device=torch.device("cpu"),
-                                mlflow_uri="http://mlflow:5000",
                                 voting_type="plurality")
-            trainer.train(voting_type="plurality", save_threshold=30.0)
-            completed_training += 1
+            
+            with mlflow.start_run(run_name=f'{accusation_phase_num}_accusations',
+                                  experiment_id=experiment_id,
+                                  tags={"version": "v1", "priority": "P1"},
+                                  description="Run with accusation"):
+
+                trainer.train(voting_type="plurality", save_threshold=30.0)
+                completed_training += 1
+                
         except ValueError as e:
             print("Probably a nan error")
             if ("nan" in str(e)):

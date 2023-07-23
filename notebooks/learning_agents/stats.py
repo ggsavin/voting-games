@@ -1,4 +1,4 @@
-from utils import Phase,  Roles
+from notebooks.learning_agents.utils import Phase, Roles
 import numpy as np
 from collections import Counter
 
@@ -290,13 +290,39 @@ def aggregate_stats_from_replays(game_replays, voting_type=None):
 
     if voting_type == "plurality":
         avg_records = _game_avg_records(game_replays, _plurality_target_indicators)
-        indicator_stats = {
-            "unq_villager_targets": avg_records[0],
-            "avg_self_vote": avg_records[1],
-            "p_targetting_wolves": avg_records[2],
-            "p_targetting_dead_players": avg_records[3],
-            "p_targetting_dead_wolf": avg_records[4]
-        }
+
+        # TODO : how to store these better? just in an artifact that can later be analyzed?
+        # avg_records are per day
+        indicator_stats = {}
+        for day, voting_info in avg_records.items():
+
+            for i, accusations in enumerate(voting_info[0:-1]):
+                indicator_stats = {
+                    **indicator_stats,
+                    f'day_{day}_accusation_{i}_unq_villager_targets': accusations[0],
+                    f'day_{day}_accusation_{i}_avg_self_vote': accusations[1],
+                    f'day_{day}_accusation_{i}_p_targetting_wolves': accusations[2],
+                    f'day_{day}_accusation_{i}_p_targetting_dead_players': accusations[3],
+                    f'day_{day}_accusation_{i}_p_targetting_dead_wolf': accusations[4],
+                }
+            
+            # voting r ound
+            indicator_stats = {
+                **indicator_stats,
+                f'day_{day}_voting_unq_villager_targets': voting_info[-1][0],
+                f'day_{day}_voting_avg_self_vote': voting_info[-1][1],
+                f'day_{day}_voting_p_targetting_wolves': voting_info[-1][2],
+                f'day_{day}_voting_p_targetting_dead_players': voting_info[-1][3],
+                f'day_{day}_voting_p_targetting_dead_wolf': voting_info[-1][4],
+            }
+        # indicator_stats = {
+        #     "unq_villager_targets": avg_records[0],
+        #     "avg_self_vote": avg_records[1],
+        #     "p_targetting_wolves": avg_records[2],
+        #     "p_targetting_dead_players": avg_records[3],
+        #     "p_targetting_dead_wolf": avg_records[4]
+        # }
+
 
     elif voting_type == "approval":
         avg_records = _game_avg_records(game_replays, _approval_target_indicators)

@@ -21,5 +21,5 @@ with mlflow.start_run(
     tags={"version": "v1", "priority": "P1"},
     description="The description of the test run"):
 
-    mlflow.log_metric("metric1", 10)
+    mlflow.log_metric("metric1", 20)
     mlflow.log_metric("metric1", 20)
