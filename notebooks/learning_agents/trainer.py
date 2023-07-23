@@ -1,3 +1,4 @@
+from notebooks.learning_agents.stats import aggregate_stats_from_replays
 import torch
 import numpy as np
 from notebooks.learning_agents.models import ActorCriticAgent
@@ -96,6 +97,7 @@ class PPOTrainer:
                     loop.set_description("Playing games and averaging score")
                     wins = []
                     score_gathering = tqdm(range(10), position=1, leave=False)
+                    replays = []
                     for _ in score_gathering:
                         game_wins, game_replays = play_recurrent_game(self.env, 
                                                         self.wolf_policy, 
@@ -104,13 +106,19 @@ class PPOTrainer:
                                                         hidden_state_size=self.config["config_training"]["model"]["recurrent_hidden_size"],
                                                         voting_type=voting_type)
                         wins.append(game_wins)
+                        replays.append(game_replays)
                         score_gathering.set_description(f'Avg wins with current policy : {np.mean(wins)}')
+
+                    # flatten all of our replays and get our current stats
+                    mlflow.log_metrics(aggregate_stats_from_replays(
+                        [replay for game_replays in replays for replay in game_replays]))
 
                     mlflow.log_metric("avg_wins/100", np.mean(wins))
                     if np.mean(wins) > save_threshold:
                         save_threshold = int(np.mean(wins))
                         mlflow.pytorch.log_state_dict(self.agent.state_dict(), artifact_path='checkpoint')
                         # torch.save(self.agent.state_dict(), f'{voting_type}_agent_{self.config["config_game"]["gameplay"]["num_agents"]}_score_{save_threshold}')
+
 
                 loop.set_description("Filling buffer")
                 # fill buffer
