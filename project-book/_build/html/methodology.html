@@ -64,7 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'methodology';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Bibliography" href="bibliography.html" />
+    <link rel="next" title="Training" href="training.html" />
     <link rel="prev" title="Werewolf - The Game" href="voting-game.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -160,10 +160,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="literature-review.html">Literature Review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="voting-game.html">Werewolf - The Game</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Methodology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
-<li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
 </ul>
 
     </div>
@@ -360,7 +358,14 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mdps">MDPs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pomdps">POMDPs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo">PPO</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agents">Agents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-implementation">Agent Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-observation-to-vector">Convert observation to vector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis">Analysis</a></li>
 </ul>
             </nav>
         </div>
@@ -383,8 +388,17 @@ document.write(`
 <section id="ppo">
 <h2>PPO<a class="headerlink" href="#ppo" title="Permalink to this heading">#</a></h2>
 </section>
-<section id="agents">
-<h2>Agents<a class="headerlink" href="#agents" title="Permalink to this heading">#</a></h2>
+<section id="agent-implementation">
+<h2>Agent Implementation<a class="headerlink" href="#agent-implementation" title="Permalink to this heading">#</a></h2>
+<section id="utilities">
+<h3>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">#</a></h3>
+<section id="convert-observation-to-vector">
+<span id="convert-obs"></span><h4>Convert observation to vector<a class="headerlink" href="#convert-observation-to-vector" title="Permalink to this heading">#</a></h4>
+</section>
+</section>
+</section>
+<section id="analysis">
+<span id="game-analysis-methodology"></span><h2>Analysis<a class="headerlink" href="#analysis" title="Permalink to this heading">#</a></h2>
 </section>
 </section>
 
@@ -429,11 +443,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="bibliography.html"
+       href="training.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Bibliography</p>
+        <p class="prev-next-title">Training</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -458,7 +472,14 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mdps">MDPs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pomdps">POMDPs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo">PPO</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agents">Agents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-implementation">Agent Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-observation-to-vector">Convert observation to vector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis">Analysis</a></li>
 </ul>
   </nav></div>
 

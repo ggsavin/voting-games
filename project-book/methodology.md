@@ -6,6 +6,14 @@
 
 ## PPO
 
-## Agents
+## Agent Implementation
+
+### Utilities
+
+(convert-obs)=
+#### Convert observation to vector
+
+(game-analysis-methodology)=
+## Analysis
 
 

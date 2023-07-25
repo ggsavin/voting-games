@@ -1,11 +1,11 @@
 # Werewolf - The Game
 
-Mechanisms employed:
-- Hidden Roles
-- Negotiation
-- Roles with Asymmetric information
-- Voting
-- Elimination
+## Quick History
+Werewolf is a 1997 re-imagining by Andrew Plotkin [^werewolf-boardgame] of a game known as mafia[^mafia-wikipedia], credited to Dimitry Davidoff in the Psychology Department of Moscow State University in 1986.
+
+The game models a conflict between an informed minority (mafiosi) and an unaware majority(villagers).
+
+Originally created for psychological research, it has spread all over the world and is now in the top 50 most historically and culturally significant games published[^top50]
 
 ## Description
 
@@ -19,26 +19,6 @@ Different versions of the game slightly alter rules, or introduce various new ro
 
 The game ends when either all the werewolves have been executed, or there are more werewolves than villagers remaining.
 
-## History
-
-Also known as MAFIA, it is a social game
-https://boardgamegeek.com/boardgame/925/werewolf
-
-https://en.wikipedia.org/wiki/Mafia_(party_game)
-
-Created by Dimitry Davidoff in 1986 in Russia. Moscow State University, Psychology Department
-
-
-Mafia is one of the 50 most historically and culturally significant tabletop games since 1800 according to about.com
-
-
-Andrew Plotkin put the werewolf spin on the game in 1997
-
-Deduction, Negotiation, Bluffing
-
-The game models a conflict between two groups: an informed minority (the mafiosi or the werewolves) and an uninformed majority (the villagers)
-
-
 ## Implementation
 
 ### Pettingzoo
@@ -50,19 +30,87 @@ While there are many routes to take when creating a custom environment, using a 
 
 ### Werewolf
 
-#### Game flow
+(game-flow)=
+#### Game flow overview
 
 ![gameplay flowchart](images/werewolf-flowchart.svg)
 
 #### Start of the game
+```python
+def __init__(self, num_agents=5, werewolves=1, num_accusations=1, rewards=REWARDS)
+```
+
+We allow for a variable number of agents as well as number of accusation rounds before an execution vote. We also allow for custom reward values along with [default values](game-rewards)
+
+```{note}
+square root of the number of agents is the max allowed werewolf count, reason being *cite game theory work on this*
+```
+
+A permutation of roles given the above choice is taken, and assigned to players.
 
 #### Roles and Phases
+There are only two roles, werewolves and villagers
 
-#### Action Spce and Observation Space
+```python
+class Roles(enum.IntEnum):
+    VILLAGER = 0
+    WEREWOLF = 1
+```
+
+Currently, the day consists of $n$ accusation phases and one voting phase, while the night is its own phase as wolf policies are static.
+
+```python
+class Phase(enum.IntEnum):
+    ACCUSATION = 0
+    VOTING = 1
+    NIGHT = 2
+```
+
+#### Action Space and Observation Space
+
+The action space is simply the vote of the agent
+
+```python
+# plurality
+self.action_spaces = { name: Discrete(num_agents)  for name in self.agents }
+
+# approval
+self.action_spaces = { name: Box(low=-1, high=1, shape=(num_agents,), dtype=int) for name in self.agents }
+```
+
+The observation space returned has quite a bit more information, and a seperate [utility function](convert-obs) is used to convert this observation in the training of agents.
+
+The longest possible run-time of the game is chosen as the upper-bound for days
+
+A self-id is also provided, as the agent has to have a way to know which id is theirs.
+
+The votes are the previous phases votes, and for villagers after a night round, hides the information as an invalid target.
+
+Roles are also returned as all villagers for other villagers, except for instances were a wolf was killed, then their role is revealed as per the rules of the game.
+
+```python
+        self.observation_spaces = {
+            name: Dict(
+                {
+                    "observation": Dict({
+                        "day": Discrete(int(num_agents/2), start=1),
+                        "phase": Discrete(3),
+                        "self_id": Discrete(num_agents), # TODO: FINISH THIS
+                        "player_status": Box(low=0, high=1, shape=(num_agents,), dtype=bool),
+                        "roles": Box(low=0, high=1, shape=(num_agents,), dtype=int), 
+                        "votes" : Dict({
+                            name: Box(low=-1, high=1, shape=(num_agents,), dtype=int) for name in self.agents}), # approval
+                            name: Box(low=0, high=num_agents, shape=(num_agents,)) for name in self.agents}), # plurality
+                    }),
+                    "action_mask": Box(low=0, high=1, shape=(num_agents,), dtype=bool)
+                }
+            )
+            for name in self.agents
+        }
+```
 
 #### Game state
 
-We keep track of a world state
 ```python
 self.world_state = {
     "day": day,
@@ -78,11 +126,17 @@ self.world_state = {
 }
 ```
 
+The world state tracks everything happening in the game and is used for both the history and for rendering the game. In the case of game history for [analysis purposes](game-analysis-methodology) the votes are the actual votes that occured in the current phase, unlike observations which contain the previous phases votes.
 
-#### Roles
+#### Voting Mechanisms
+The following function returns the target id as an integer as well as an information object detailing which agent voted for themselves, voted for a dead player, had a viable vote, etc...
 
+```python
+def _get_player_to_be_killed(self, actions) -> tuple[int, object]:
+```
 
-#### Phases
+For both approval and plurality voting, if there is a tie vote, a target is taken at raandom from this list of tied agents. If however the target with the majority of votes is a dead player, the next highest targetted agent is taken.
+
 
 (game-rewards)=
 #### Rewards
@@ -103,8 +157,23 @@ REWARDS = {
     "no_sleep": -1,
 }
 ```
-Plurality
-
-Approval
 
 
+#### Game loop
+
+As seen in the [flowchart](game-flow), the logic is all implemented in the `env.step()` function which expects a dictionary of agent ids and their respective actions.
+
+For every phase, the target is determined via `self._get_player_to_be_killed(actions)`. If this was a voting or night-time phase, the target is added to executed (voting) or killed (night-time) lists, and this dying agent is given a negative reward for dying.
+
+```{warning}
+During the night-time, we still allow actions from villagers, however these are completely ignored. 
+```
+
+We then check for winners and reward players accordingly, before appending the history and possibly incrementing the game round, phase and day. 
+
+Finally the remainder of rewards based on agent voting information is distributed
+
+
+[^werewolf-boardgame]: https://boardgamegeek.com/boardgame/925/werewolf
+[^mafia-wikipedia]: https://en.wikipedia.org/wiki/Mafia_(party_game)
+[^top50]:https://www.thesprucecrafts.com/board-and-card-games-timeline-409387

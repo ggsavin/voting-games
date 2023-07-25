@@ -3,7 +3,8 @@
 ## Introduction
 Social Deduction Games model tentative cooperation between groups with uncertain motives.
 
-
+Mechanisms employed in Mafia/Werewolf
+{bdg-primary}`Hidden Roles`, {bdg-primary}`Negotiation`, {bdg-primary}`Asymmetric information`, {bdg-primary}`Voting`, {bdg-primary}`Elimination`,
 
 Shared goals, conflicting motives {cite}`Dafoe2020-ds`.
 

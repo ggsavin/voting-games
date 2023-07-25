@@ -7,7 +7,5 @@ chapters:
 - file: literature-review
 - file: voting-game
 - file: methodology
+- file: training
 - file: bibliography
-- file: markdown
-- file: notebooks
-- file: markdown-notebooks
