@@ -1,6 +1,11 @@
 # COMP 5903 - Voting impact on hidden role games
 
 ## Introduction
+Social Deduction Games model tentative cooperation between groups with uncertain motives.
+
+
+
+Shared goals, conflicting motives {cite}`Dafoe2020-ds`.
 
 Werewolf/mafia are interchangeable names for the same underlying game, so any 
 
@@ -20,9 +25,10 @@ F or cooperative domains, the key issue is that learners obtain a local/personal
 
 Approval voting has more implicit and explicit information, and allows for more expression when voting. Naturally, we ask ourselves what kind of impact changing the voting mechanism underlying werewolf would have on the ability of the simulated agents to learn and their chances of winning.
 
-## Our work
+## Contribution
 
 We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale
+
 
 ## Future
 
@@ -32,12 +38,6 @@ Different reward functions such as difference rewards, maybe even a VCG mechanis
 
 ```{tableofcontents}
 ```
-
-## Literature review / Related work
-
-### Game theoretic work done in mafia
-
-### Communication channels and RL
 
 
 ## Analysis

@@ -87,7 +87,7 @@ self.world_state = {
 (game-rewards)=
 #### Rewards
 
-The following object is the default reward structure for the game, and it was based in part by {cite}`Brandizzi2021RLupusCT`
+The following object is the default reward structure for the game, and it was based on reward structures found in other Werewolf focused papers {cite}`Brandizzi2021RLupusCT, Velikov2021-vt`.
 
 ```python
 REWARDS = {

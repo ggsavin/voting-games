@@ -38,7 +38,8 @@ We implemented our own following some works in truncated BPTT and CLeanRL, howev
 
 ## Game theoretic work done in mafia
 
-## RL
+
+## Mafia and Werewolf RL
 
 AIWolf {cite}`toriumi2017ai` is a popular Werewolf game framework and yearly competition run out of Japan *cite the competition and the framework*, which pits agents against eachother in full NLP or protocol limited communication modes. Agents have been trained *cite*
 
@@ -46,13 +47,30 @@ AIWolf {cite}`toriumi2017ai` is a popular Werewolf game framework and yearly com
 RLupus {cite}`Brandizzi2021RLupusCT` explored explicit communication in Werewolf, by adding a signal channel to the action. A follow up {cite}`Lipinski2022EMP` showed that a single word vocabulary is a good enough heuristic. They also explored longer communication rounds, much like we allow multiple accusation rounds.
 
 
+Other works {cite}`Ibraheem2020-mw` looked to classify roles in mafia based on their textual interactions and properties.
+
 Our work takes the voting mechanism and replaces it with an approval variant, to see if there is any difference. 
 
+{cite}`Serrino2019-ge` develop a neural network model based on counterfactual regret minimization to train agents to play The Resistance Avalon.
+
+{cite}`Reinhardt2020-bs` developped a variant of Monte-Carlo Tree Search to play Secret Hitler, and showed that it can play as well as simpler rule based agents.
 
 
-## SGDs
+## Psychology
+
+Initial Werewolf work, 
+Werewolf was used {cite}`Conner2022-iu` to teach symbolic interaction and to help students overcome anxiety when confronted with sociological theory by using active learning approaches. {cite}`Ri2022-ih` looked at the different dynamics at play between the minority and majority teams in Mafia and tried to give it an entertainment score based on these dynamics.
+
+
+
+## SDGs
 
 Organize around different approaches taken on hidden role, elimination games.
+
+A paired down clone of Among Us was explored in {cite}`Kopparapu2022-bm`. how individuals might learn to synthesize potentially unreliable information about others. Given the richness of the 2D environment, different strategic behaviors were observed such as camping and chasing and ability to vote properly.
+
+Some work in SGDs explore algorithms for better play {cite}`Serrino2019-ge`
+_J. Reinhardt, Finding friend and foe in multi-agent games, Application of deep reinforcement learning in werewolf game agents._, communication for better play _RLupus, wdad_
 
 
 ## Questions we try to answer?
