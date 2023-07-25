@@ -358,6 +358,8 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#our-work">Our work</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#future">Future</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#literature-review-related-work">Literature review / Related work</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#game-theoretic-work-done-in-mafia">Game theoretic work done in mafia</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#communication-channels-and-rl">Communication channels and RL</a></li>
@@ -386,10 +388,19 @@ document.write(`
 Among us -&gt; Hidden Agenda paper
 Secret Hitler -&gt;
 Avalon, The REsistance</p>
+<p>F or cooperative domains, the key issue is that learners obtain a local/personal reward but need to learn a decision that is good for the society of agents.</p>
 </section>
 <section id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h2>
 <p>Approval voting has more implicit and explicit information, and allows for more expression when voting. Naturally, we ask ourselves what kind of impact changing the voting mechanism underlying werewolf would have on the ability of the simulated agents to learn and their chances of winning.</p>
+</section>
+<section id="our-work">
+<h2>Our work<a class="headerlink" href="#our-work" title="Permalink to this heading">#</a></h2>
+<p>We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale</p>
+</section>
+<section id="future">
+<h2>Future<a class="headerlink" href="#future" title="Permalink to this heading">#</a></h2>
+<p>Different reward functions such as difference rewards, maybe even a VCG mechanism could be interesting (contrasting with a counterfactual directly)? What is the goal with these though? To lower werewolf win rates? Or to see the impacts they have?</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="literature-review.html">Literature Review</a></li>
@@ -478,6 +489,8 @@ Avalon, The REsistance</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#our-work">Our work</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#future">Future</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#literature-review-related-work">Literature review / Related work</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#game-theoretic-work-done-in-mafia">Game theoretic work done in mafia</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#communication-channels-and-rl">Communication channels and RL</a></li>

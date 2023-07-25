@@ -363,6 +363,9 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pettingzoo">Pettingzoo</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolf">Werewolf</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#game-flow">Game flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#start-of-the-game">Start of the game</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#roles-and-phases">Roles and Phases</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#action-spce-and-observation-space">Action Spce and Observation Space</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#game-state">Game state</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#roles">Roles</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#phases">Phases</a></li>
@@ -424,6 +427,15 @@ document.write(`
 <h4>Game flow<a class="headerlink" href="#game-flow" title="Permalink to this heading">#</a></h4>
 <p><img alt="gameplay flowchart" src="_images/werewolf-flowchart.svg" /></p>
 </section>
+<section id="start-of-the-game">
+<h4>Start of the game<a class="headerlink" href="#start-of-the-game" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="roles-and-phases">
+<h4>Roles and Phases<a class="headerlink" href="#roles-and-phases" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="action-spce-and-observation-space">
+<h4>Action Spce and Observation Space<a class="headerlink" href="#action-spce-and-observation-space" title="Permalink to this heading">#</a></h4>
+</section>
 <section id="game-state">
 <h4>Game state<a class="headerlink" href="#game-state" title="Permalink to this heading">#</a></h4>
 <p>We keep track of a world state</p>
@@ -450,6 +462,7 @@ document.write(`
 </section>
 <section id="rewards">
 <span id="game-rewards"></span><h4>Rewards<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h4>
+<p>The following object is the default reward structure for the game, and it was based in part by <span id="id3">[<a class="reference internal" href="bibliography.html#id4" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>]</span></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">REWARDS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;player_death&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
@@ -544,6 +557,9 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pettingzoo">Pettingzoo</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolf">Werewolf</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#game-flow">Game flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#start-of-the-game">Start of the game</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#roles-and-phases">Roles and Phases</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#action-spce-and-observation-space">Action Spce and Observation Space</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#game-state">Game state</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#roles">Roles</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#phases">Phases</a></li>

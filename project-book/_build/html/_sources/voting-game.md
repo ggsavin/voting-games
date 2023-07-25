@@ -53,6 +53,13 @@ While there are many routes to take when creating a custom environment, using a 
 #### Game flow
 
 ![gameplay flowchart](images/werewolf-flowchart.svg)
+
+#### Start of the game
+
+#### Roles and Phases
+
+#### Action Spce and Observation Space
+
 #### Game state
 
 We keep track of a world state
@@ -80,6 +87,7 @@ self.world_state = {
 (game-rewards)=
 #### Rewards
 
+The following object is the default reward structure for the game, and it was based in part by {cite}`Brandizzi2021RLupusCT`
 
 ```python
 REWARDS = {
@@ -98,4 +106,5 @@ REWARDS = {
 Plurality
 
 Approval
+
 
