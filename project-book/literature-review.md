@@ -4,7 +4,13 @@ Reward designing to try to shape behavior and outcomes is very hard, and can usa
 
 ## Voting RL
 
-{cite}`Dodevska2019ComputationalSC` computational social choice and challenges of voting in multi-agent systems:
+Earlier work by {cite}`Partalas2007-sz` used a voting process amongst a set of joint actions to choose the one that all agents follow in the predator-prey game. The reasoning is that each agent perceives only their part, so merging each agents partial knowledge may lead to better coordination and results. _Voting is used as the mechanism to combine the individual decisions of the agents and output a global decision (or strategy) that the agents as a team must follow_
+
+
+{cite}`Airiau2017-ny` look to use RL in iterative voting to see if they observe convergence, and if the winner lines up with theoretic expectations. They use Condorcet efficiency and Borda Scores as their metrics, 
+
+
+{cite}`Dodevska2019ComputationalSC` brings at the forefront the focuses on computational challenges of voting algorithms or different social issues of voting in the scope of multi-agent decentralized systems.
 
 
 
