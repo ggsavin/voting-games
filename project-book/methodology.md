@@ -17,12 +17,12 @@ INitializations and hyper-parameter choices were greatly influenced by the exhau
 
 **Inputs** Initial policy parameters $theta_0$, clipping threshold $\epsilon$
 1. for $k=0,1,2,...$ do
-    1. Collect set of trajectories $\Tau$ on policy $\pi_k = \pi(\theta_k)$
+    1. Collect set of trajectories $\tau$ on policy $\pi_k = \pi(\theta_k)$
     2. Estimate advatanges $A^{\pi_k}$ using GAE (Schulman 2016)
     3. Compute policy update
-            $\theta_{k+1} = argmax \mathcal{L} $
+            $\theta_{k+1} = argmax \mathcal{L}^{CLIP} $
         by taking $K$ steps of minibatch SGD (via Adam), where
-
+            $\mathcal{L}^{CLIP(\theta)} = E [\sum_{t=0}^{\tau}[min(q_t(\theta)A_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]$
         (Schulman 2017)
 ```
 

@@ -397,16 +397,16 @@ document.write(`
 <p class="admonition-title"><span class="caption-number">Algorithm 1 </span> (Proximal Policy Optimization)</p>
 <section class="algorithm-content" id="proof-content">
 <p><strong>Inputs</strong> Initial policy parameters <span class="math notranslate nohighlight">\(theta_0\)</span>, clipping threshold <span class="math notranslate nohighlight">\(\epsilon\)</span></p>
-<ol class="arabic">
+<ol class="arabic simple">
 <li><p>for <span class="math notranslate nohighlight">\(k=0,1,2,...\)</span> do</p>
-<ol class="arabic">
-<li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\Tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
+<ol class="arabic simple">
+<li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
 <li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE (Schulman 2016)</p></li>
 <li><p>Compute policy update
-<span class="math notranslate nohighlight">\(\theta_{k+1} = argmax \mathcal{L} \)</span>
-by taking <span class="math notranslate nohighlight">\(K\)</span> steps of minibatch SGD (via Adam), where</p>
-<p>(Schulman 2017)</p>
-</li>
+<span class="math notranslate nohighlight">\(\theta_{k+1} = argmax \mathcal{L}^{CLIP} \)</span>
+by taking <span class="math notranslate nohighlight">\(K\)</span> steps of minibatch SGD (via Adam), where
+<span class="math notranslate nohighlight">\(\mathcal{L}^{CLIP(\theta)} = E [\sum_{t=0}^{\tau}[min(q_t(\theta)A_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]\)</span>
+(Schulman 2017)</p></li>
 </ol>
 </li>
 </ol>
