@@ -12,6 +12,7 @@ PPO was chosen because it stil seems to be the most widely used on-policy algori
 
 INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in {cite}`Andrychowicz2020-fs`
 
+Because we are implementing an LSTM, the action selected by the policy depends on both the observation and the hidden state at the desired time $t$.
 ```{prf:algorithm} Proximal Policy Optimization
 :label: ppo-alg
 
@@ -20,10 +21,21 @@ INitializations and hyper-parameter choices were greatly influenced by the exhau
     1. Collect set of trajectories $\tau$ on policy $\pi_k = \pi(\theta_k)$
     2. Estimate advatanges $A^{\pi_k}$ using GAE (Schulman 2016)
     3. Compute policy update
-            $\theta_{k+1} = argmax \mathcal{L}^{CLIP} $
+            $$
+            \theta_{k+1} = argmax \mathcal{L}^{CVH} 
+            $$
         by taking $K$ steps of minibatch SGD (via Adam), where
-            $\mathcal{L}^{CLIP(\theta)} = E [\sum_{t=0}^{\tau}[min(q_t(\theta)A_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]$
+            $$
+            \mathcal{L}^C(\theta) = E [\sum_{t=0}^{\tau}[min(q_t(\theta)\hat{A}_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]
+            $$
+            ratio $q_t(\theta) = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}$
+            $$
+            L^{CVH}_t(\theta) = E [\mathcal{L}^C(\theta) - c_1\cdot \mathcal{L}^V_t(\theta)]
+            $$
         (Schulman 2017)
+
+    4. Compute value update
+
 ```
 
 
