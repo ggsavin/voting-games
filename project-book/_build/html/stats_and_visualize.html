@@ -1,0 +1,1450 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Identifying villager voting behavior patterns and stats &#8212; Hidden Role Games and Voting</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'stats_and_visualize';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bibliography" href="bibliography.html" />
+    <link rel="prev" title="Training" href="training.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/midjourney-werewolves.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/midjourney-werewolves.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    COMP 5903 - Voting impact on hidden role games
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="literature-review.html">Literature Review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voting-game.html">Werewolf - The Game</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methodology.html">Methodology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Identifying villager voting behavior patterns and stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/ggsavin/voting-games" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Fstats_and_visualize.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/stats_and_visualize.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Identifying villager voting behavior patterns and stats</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-indicators-and-stats">Behavioral Indicators and Stats</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-wolf-policies">Static Wolf Policies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-collection">Data collection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plurality-agent">Plurality Agent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-agent">Approval Agent</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#days-to-win">Days to win</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-kills">Days between wolf kills</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tie-games">Tie games</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#villager-target-selection">Villager target selection</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantifying-losing-games">Quantifying losing games</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#graphs">Graphs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#replay-visualization">Replay visualization</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import torch
+import sys
+sys.path.append(&#39;../&#39;)
+from voting_games.werewolf_env_v0 import plurality_env, pare, Phase, Roles
+import random
+import copy
+from tqdm import tqdm
+from collections import Counter
+import matplotlib.pyplot as plt
+from notebooks.learning_agents.models import ActorCriticAgent
+from notebooks.learning_agents.utils import play_recurrent_game
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/root/.local/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="identifying-villager-voting-behavior-patterns-and-stats">
+<h1>Identifying villager voting behavior patterns and stats<a class="headerlink" href="#identifying-villager-voting-behavior-patterns-and-stats" title="Permalink to this heading">#</a></h1>
+<p>This notebook details the code used to look for certain identifiers in the voting patterns of villagers</p>
+<section id="behavioral-indicators-and-stats">
+<h2>Behavioral Indicators and Stats<a class="headerlink" href="#behavioral-indicators-and-stats" title="Permalink to this heading">#</a></h2>
+<p>Other than training stats, possible in-game statistics may indicate different behavior and voting patterns amongst the agents</p>
+<p>We want to</p>
+<ul class="simple">
+<li><p>Look at unique votes from villagers throughout accusation and voting. Do these go down?</p>
+<ul>
+<li><p>Is there a difference between wins/losses?</p></li>
+</ul>
+</li>
+<li><p>When are wolves voted out? Earlier or later?</p>
+<ul>
+<li><p>If so, when is the second wolf found? How many voting rounds after the first wolf killed</p></li>
+</ul>
+</li>
+</ul>
+<p>Here are some things we might care about finding out:</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> How many execution votes led to ties?</p>
+<ul>
+<li><p>Did these favor the wolves or the villagers?</p></li>
+</ul>
+</li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Villagers who have the same votes as others between accusations (is there accord between villagers)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> What id’s do wolves have in games with villager wins</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> How many distinct votes do we have? (per accusation round, per voting round)</p></li>
+</ul>
+<p>Some stuff might be specific to approval, plurality or ranked voting
+Approval</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> How many villagers vote the exact same way (with approvals and neutrals )</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> How many negative votes do villagers give on average. Does this change with training ? *Stat to track while training</p></li>
+</ul>
+<p>In terms of gathering up the stats, does it make more sense to look at the history, or does it make sense to just gather them while we train? it might be better to do it post game?</p>
+<p>Lets look at unique votes accusation -&gt; voting
+How many unique votes are there from accusation to voting?
+If they switch, does a bigger count switch down to a little one? or does a smaller count lose a number to the bigger one?</p>
+<p>Did a villager switch to a werewolf vote?
+wolf to wolf?</p>
+<p>What proportion of votes are for werewolves?</p>
+<p>How often is the vote against a dead player?</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> In situations where we have a wolf who died, do players still vote against them?</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Do we have 3 way ties between both werewolves and the werewolf target?
+Is it possible that we actually lose because there is less consensus between agents on who they want to target?</p></li>
+</ul>
+<p>do villagers win more given a first wolf vote?
+is there a vote they key on quicker?</p>
+<p>On voting rounds:
+- [ ] Does a wolf get lucky, and agents split their votes between the wolves, and the wolf target actually gets killed?</p>
+<p>General game questions:
+- Does the first target a wolf pick impact their chance of winning? Alternatively, do villagers key better on certain first wolf votes?
+- Do certain wolf id combinations lead to more villager wins?</p>
+</section>
+<section id="static-wolf-policies">
+<h2>Static Wolf Policies<a class="headerlink" href="#static-wolf-policies" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def random_plurality_wolf(env, agent, action=None):
+    villagers_remaining = set(env.world_state[&quot;villagers&quot;]) &amp; set(env.world_state[&#39;alive&#39;])
+    return action if action != None else int(random.choice(list(villagers_remaining)).split(&quot;_&quot;)[-1])
+
+def random_approval_wolf(env, agent, action=None):
+    if action != None:
+        return action
+
+    villagers_remaining = set(env.world_state[&quot;villagers&quot;]) &amp; set(env.world_state[&#39;alive&#39;])
+    wolves_remaining = set(env.world_state[&quot;werewolves&quot;]) &amp; set(env.world_state[&#39;alive&#39;])
+
+    # pick a living target
+    target = random.choice(list(villagers_remaining))
+
+    action = [0] * len(env.possible_agents)
+    action[int(target.split(&quot;_&quot;)[-1])] = -1
+    for curr_wolf in wolves_remaining:
+        action[int(curr_wolf.split(&quot;_&quot;)[-1])] = 1
+
+    return action
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-collection">
+<h2>Data collection<a class="headerlink" href="#data-collection" title="Permalink to this heading">#</a></h2>
+<p>We are going to use a trained agent, an untrained agent, and a random agent.
+This way we can maybe identify patterns that would seperate each one</p>
+<section id="plurality-agent">
+<h3>Plurality Agent<a class="headerlink" href="#plurality-agent" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
+observations, _, _, _, _ = env.reset()
+
+obs_size= env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
+
+untrained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128, 
+                                        &quot;rec_layers&quot;: 1,
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 1,
+                                        &quot;approval_states&quot;: 10},
+                                        num_players=10,
+                                        obs_size=obs_size)
+
+trained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128,
+                                        &quot;rec_layers&quot;: 1, 
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 1,
+                                        &quot;approval_states&quot;: 10},
+                                        num_players=10,
+                                        obs_size=obs_size)
+trained_plurality_agent.load_state_dict(torch.load(&quot;stored_agents/lstm_first_no_one_hot_128_128/plurality_agent_10_score_46&quot;))
+
+# random_agent = None
+
+trained_plurality_wins, trained_plurality_replays = play_recurrent_game(env, random_plurality_wolf, trained_plurality_agent, num_times=1000, hidden_state_size=128, voting_type=&quot;plurality&quot;)
+untrained_plurality_wins, untrained_plurality_replays = play_recurrent_game(env, random_plurality_wolf, untrained_plurality_agent, num_times=1000, hidden_state_size=128, voting_type=&quot;plurality&quot;)
+# random_wins, random_replays = play_recurrent_game_w_replays(env, random_coordinated_single_wolf, random_agent, num_times=1000, hidden_state_size=128, voting_type=&quot;plurality&quot;)
+
+trained_plurality_villager_wins = [r for r in trained_plurality_replays if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+print(f&#39;Trained villagers won {trained_plurality_wins} games&#39;)
+untrained_plurality_villager_wins = [r for r in untrained_plurality_replays if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+print(f&#39;Untrained villagers won {untrained_plurality_wins} games&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trained villagers won 469 games
+Untrained villagers won 37 games
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="approval-agent">
+<h3>Approval Agent<a class="headerlink" href="#approval-agent" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = pare(num_agents=10, werewolves=2, num_accusations=2)
+observations, _, _, _, _ = env.reset()
+
+obs_size= env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
+observations[&#39;player_0&#39;][&#39;observation&#39;]
+
+untrained_approval_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 256, 
+                                        &quot;rec_layers&quot;: 1,
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 10,
+                                        &quot;approval_states&quot;: 3},
+                                        num_players=10,
+                                        obs_size=obs_size)
+
+trained_approval_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 256,
+                                        &quot;rec_layers&quot;: 1, 
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 10,
+                                        &quot;approval_states&quot;: 3},
+                                        num_players=10,
+                                        obs_size=obs_size)
+trained_approval_agent.load_state_dict(torch.load(&quot;stored_agents/lstm_first_no_one_hot_256_128/approval_agent_10_score_49&quot;))
+
+# random_agent = None
+
+trained_approval_wins, trained_approval_replays = play_recurrent_game(env, random_approval_wolf, trained_approval_agent, num_times=1000, hidden_state_size=256, voting_type=&quot;approval&quot;)
+untrained_approval_wins, untrained_approval_replays = play_recurrent_game(env, random_approval_wolf, untrained_approval_agent, num_times=1000, hidden_state_size=256, voting_type=&quot;approval&quot;)
+# random_wins, random_replays = play_recurrent_game_w_replays(env, random_coordinated_single_wolf, random_agent, num_times=1000, hidden_state_size=128, voting_type=&quot;plurality&quot;)
+
+trained_approval_villager_wins = [r for r in trained_approval_replays if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+print(f&#39;Trained villagers won {trained_approval_wins} games&#39;)
+untrained_approval_villager_wins = [r for r in untrained_approval_replays if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+print(f&#39;Untrained villagers won {untrained_approval_wins} games&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trained villagers won 525 games
+Untrained villagers won 72 games
+</pre></div>
+</div>
+</div>
+</div>
+<section id="days-to-win">
+<h4>Days to win<a class="headerlink" href="#days-to-win" title="Permalink to this heading">#</a></h4>
+<p>One metric that highlights improvement is the number of days taken to win a game</p>
+<p>Note :
+The way the environment stores history is slightly different than observations. Whereas the latter stores the prior votes, env.history steps have the votes and the outcomes that occured at that particular day/phase/round.
+This makes analysis slightly easier, but we still need to track a few things</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Average amount of days until a win is achieved by villagers in plurality games&quot;)
+print(f&#39;\t Trained villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in trained_plurality_villager_wins]):2f}&#39;)
+print(f&#39;\t Untrained villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in untrained_plurality_villager_wins]):2f}&#39;)
+
+print(&quot;\n&quot;)
+
+print(&quot;Average amount of days until a win is achieved by villagers in approval games&quot;)
+print(f&#39;\t Trained villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in trained_approval_villager_wins]):2f}&#39;)
+print(f&#39;\t Untrained villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in untrained_approval_villager_wins]):2f}&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average amount of days until a win is achieved by villagers in plurality games
+	 Trained villagers : 2.912580
+	 Untrained villagers : 3.405405
+
+
+Average amount of days until a win is achieved by villagers in approval games
+	 Trained villagers : 2.954286
+	 Untrained villagers : 3.444444
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="days-between-wolf-kills">
+<h4>Days between wolf kills<a class="headerlink" href="#days-between-wolf-kills" title="Permalink to this heading">#</a></h4>
+<p>This is a slight variation to days it took to win, as we instead focus on how likely it was for agents to vote out another wolf after executing the first one</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def when_did_wolves_get_killed(game):
+    wolves = game[0][&#39;werewolves&#39;]
+
+    days_wolves_executed = []
+    just_votes = []
+    for step in game:
+        if step[&quot;phase&quot;] == Phase.VOTING:
+            # first eecution
+            if len(step[&quot;executed&quot;]) == 1:
+                if step[&#39;executed&#39;][0] in wolves:
+                    days_wolves_executed.append(step[&#39;day&#39;])
+            else:
+                who_was_killed = list(set(step[&#39;executed&#39;]) - set(just_votes[-1][&#39;executed&#39;]))[0]
+                if who_was_killed  in wolves:
+                    days_wolves_executed.append(step[&#39;day&#39;])
+
+            just_votes.append(step)
+    
+    if len(days_wolves_executed) &lt; len(wolves):
+        print(&quot;Not every wolf was killed!&quot;)
+    
+    return days_wolves_executed
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Average amount of days until the next wolf was killed in plurality games for 2 wolf environments&quot;)
+wolf_execution_days = [when_did_wolves_get_killed(trained_villager_win) for trained_villager_win in trained_plurality_villager_wins]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for trained agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+
+wolf_execution_days = [when_did_wolves_get_killed(untrained_villager_win) for untrained_villager_win in untrained_plurality_villager_wins]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for untrained agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+
+print(&quot;\n&quot;)
+
+print(&quot;Average amount of days until the next wolf was killed in approval games for 2 wolf environments&quot;)
+wolf_execution_days = [when_did_wolves_get_killed(trained_villager_win) for trained_villager_win in trained_approval_villager_wins]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for trained agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+
+wolf_execution_days = [when_did_wolves_get_killed(untrained_villager_win) for untrained_villager_win in untrained_approval_villager_wins]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for untrained agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average amount of days until the next wolf was killed in plurality games for 2 wolf environments
+	Days between wolf kills for trained agents : 1.557
+	Days between wolf kills for untrained agents : 1.946
+
+
+Average amount of days until the next wolf was killed in approval games for 2 wolf environments
+	Days between wolf kills for trained agents : 1.461
+	Days between wolf kills for untrained agents : 1.847
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tie-games">
+<h4>Tie games<a class="headerlink" href="#tie-games" title="Permalink to this heading">#</a></h4>
+<p>Other interesting data points involve tie voting rounds, and answering questins regarding how often they occur, do they occur less if a tie was incurred in the prior accusation round, do they include wolf targets, how often do wolves get lucky and if a wolf got lucky, are they targetted again the next round?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def game_tie_info(game, voting_type=None):
+	wolves = game[0][&#39;werewolves&#39;]
+
+	just_votes = []
+	tie_days = []
+
+	# wolf won the tie flip
+	lucky_wolf_day = []
+	wolf_tie_day = []
+
+	for step in game:
+
+		if voting_type == &quot;plurality&quot;:
+			villager_votes = [vote for player, vote in step[&#39;votes&#39;].items() if player not in wolves]
+			wolf_votes = [vote for player, vote in step[&#39;votes&#39;].items() if player in wolves]
+			all_votes = list(step[&#39;votes&#39;].values())
+		elif voting_type == &quot;approval&quot;:
+			villager_votes = np.concatenate([np.where(np.array(vote) == -1)[0] for player, vote in step[&#39;votes&#39;].items() if player not in wolves]).tolist()
+			wolf_votes = np.concatenate([np.where(np.array(vote) == -1)[0] for player, vote in step[&#39;votes&#39;].items() if player in wolves]).tolist()
+			all_votes = np.concatenate([np.where(np.array(vote) == -1)[0] for player, vote in step[&#39;votes&#39;].items()]).tolist()
+
+		villager_vote_counter = Counter(villager_votes)
+		all_vote_counter = Counter(all_votes)
+
+		if step[&quot;phase&quot;] == Phase.VOTING:
+			just_votes.append(step)
+
+    		# was the vote a tie? did it lead to 
+			max_votes_on_target = max(all_vote_counter.values())
+			targets = [k for k in all_vote_counter if all_vote_counter[k] == max_votes_on_target]
+
+			# we have a tie
+			if len(targets) &gt; 1:
+				tie_days.append(step[&quot;day&quot;])
+				# are one of the targets a wolf target?
+				is_a_target_a_wolf_target = sum([target in wolf_votes for target in targets])
+				
+				# is the tie between a dead player and a live player?
+				# this won&#39;t  trigger a tie trigger though
+				if len(step[&#39;executed&#39;]) == 1:
+					dead_players = list(set(step[&#39;executed&#39;]) | set(step[&#39;killed&#39;]))
+					killed_this_turn = step[&#39;executed&#39;][0]
+				else:
+					dead_players =  list((set(step[&#39;executed&#39;]) &amp; set(just_votes[-2][&#39;executed&#39;])) | set(step[&#39;killed&#39;]))
+					killed_this_turn = list(set(step[&#39;executed&#39;]) - set(just_votes[-2][&#39;executed&#39;]))[0]
+
+				# is the tie only between dead players?
+				is_a_target_a_living_wolf = sum([f&#39;player_{target}&#39; in wolves for target in targets if target not in dead_players])
+
+				# so now, we want to know if we have at tie between a wolf target and a living wolf
+				if is_a_target_a_living_wolf and is_a_target_a_wolf_target:
+					if killed_this_turn not in wolves:
+						# wolves got lucky
+						lucky_wolf_day.append(step[&quot;day&quot;])
+
+				if is_a_target_a_living_wolf:
+					wolf_tie_day.append(step[&quot;day&quot;])
+
+	return tie_days, lucky_wolf_day, wolf_tie_day
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tie_game_plurality_stats = [game_tie_info(trained_villager_win, voting_type=&quot;plurality&quot;) for trained_villager_win in trained_plurality_villager_wins]
+tie_game_approval_stats = [game_tie_info(trained_villager_win, voting_type=&quot;approval&quot;) for trained_villager_win in trained_approval_villager_wins]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Plurality&quot;)
+tie_games = [tie_game for tie_game in tie_game_plurality_stats if len(tie_game[0]) &gt;= 1]
+wolf_ties = [tie_game for tie_game in tie_game_plurality_stats if len(tie_game[2]) &gt;= 1]
+lucky_wolf = [tie_game for tie_game in tie_game_plurality_stats if len(tie_game[1]) &gt;= 1]
+print(f&#39; {len(tie_games)/len(trained_plurality_villager_wins):.2f} share of games had a tie voting round&#39;)
+print(f&#39; {len(wolf_ties)/len(trained_plurality_villager_wins):.2f} share of games had a wolf targetted as part of this tie vote, and {len(lucky_wolf)/len(trained_plurality_villager_wins):.2f} of times they got lucky&#39;)
+
+
+print(&quot;Approval&quot;)
+tie_games = [tie_game for tie_game in tie_game_approval_stats if len(tie_game[0]) &gt;= 1]
+wolf_ties = [tie_game for tie_game in tie_game_approval_stats if len(tie_game[2]) &gt;= 1]
+lucky_wolf = [tie_game for tie_game in tie_game_approval_stats if len(tie_game[1]) &gt;= 1]
+print(f&#39; {len(tie_games)/len(trained_approval_villager_wins):.2f} share of games had a tie voting round&#39;)
+print(f&#39; {len(wolf_ties)/len(trained_approval_villager_wins):.2f} share of games had a wolf targetted as part of this tie vote, and {len(lucky_wolf)/len(trained_approval_villager_wins):.2f} of times they got lucky&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plurality
+ 0.47 share of games had a tie voting round
+ 0.38 share of games had a wolf targetted as part of this tie vote, and 0.07 of times they got lucky
+Approval
+ 0.68 share of games had a tie voting round
+ 0.61 share of games had a wolf targetted as part of this tie vote, and 0.09 of times they got lucky
+</pre></div>
+</div>
+</div>
+</div>
+<p>Very interesting. Almost as if approval voting learn to split votes early, to see what happens. Their games are shorter than plurality games</p>
+</section>
+<section id="villager-target-selection">
+<h4>Villager target selection<a class="headerlink" href="#villager-target-selection" title="Permalink to this heading">#</a></h4>
+<p>With this analytic point, we track target percentages throughout accusation rounds to the final voting round per day.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def game_per_day_target_indicators(game_replay, verbose=False):
+    wolves = game_replay[0][&#39;werewolves&#39;]
+    if verbose:
+        print(f&#39;Wolves : {wolves}\n&#39;)
+    
+    # this will be an object of lists with each list containing the accusation and voting stats for the day
+    target_record = {}
+
+    vote_rounds = []
+    for i, step in enumerate(game_replay):
+        if step[&quot;phase&quot;] == Phase.NIGHT or i == 0:
+            continue
+        if step[&quot;phase&quot;] == Phase.VOTING:
+            vote_rounds.append(step)
+        
+        if step[&#39;day&#39;] not in target_record.keys():
+            target_record[step[&#39;day&#39;]] = []
+        
+        villager_votes = [vote for player, vote in step[&#39;votes&#39;].items() if player not in wolves]
+        all_votes = list(step[&#39;votes&#39;].values())
+
+        villager_vote_counter = Counter(villager_votes)
+        all_vote_counter = Counter(all_votes)
+
+        unique_villager_votes = len(villager_vote_counter)
+        avg_self_vote = sum([1 for k,v in step[&#39;votes&#39;].items() if int(k.split(&quot;_&quot;)[-1]) == v and k not in wolves]) / float(len(villager_votes))
+        percent_of_villagers_targetting_wolves = sum([villager_vote_counter[int(wolf.split(&quot;_&quot;)[-1])] for wolf in wolves]) / float(len(villager_votes))
+
+
+        # Who is dead?
+        if step[&quot;phase&quot;] == Phase.VOTING:
+            if len(vote_rounds) == 1:
+                dead_players = []
+                dead_wolves = []
+            else:
+                dead_players = list((set(step[&#39;executed&#39;]) &amp; set(vote_rounds[-2][&#39;executed&#39;])) | set(step[&#39;killed&#39;]))
+                dead_wolves = list(set(wolves) &amp; set(dead_players))
+        else:
+            dead_players = list(set(step[&#39;executed&#39;]) | set(step[&#39;killed&#39;]))
+            dead_wolves = list(set(wolves) &amp; set(dead_players))
+
+        percent_of_villagers_targetting_dead_players = sum([villager_vote_counter[int(dead_player.split(&quot;_&quot;)[-1])] for dead_player in dead_players]) / float(len(villager_votes))
+        percent_of_villagers_targetting_a_dead_wolf = sum([villager_vote_counter[int(dead_wolf.split(&quot;_&quot;)[-1])] for dead_wolf in dead_wolves]) / float(len(villager_votes))
+
+        # add information to the record 
+        target_record[step[&#39;day&#39;]].append([unique_villager_votes,
+                                           avg_self_vote,
+                                           percent_of_villagers_targetting_wolves, 
+                                           percent_of_villagers_targetting_dead_players, 
+                                           percent_of_villagers_targetting_a_dead_wolf])
+
+        # percent_of_villagers_targetting_a_dead_wolf = None
+        if verbose:
+            print(f&#39;Day : {step[&quot;day&quot;]} | Phase : {step[&quot;phase&quot;]} | Round : {step[&quot;round&quot;]}&#39;)
+            print(f&#39;Villager votes : {villager_votes}&#39;)
+            print(f&#39;\t | - {unique_villager_votes} players targetted, with {percent_of_villagers_targetting_wolves:.3f} of the votes targetting wolves and around  {avg_self_vote} of villagers targetting themselves&#39;)
+            print(f&#39;\t | - {percent_of_villagers_targetting_dead_players:.3f} share of the votes targetting dead players&#39;)
+            print(f&#39;\t | - {percent_of_villagers_targetting_a_dead_wolf:.3f} share of the votes targetting dead wolves\n&#39;)
+
+    return target_record
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>record = game_per_day_target_indicators(trained_plurality_villager_wins[0], verbose=True)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Wolves : [&#39;player_4&#39;, &#39;player_8&#39;]
+
+Day : 1 | Phase : 0 | Round : 0
+Villager votes : [2, 6, 9, 8, 9, 6, 6, 2]
+	 | - 4 players targetted, with 0.125 of the votes targetting wolves and around  0.0 of villagers targetting themselves
+	 | - 0.000 share of the votes targetting dead players
+	 | - 0.000 share of the votes targetting dead wolves
+
+Day : 1 | Phase : 0 | Round : 1
+Villager votes : [8, 8, 8, 9, 8, 4, 8, 3]
+	 | - 4 players targetted, with 0.750 of the votes targetting wolves and around  0.0 of villagers targetting themselves
+	 | - 0.000 share of the votes targetting dead players
+	 | - 0.000 share of the votes targetting dead wolves
+
+Day : 1 | Phase : 1 | Round : 0
+Villager votes : [4, 8, 8, 8, 9, 4, 8, 4]
+	 | - 3 players targetted, with 0.875 of the votes targetting wolves and around  0.0 of villagers targetting themselves
+	 | - 0.000 share of the votes targetting dead players
+	 | - 0.000 share of the votes targetting dead wolves
+
+Day : 2 | Phase : 0 | Round : 0
+Villager votes : [8, 8, 8, 8, 6, 7, 4]
+	 | - 4 players targetted, with 0.714 of the votes targetting wolves and around  0.0 of villagers targetting themselves
+	 | - 0.714 share of the votes targetting dead players
+	 | - 0.571 share of the votes targetting dead wolves
+
+Day : 2 | Phase : 0 | Round : 1
+Villager votes : [8, 7, 7, 9, 4, 9, 4]
+	 | - 4 players targetted, with 0.429 of the votes targetting wolves and around  0.0 of villagers targetting themselves
+	 | - 0.143 share of the votes targetting dead players
+	 | - 0.143 share of the votes targetting dead wolves
+
+Day : 2 | Phase : 1 | Round : 0
+Villager votes : [4, 8, 9, 7, 4, 9, 4]
+	 | - 4 players targetted, with 0.571 of the votes targetting wolves and around  0.0 of villagers targetting themselves
+	 | - 0.143 share of the votes targetting dead players
+	 | - 0.143 share of the votes targetting dead wolves
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def game_avg_records(game_replays, indicator_func):
+    records = [indicator_func(game_replay, verbose=False) for game_replay in game_replays]
+    max_days = max([max(record.keys()) for record in records])
+    avg_records = {i: None for i in range(1, max_days+1)}
+    for day in range(1, max_days+1):
+        avg_records[day] = np.mean(np.stack([record[day] for record in records if day in record.keys()]), axis=0)
+
+    return avg_records
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>game_avg_records(trained_plurality_villager_wins, game_per_day_target_indicators)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{1: array([[4.50959488, 0.24466951, 0.        , 0.        ],
+        [4.36034115, 0.40351812, 0.        , 0.        ],
+        [3.85927505, 0.56583156, 0.        , 0.        ]]),
+ 2: array([[3.87633262, 0.35429993, 0.21636714, 0.08559245],
+        [3.49466951, 0.40151284, 0.0716824 , 0.02741395],
+        [3.27292111, 0.46349883, 0.04406539, 0.01583917]]),
+ 3: array([[3.13758389, 0.32416107, 0.37969799, 0.07449664],
+        [2.93624161, 0.40536913, 0.21610738, 0.02281879],
+        [2.80872483, 0.475     , 0.15503356, 0.01946309]]),
+ 4: array([[2.27692308, 0.32820513, 0.55641026, 0.04871795],
+        [2.19230769, 0.49487179, 0.37692308, 0.04615385],
+        [1.94615385, 0.67179487, 0.25384615, 0.02564103]])}
+</pre></div>
+</div>
+</div>
+</div>
+<p>We now do something similar for approval games</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def approval_target_indicators(game, verbose=False):
+    wolves = game[0][&#39;werewolves&#39;]
+    villagers = game[0][&#39;villagers&#39;]
+
+    # this will be an object of lists with each list containing the accusation and voting stats for the day
+    target_record = {}
+    
+    vote_rounds = []
+    for i, step in enumerate(game):
+
+        if step[&#39;phase&#39;] == Phase.NIGHT or i == 0:
+            continue
+        if step[&quot;phase&quot;] == Phase.VOTING:
+            vote_rounds.append(step)
+        if step[&#39;day&#39;] not in target_record.keys():
+            target_record[step[&#39;day&#39;]] = []
+
+        villager_votes = [vote for player, vote in step[&#39;votes&#39;].items() if player not in wolves]
+        all_votes = list(step[&#39;votes&#39;].values())
+
+        villager_targets = [np.where(np.array(villager_vote) == -1)[0] for villager_vote in villager_votes]
+        villager_likes = [np.where(np.array(villager_vote) == 1)[0] for villager_vote in villager_votes]
+        villager_neutrals = [np.where(np.array(villager_vote) == 0)[0] for villager_vote in villager_votes]
+
+        v_target_counter = Counter(np.concatenate(villager_targets))
+        v_like_counter = Counter(np.concatenate(villager_likes))
+        v_neutral_counter = Counter(np.concatenate(villager_neutrals))
+
+        ## AVERAGE UNIQUE TARGETS, LIKES, NEUTRALS ## 
+        v_avg_target_count = np.mean([len(targets) for targets in villager_targets])
+        v_avg_like_count = np.mean([len(targets) for targets in villager_likes])
+        v_avg_neutral_count = np.mean([len(targets) for targets in villager_neutrals])
+
+        # do villagers target themselves and or like themselves
+        avg_vself_target = sum([1 for k,v in step[&#39;votes&#39;].items() if v[int(k.split(&quot;_&quot;)[-1])] == -1 and k not in wolves]) / float(len(villager_votes))
+        avg_vself_like = sum([1 for k,v in step[&#39;votes&#39;].items() if v[int(k.split(&quot;_&quot;)[-1])] == 1 and k not in wolves]) / float(len(villager_votes))
+
+        most_common_n_targets = int(len(v_target_counter)*0.3)
+        most_common_n_likes = int(len(v_like_counter)*0.3)
+
+        wolves_in_most_common_targets =\
+            [int(wolf.split(&quot;_&quot;)[-1]) for wolf in wolves if int(wolf.split(&quot;_&quot;)[-1]) in [idx for idx, _ in v_target_counter.most_common(max(1,most_common_n_targets))]]
+
+        wolves_in_most_common_likes =\
+            [int(wolf.split(&quot;_&quot;)[-1]) for wolf in wolves if int(wolf.split(&quot;_&quot;)[-1]) in [idx for idx, _ in v_like_counter.most_common(max(1,most_common_n_likes))]]
+
+        if step[&quot;phase&quot;] == Phase.VOTING:
+            if len(vote_rounds) == 1:
+                dead_players = []
+                dead_wolves = []
+                dead_villagers = []
+            else:
+                dead_players = list((set(step[&#39;executed&#39;]) &amp; set(vote_rounds[-2][&#39;executed&#39;])) | set(step[&#39;killed&#39;]))
+                dead_wolves = list(set(wolves) &amp; set(dead_players))
+                dead_villagers = list(set(villagers) &amp; set(dead_players))
+        else:
+            dead_players = list(set(step[&#39;executed&#39;]) | set(step[&#39;killed&#39;]))
+            dead_wolves = list(set(wolves) &amp; set(dead_players))
+            dead_villagers = list(set(villagers) &amp; set(dead_players))
+        
+        # do the most liked individuals also get the least amount of votes?
+        total_target_votes = sum(v_target_counter.values())
+        total_like_votes = sum(v_like_counter.values())
+
+        # target percentages
+        percent_of_vtargets_toward_dead_players = sum([v_target_counter[int(dead_player.split(&quot;_&quot;)[-1])] for dead_player in dead_players]) / float(total_target_votes)
+        percent_of_vtargets_toward_wolves = sum([v_target_counter[int(wolf.split(&quot;_&quot;)[-1])] for wolf in wolves]) / float(total_target_votes)
+        percent_of_vtargets_toward_dead_wolves = sum([v_target_counter[int(dead_wolf.split(&quot;_&quot;)[-1])] for dead_wolf in dead_wolves]) / float(total_target_votes)
+        percent_of_vtargets_toward_alive_wolves = sum([v_target_counter[int(wolf.split(&quot;_&quot;)[-1])] for wolf in wolves if wolf not in dead_wolves]) / float(total_target_votes)
+
+        # how many likes are for other trusted villagers?
+        percentage_of_vlikes_for_alive_villagers = sum([v_like_counter[int(villager.split(&quot;_&quot;)[-1])] for villager in villagers if villager not in dead_villagers]) / float(total_like_votes)
+        percentage_of_vlikes_for_dead_villagers = sum([v_like_counter[int(dead_villager.split(&quot;_&quot;)[-1])] for dead_villager in dead_villagers]) / float(total_like_votes)
+
+        percentage_of_vlikes_for_dead_wolves = sum([v_like_counter[int(dead_wolf.split(&quot;_&quot;)[-1])] for dead_wolf in dead_wolves]) / float(total_like_votes)
+        percentage_of_vlikes_for_alive_wolves = sum([v_like_counter[int(wolf.split(&quot;_&quot;)[-1])] for wolf in wolves if wolf not in dead_wolves]) / float(total_like_votes)
+
+
+        # TODO: DO I repeat the above for numbers in the top n votes?
+        target_record[step[&#39;day&#39;]].append([v_avg_target_count,
+                                           v_avg_like_count,
+                                           v_avg_neutral_count,
+                                           avg_vself_target,
+                                           avg_vself_like,
+                                           most_common_n_targets,
+                                           len(wolves_in_most_common_targets),
+                                           most_common_n_likes,
+                                           len(wolves_in_most_common_likes),
+                                           percent_of_vtargets_toward_dead_players,
+                                           percent_of_vtargets_toward_wolves,
+                                           percent_of_vtargets_toward_dead_wolves,
+                                           percent_of_vtargets_toward_alive_wolves,
+                                           percentage_of_vlikes_for_alive_villagers,
+                                           percentage_of_vlikes_for_dead_villagers,
+                                           percentage_of_vlikes_for_dead_wolves,
+                                           percentage_of_vlikes_for_alive_wolves,
+                                           ])
+        
+
+        if verbose:
+            phase_name = &quot;Voting Phase&quot; if step[&#39;phase&#39;] == Phase.VOTING else &quot;Accusation Phase&quot;
+            print(f&#39;Day : {step[&quot;day&quot;]} | Phase : {step[&quot;phase&quot;]} - {phase_name} | Round : {step[&quot;round&quot;]}&#39;)
+            print(f&#39;\t | - avg targetted {v_avg_target_count:.2f}, liked {v_avg_like_count:.2f}, neutral {v_avg_neutral_count:.2f}, with {avg_vself_target:.2f} share of villagers targetting themselves, and {avg_vself_like:.2f} liking themselves&#39;)
+            print(f&#39;\t | -{len(wolves_in_most_common_targets)} wolves targetted in top {most_common_n_targets} votes&#39;)
+            print(f&#39;\t | -{len(wolves_in_most_common_likes)} wolves liked in top {most_common_n_likes} likes&#39;)
+            print(f&#39;\t | - % of votes towards dead players ({percent_of_vtargets_toward_dead_players:.2f}), towards dead wolves ({percent_of_vtargets_toward_dead_wolves:.2f}), towards wolves ({percent_of_vtargets_toward_wolves:.2f}), towards living wolves ({percent_of_vtargets_toward_alive_wolves:.2f})&#39;)
+            print(f&#39;\t | - % of likes towards dead wolves ({percentage_of_vlikes_for_dead_wolves:.2f}), towards alive wolves ({percentage_of_vlikes_for_alive_wolves:.2f})&#39;)
+            print(f&#39;\t | - % of likes towards dead villagers ({percentage_of_vlikes_for_dead_villagers:.2f}), towards alive villagers ({percentage_of_vlikes_for_alive_villagers:.2f})&#39;)
+            print(&quot;\n&quot;)
+
+    return target_record
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>_ = approval_target_indicators(trained_approval_villager_wins[0], verbose=True)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Day : 1 | Phase : 0 - Accusation Phase | Round : 0
+	 | - avg targetted 3.75, liked 3.75, neutral 2.50, with 0.25 share of villagers targetting themselves, and 0.125 liking themselves
+	 | -2 wolves targetted in top 3 votes
+	 | -0 wolves liked in top 3 likes
+	 | - % of votes towards dead players (0.00), towards dead wolves (0.00), towards wolves (0.30), towards living wolves (0.30)
+	 | - % of likes towards dead wolves (0.00), towards alive wolves (0.13)
+	 | - % of likes towards dead villagers (0.00), towards alive villagers (0.87)
+
+
+Day : 1 | Phase : 0 - Accusation Phase | Round : 1
+	 | - avg targetted 3.38, liked 3.50, neutral 3.12, with 0.375 share of villagers targetting themselves, and 0.375 liking themselves
+	 | -1 wolves targetted in top 3 votes
+	 | -0 wolves liked in top 2 likes
+	 | - % of votes towards dead players (0.00), towards dead wolves (0.00), towards wolves (0.19), towards living wolves (0.19)
+	 | - % of likes towards dead wolves (0.00), towards alive wolves (0.18)
+	 | - % of likes towards dead villagers (0.00), towards alive villagers (0.82)
+
+
+Day : 1 | Phase : 1 - Voting Phase | Round : 0
+	 | - avg targetted 2.75, liked 3.50, neutral 3.75, with 0.125 share of villagers targetting themselves, and 0.625 liking themselves
+	 | -1 wolves targetted in top 2 votes
+	 | -0 wolves liked in top 3 likes
+	 | - % of votes towards dead players (0.00), towards dead wolves (0.00), towards wolves (0.36), towards living wolves (0.36)
+	 | - % of likes towards dead wolves (0.00), towards alive wolves (0.11)
+	 | - % of likes towards dead villagers (0.00), towards alive villagers (0.89)
+
+
+Day : 2 | Phase : 0 - Accusation Phase | Round : 0
+	 | - avg targetted 3.86, liked 2.86, neutral 3.29, with 0.14285714285714285 share of villagers targetting themselves, and 0.42857142857142855 liking themselves
+	 | -1 wolves targetted in top 3 votes
+	 | -1 wolves liked in top 2 likes
+	 | - % of votes towards dead players (0.19), towards dead wolves (0.11), towards wolves (0.22), towards living wolves (0.11)
+	 | - % of likes towards dead wolves (0.15), towards alive wolves (0.05)
+	 | - % of likes towards dead villagers (0.00), towards alive villagers (0.80)
+
+
+Day : 2 | Phase : 0 - Accusation Phase | Round : 1
+	 | - avg targetted 3.00, liked 3.86, neutral 3.14, with 0.42857142857142855 share of villagers targetting themselves, and 0.14285714285714285 liking themselves
+	 | -1 wolves targetted in top 3 votes
+	 | -1 wolves liked in top 3 likes
+	 | - % of votes towards dead players (0.10), towards dead wolves (0.05), towards wolves (0.24), towards living wolves (0.19)
+	 | - % of likes towards dead wolves (0.19), towards alive wolves (0.11)
+	 | - % of likes towards dead villagers (0.07), towards alive villagers (0.63)
+
+
+Day : 2 | Phase : 1 - Voting Phase | Round : 0
+	 | - avg targetted 3.71, liked 3.71, neutral 2.57, with 0.42857142857142855 share of villagers targetting themselves, and 0.5714285714285714 liking themselves
+	 | -1 wolves targetted in top 3 votes
+	 | -1 wolves liked in top 3 likes
+	 | - % of votes towards dead players (0.31), towards dead wolves (0.19), towards wolves (0.27), towards living wolves (0.08)
+	 | - % of likes towards dead wolves (0.04), towards alive wolves (0.12)
+	 | - % of likes towards dead villagers (0.08), towards alive villagers (0.77)
+
+
+Day : 3 | Phase : 0 - Accusation Phase | Round : 0
+	 | - avg targetted 4.60, liked 2.60, neutral 2.80, with 0.6 share of villagers targetting themselves, and 0.2 liking themselves
+	 | -0 wolves targetted in top 2 votes
+	 | -1 wolves liked in top 2 likes
+	 | - % of votes towards dead players (0.48), towards dead wolves (0.00), towards wolves (0.13), towards living wolves (0.13)
+	 | - % of likes towards dead wolves (0.23), towards alive wolves (0.00)
+	 | - % of likes towards dead villagers (0.23), towards alive villagers (0.54)
+
+
+Day : 3 | Phase : 0 - Accusation Phase | Round : 1
+	 | - avg targetted 3.00, liked 3.20, neutral 3.80, with 0.0 share of villagers targetting themselves, and 0.4 liking themselves
+	 | -1 wolves targetted in top 2 votes
+	 | -1 wolves liked in top 2 likes
+	 | - % of votes towards dead players (0.40), towards dead wolves (0.07), towards wolves (0.27), towards living wolves (0.20)
+	 | - % of likes towards dead wolves (0.19), towards alive wolves (0.06)
+	 | - % of likes towards dead villagers (0.19), towards alive villagers (0.56)
+
+
+Day : 3 | Phase : 1 - Voting Phase | Round : 0
+	 | - avg targetted 4.80, liked 2.80, neutral 2.40, with 0.6 share of villagers targetting themselves, and 0.2 liking themselves
+	 | -1 wolves targetted in top 2 votes
+	 | -0 wolves liked in top 2 likes
+	 | - % of votes towards dead players (0.29), towards dead wolves (0.04), towards wolves (0.25), towards living wolves (0.21)
+	 | - % of likes towards dead wolves (0.07), towards alive wolves (0.00)
+	 | - % of likes towards dead villagers (0.43), towards alive villagers (0.50)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>game_avg_records(trained_approval_villager_wins, approval_target_indicators)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{1: array([[3.42190476, 3.2797619 , 3.29833333, 0.35666667, 0.32095238,
+         2.64952381, 0.45904762, 2.61142857, 0.5847619 , 0.        ,
+         0.19448546, 0.        , 0.19448546, 0.79212616, 0.        ,
+         0.        , 0.20787384],
+        [3.33142857, 3.28238095, 3.38619048, 0.3502381 , 0.31071429,
+         2.60952381, 0.60190476, 2.57904762, 0.53714286, 0.        ,
+         0.20916051, 0.        , 0.20916051, 0.80057958, 0.        ,
+         0.        , 0.19942042],
+        [3.19690476, 3.38238095, 3.42071429, 0.29452381, 0.34547619,
+         2.45142857, 1.03238095, 2.55809524, 0.35428571, 0.        ,
+         0.29445294, 0.        , 0.29445294, 0.8392938 , 0.        ,
+         0.        , 0.1607062 ]]),
+ 2: array([[3.44163265, 3.24108844, 3.31727891, 0.37043084, 0.3046712 ,
+         2.48190476, 0.47809524, 2.41142857, 0.55238095, 0.2078003 ,
+         0.18770592, 0.05850358, 0.12920234, 0.64596733, 0.13925759,
+         0.05483049, 0.15994458],
+        [3.32884354, 3.29655329, 3.37460317, 0.34190476, 0.31718821,
+         2.41333333, 0.60761905, 2.4152381 , 0.47238095, 0.20376202,
+         0.21925453, 0.06286385, 0.15639068, 0.65972014, 0.14263696,
+         0.05163881, 0.14600408],
+        [3.18027211, 3.40975057, 3.40997732, 0.28870748, 0.34566893,
+         2.28190476, 1.02285714, 2.39047619, 0.29714286, 0.17730954,
+         0.31810982, 0.05467531, 0.2634345 , 0.69481209, 0.15312031,
+         0.05893649, 0.0931311 ]]),
+ 3: array([[3.36270492, 3.30027322, 3.33702186, 0.35901639, 0.31434426,
+         2.17213115, 0.42076503, 2.17213115, 0.45628415, 0.40098704,
+         0.1943495 , 0.09191064, 0.10243886, 0.48033149, 0.31232658,
+         0.0931367 , 0.11420523],
+        [3.34057377, 3.26721311, 3.39221311, 0.33647541, 0.29644809,
+         2.14480874, 0.4863388 , 2.17759563, 0.43715847, 0.39376108,
+         0.2207387 , 0.09547484, 0.12526386, 0.49021929, 0.31243258,
+         0.08887203, 0.10847611],
+        [3.23019126, 3.27513661, 3.49467213, 0.27868852, 0.34289617,
+         2.04644809, 0.92622951, 2.1147541 , 0.2295082 , 0.37026199,
+         0.30396858, 0.0877304 , 0.21623817, 0.52207285, 0.32996885,
+         0.08481419, 0.06314411]]),
+ 4: array([[3.4691358 , 3.17777778, 3.35308642, 0.37283951, 0.29876543,
+         1.66666667, 0.37037037, 1.60740741, 0.39259259, 0.58164659,
+         0.20197708, 0.10010939, 0.10186769, 0.29735093, 0.50507409,
+         0.1010116 , 0.09656338],
+        [3.36049383, 3.25185185, 3.38765432, 0.34567901, 0.3308642 ,
+         1.67407407, 0.38518519, 1.62962963, 0.2962963 , 0.57335501,
+         0.22322089, 0.09942031, 0.12380058, 0.30780372, 0.49854555,
+         0.08933026, 0.10432047],
+        [3.26666667, 3.3382716 , 3.39506173, 0.24691358, 0.37777778,
+         1.57777778, 0.82222222, 1.61481481, 0.22962963, 0.52576841,
+         0.3288928 , 0.08224113, 0.24665167, 0.31060531, 0.54392267,
+         0.10988302, 0.035589  ]])}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="quantifying-losing-games">
+<h3>Quantifying losing games<a class="headerlink" href="#quantifying-losing-games" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="graphs">
+<h3>Graphs<a class="headerlink" href="#graphs" title="Permalink to this heading">#</a></h3>
+<p>Should we give a penalty to players that target dead wolves? More than just targetting dead players in general?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from collections import Counter
+import matplotlib.pyplot as plt
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>labels, values = zip(*Counter([item for sublist in [villager_win[-1][&quot;werewolves&quot;] for villager_win in approval_trained_villager_wins] for item in sublist]).items())
+indexes = np.arange(len(labels))
+width = 10
+
+# plt.bar(indexes, values, width)
+# plt.xticks(indexes + width * 0.5, labels)
+# plt.tight_layout()
+# plt.xticks(rotation=60)
+# plt.show()npa
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># load up trained agent
+# load up fresh agent for comparisons
+
+# play recurrent game_w_replays with both agents
+
+# try to answer the questions below
+
+
+# play_recurrent_game_w_replays()
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="replay-visualization">
+<h2>Replay visualization<a class="headerlink" href="#replay-visualization" title="Permalink to this heading">#</a></h2>
+<p>Need good ways to visualize the gameplay</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># https://towardsdatascience.com/building-interactive-network-graphs-using-pyvis-5b8e6e25cf64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def print_replay(replay):
+    #[wolf for wolf in stage[&quot;werewolves&quot;]]
+    #print(&quot;Werewolves \tVillagers&quot;)
+    for stage in replay:
+        wolf_votes = [(f&#39;p_{wolf.split(&quot;_&quot;)[-1]}&#39;, stage[&quot;votes&quot;][wolf]) for wolf in stage[&quot;werewolves&quot;] if wolf in stage[&quot;votes&quot;]]
+        villager_votes = [(f&#39;p{villager.split(&quot;_&quot;)[-1]}&#39;, stage[&quot;votes&quot;][villager]) for villager in stage[&quot;villagers&quot;] if villager in stage[&quot;votes&quot;]]
+        print(f&#39;Wolves \t : {wolf_votes} \t\t Villagers : {villager_votes}&#39;)
+        #print([f&#39;{wolf.split(&quot;_&quot;)[-1]} : {stage[&quot;votes&quot;][&quot;player&quot;_{wolf.split(&quot;_&quot;)[-1]}]}]&#39; for wolf in stage[&quot;werewolves&quot;]])
+        # for wolf in stage[&#39;werewolves&#39;]:
+        #     wid = wolf.split(&quot;_&quot;)[-1]
+        #     pid = f&quot;player_{wid}&quot;
+        #     stage[&quot;votes&quot;][pid]
+        #     print(f&#39;p_{wid} : {stage[&quot;votes&quot;][pid]}&#39;)
+        # print(stage[&#39;votes&#39;])
+
+print_replay(replay[4])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="training.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Training</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="bibliography.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bibliography</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-indicators-and-stats">Behavioral Indicators and Stats</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-wolf-policies">Static Wolf Policies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-collection">Data collection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plurality-agent">Plurality Agent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-agent">Approval Agent</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#days-to-win">Days to win</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-kills">Days between wolf kills</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tie-games">Tie games</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#villager-target-selection">Villager target selection</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantifying-losing-games">Quantifying losing games</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#graphs">Graphs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#replay-visualization">Replay visualization</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By George Savin
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

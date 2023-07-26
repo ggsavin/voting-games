@@ -164,6 +164,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="voting-game.html">Werewolf - The Game</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Methodology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="training.html">Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats_and_visualize.html">Identifying villager voting behavior patterns and stats</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -392,7 +393,7 @@ document.write(`
 <section id="ppo">
 <h2>PPO<a class="headerlink" href="#ppo" title="Permalink to this heading">#</a></h2>
 <p>PPO was chosen because it stil seems to be the most widely used on-policy algorithm.</p>
-<p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id1">[<a class="reference internal" href="bibliography.html#id21">ARStanczyk+20</a>]</span></p>
+<p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id1">[<a class="reference internal" href="bibliography.html#id21">ARStanczyk+20</a>]</span> and <span id="id2">[<a class="reference internal" href="bibliography.html#id24" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
 <p>Because we are implementing an LSTM, the action <span class="math notranslate nohighlight">\(a_t\)</span> selected by the policy <span class="math notranslate nohighlight">\(\pi_{\theta}\)</span> depends on both the observation <span class="math notranslate nohighlight">\(o_t\)</span> and the hidden state <span class="math notranslate nohighlight">\(h_t\)</span>.</p>
 <div class="proof algorithm admonition" id="ppo-alg">
 <p class="admonition-title"><span class="caption-number">Algorithm 1 </span> (Proximal Policy Optimization w/ Clipped Surrogate)</p>
@@ -402,8 +403,8 @@ document.write(`
 <li><p>for <span class="math notranslate nohighlight">\(k=0,1,2,...\)</span> do</p>
 <ol class="arabic simple">
 <li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
-<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id2">[<a class="reference internal" href="bibliography.html#id23" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
-<li><p>Compute policy update <span id="id3">[<a class="reference internal" href="bibliography.html#id22" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
+<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id3">[<a class="reference internal" href="bibliography.html#id23" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
+<li><p>Compute policy update <span id="id4">[<a class="reference internal" href="bibliography.html#id22" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
 </ol>
 <div class="math notranslate nohighlight">
 \[
@@ -412,29 +413,23 @@ document.write(`
 <p>by taking <span class="math notranslate nohighlight">\(K\)</span> steps of minibatch SGD (via Adam), where</p>
 <div class="math notranslate nohighlight">
 \[
-    \mathcal{L}^C(\theta) = E [\sum_{t=0}^{\tau}[min(q_t(\theta)\hat{A}_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]
+    \mathcal{L}^C(\theta) &amp; = E [\sum_{t=0}^{\tau}[min(q_t(\theta)\hat{A}_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]
+            $q_t(\theta) &amp; = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
     \]</div>
-<p>ratio <span class="math notranslate nohighlight">\(q_t(\theta) = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}\)</span></p>
 <div class="math notranslate nohighlight">
 \[
     \mathcal{L}^V_t(\theta) = (V_{\theta}(o_t,h_t) - V^{target}_t)^2
     \]</div>
-<div class="math notranslate nohighlight">
-\[
-    L^{CVH}_t(\theta) = E [\mathcal{L}^C(\theta) - c_1\cdot \mathcal{L}^V_t(\theta) + c_2 \mathcal{H}[\pi_{\theta}](o_t, h_t)]
-    \]</div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> (Schulman 2017)
-</pre></div>
-</div>
-<ol class="arabic simple" start="4">
-<li><p>Compute value update</p></li>
-</ol>
+<p>Coefficients <span class="math notranslate nohighlight">\(c_1, c_2\)</span> weigh the value fucntion loss and the entropy bonus
+$<span class="math notranslate nohighlight">\(
+ L^{CVH}_t(\theta) = E [\mathcal{L}^C(\theta) - c_1\cdot \mathcal{L}^V_t(\theta) + c_2 \mathcal{H}[\pi_{\theta}](o_t, h_t)]
+ \)</span>$</p>
 </li>
 </ol>
 </section>
 </div><div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
+<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
 </div>
 </section>
 <section id="agent-implementation">
@@ -451,7 +446,7 @@ document.write(`
 <span id="game-analysis-methodology"></span><h2>Analysis<a class="headerlink" href="#analysis" title="Permalink to this heading">#</a></h2>
 <hr class="footnotes docutils" />
 <aside class="footnote brackets" id="details-ppo" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/</a></p>
 </aside>
 </section>
