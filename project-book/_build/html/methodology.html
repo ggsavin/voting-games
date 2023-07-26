@@ -35,6 +35,7 @@
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -61,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'methodology';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -387,7 +390,28 @@ document.write(`
 </section>
 <section id="ppo">
 <h2>PPO<a class="headerlink" href="#ppo" title="Permalink to this heading">#</a></h2>
-<div class="admonition note">
+<div class="proof algorithm admonition" id="ppo-alg">
+<p class="admonition-title"><span class="caption-number">Algorithm 1 </span> (Proximal Policy Optimization)</p>
+<section class="algorithm-content" id="proof-content">
+<p><strong>Inputs</strong> Given a Network <span class="math notranslate nohighlight">\(G=(V,E)\)</span> with flow capacity <span class="math notranslate nohighlight">\(c\)</span>, a source node <span class="math notranslate nohighlight">\(s\)</span>, and a sink node <span class="math notranslate nohighlight">\(t\)</span></p>
+<p><strong>Output</strong> Compute a flow <span class="math notranslate nohighlight">\(f\)</span> from <span class="math notranslate nohighlight">\(s\)</span> to <span class="math notranslate nohighlight">\(t\)</span> of maximum value</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f(u, v) \leftarrow 0\)</span> for all edges <span class="math notranslate nohighlight">\((u,v)\)</span></p></li>
+<li><p>While there is a path <span class="math notranslate nohighlight">\(p\)</span> from <span class="math notranslate nohighlight">\(s\)</span> to <span class="math notranslate nohighlight">\(t\)</span> in <span class="math notranslate nohighlight">\(G_{f}\)</span> such that <span class="math notranslate nohighlight">\(c_{f}(u,v)&gt;0\)</span>
+for all edges <span class="math notranslate nohighlight">\((u,v) \in p\)</span>:</p>
+<ol class="arabic simple">
+<li><p>Find <span class="math notranslate nohighlight">\(c_{f}(p)= \min \{c_{f}(u,v):(u,v)\in p\}\)</span></p></li>
+<li><p>For each edge <span class="math notranslate nohighlight">\((u,v) \in p\)</span></p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f(u,v) \leftarrow f(u,v) + c_{f}(p)\)</span> <em>(Send flow along the path)</em></p></li>
+<li><p><span class="math notranslate nohighlight">\(f(u,v) \leftarrow f(u,v) - c_{f}(p)\)</span> <em>(The flow might be “returned” later)</em></p></li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</section>
+</div><div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
 </div>
