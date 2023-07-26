@@ -330,19 +330,34 @@ def aggregate_stats_from_replays(game_replays, voting_type=None):
                     f'day_{day}_accusation_{i}_avg_targets': accusations[0],
                     f'day_{day}_accusation_{i}_avg_likes': accusations[1],
                     f'day_{day}_accusation_{i}_avg_neutrals': accusations[2],
-                    f'day_{day}_accusation_{i}_p_targetting_wolves': accusations[2],
-                    f'day_{day}_accusation_{i}_p_targetting_dead_players': accusations[3],
-                    f'day_{day}_accusation_{i}_p_targetting_dead_wolf': accusations[4],
+
+                    f'day_{day}_accusation_{i}_p_targetting_dead_players': accusations[9],
+                    f'day_{day}_accusation_{i}_p_targetting_wolves': accusations[10],
+                    f'day_{day}_accusation_{i}_p_targetting_live_wolves': accusations[12],
+
+
+                    f'day_{day}_accusation_{i}_p_liking_live_villagers': accusations[13],
+                    f'day_{day}_accusation_{i}_p_liking_dead_villagers': accusations[14],
+                    f'day_{day}_accusation_{i}_p_liking_dead_wolves': accusations[15],
+                    f'day_{day}_accusation_{i}_p_liking_live_wolves': accusations[16]
                 }
             
             # voting r ound
             indicator_stats = {
                 **indicator_stats,
-                f'day_{day}_voting_unq_villager_targets': voting_info[-1][0],
-                f'day_{day}_voting_avg_self_vote': voting_info[-1][1],
-                f'day_{day}_voting_p_targetting_wolves': voting_info[-1][2],
-                f'day_{day}_voting_p_targetting_dead_players': voting_info[-1][3],
-                f'day_{day}_voting_p_targetting_dead_wolf': voting_info[-1][4],
+                f'day_{day}_voting_{i}_avg_targets': voting_info[-1][0],
+                f'day_{day}_voting_{i}_avg_likes': voting_info[-1][1],
+                f'day_{day}_voting_{i}_avg_neutrals': voting_info[-1][2],
+
+                f'day_{day}_voting_{i}_p_targetting_dead_players': voting_info[-1][9],
+                f'day_{day}_voting_{i}_p_targetting_wolves': voting_info[-1][10],
+                f'day_{day}_voting_{i}_p_targetting_live_wolves': voting_info[-1][12],
+
+
+                f'day_{day}_voting_{i}_p_liking_live_villagers': voting_info[-1][13],
+                f'day_{day}_voting_{i}_p_liking_dead_villagers': voting_info[-1][14],
+                f'day_{day}_voting_{i}_p_liking_dead_wolves': voting_info[-1][15],
+                f'day_{day}_voting_{i}_p_liking_live_wolves': voting_info[-1][16]
             }
         # indicator_stats = {
         #     "avg_targets": avg_records[0],
