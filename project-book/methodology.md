@@ -2,26 +2,28 @@
 
 ## MDPs
 
+Markov Decision Process
+
 ## POMDPs
 
 ## PPO
 
+PPO was chosen because it stil seems to be the most widely used on-policy algorithm.
+
+INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in {cite}`Andrychowicz2020-fs`
+
 ```{prf:algorithm} Proximal Policy Optimization
 :label: ppo-alg
 
-**Inputs** Given a Network $G=(V,E)$ with flow capacity $c$, a source node $s$, and a sink node $t$
+**Inputs** Initial policy parameters $theta_0$, clipping threshold $\epsilon$
+1. for $k=0,1,2,...$ do
+    1. Collect set of trajectories $\Tau$ on policy $\pi_k = \pi(\theta_k)$
+    2. Estimate advatanges $A^{\pi_k}$ using GAE (Schulman 2016)
+    3. Compute policy update
+            $\theta_{k+1} = argmax \mathcal{L} $
+        by taking $K$ steps of minibatch SGD (via Adam), where
 
-**Output** Compute a flow $f$ from $s$ to $t$ of maximum value
-
-1. $f(u, v) \leftarrow 0$ for all edges $(u,v)$
-2. While there is a path $p$ from $s$ to $t$ in $G_{f}$ such that $c_{f}(u,v)>0$
-	for all edges $(u,v) \in p$:
-
-	1. Find $c_{f}(p)= \min \{c_{f}(u,v):(u,v)\in p\}$
-	2. For each edge $(u,v) \in p$
-
-		1. $f(u,v) \leftarrow f(u,v) + c_{f}(p)$ *(Send flow along the path)*
-		2. $f(u,v) \leftarrow f(u,v) - c_{f}(p)$ *(The flow might be "returned" later)*
+        (Schulman 2017)
 ```
 
 

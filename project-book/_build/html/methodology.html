@@ -384,28 +384,28 @@ document.write(`
 <h1>Methodology<a class="headerlink" href="#methodology" title="Permalink to this heading">#</a></h1>
 <section id="mdps">
 <h2>MDPs<a class="headerlink" href="#mdps" title="Permalink to this heading">#</a></h2>
+<p>Markov Decision Process</p>
 </section>
 <section id="pomdps">
 <h2>POMDPs<a class="headerlink" href="#pomdps" title="Permalink to this heading">#</a></h2>
 </section>
 <section id="ppo">
 <h2>PPO<a class="headerlink" href="#ppo" title="Permalink to this heading">#</a></h2>
+<p>PPO was chosen because it stil seems to be the most widely used on-policy algorithm.</p>
+<p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id1">[<a class="reference internal" href="bibliography.html#id21">ARStanczyk+20</a>]</span></p>
 <div class="proof algorithm admonition" id="ppo-alg">
 <p class="admonition-title"><span class="caption-number">Algorithm 1 </span> (Proximal Policy Optimization)</p>
 <section class="algorithm-content" id="proof-content">
-<p><strong>Inputs</strong> Given a Network <span class="math notranslate nohighlight">\(G=(V,E)\)</span> with flow capacity <span class="math notranslate nohighlight">\(c\)</span>, a source node <span class="math notranslate nohighlight">\(s\)</span>, and a sink node <span class="math notranslate nohighlight">\(t\)</span></p>
-<p><strong>Output</strong> Compute a flow <span class="math notranslate nohighlight">\(f\)</span> from <span class="math notranslate nohighlight">\(s\)</span> to <span class="math notranslate nohighlight">\(t\)</span> of maximum value</p>
-<ol class="arabic simple">
-<li><p><span class="math notranslate nohighlight">\(f(u, v) \leftarrow 0\)</span> for all edges <span class="math notranslate nohighlight">\((u,v)\)</span></p></li>
-<li><p>While there is a path <span class="math notranslate nohighlight">\(p\)</span> from <span class="math notranslate nohighlight">\(s\)</span> to <span class="math notranslate nohighlight">\(t\)</span> in <span class="math notranslate nohighlight">\(G_{f}\)</span> such that <span class="math notranslate nohighlight">\(c_{f}(u,v)&gt;0\)</span>
-for all edges <span class="math notranslate nohighlight">\((u,v) \in p\)</span>:</p>
-<ol class="arabic simple">
-<li><p>Find <span class="math notranslate nohighlight">\(c_{f}(p)= \min \{c_{f}(u,v):(u,v)\in p\}\)</span></p></li>
-<li><p>For each edge <span class="math notranslate nohighlight">\((u,v) \in p\)</span></p>
-<ol class="arabic simple">
-<li><p><span class="math notranslate nohighlight">\(f(u,v) \leftarrow f(u,v) + c_{f}(p)\)</span> <em>(Send flow along the path)</em></p></li>
-<li><p><span class="math notranslate nohighlight">\(f(u,v) \leftarrow f(u,v) - c_{f}(p)\)</span> <em>(The flow might be “returned” later)</em></p></li>
-</ol>
+<p><strong>Inputs</strong> Initial policy parameters <span class="math notranslate nohighlight">\(theta_0\)</span>, clipping threshold <span class="math notranslate nohighlight">\(\epsilon\)</span></p>
+<ol class="arabic">
+<li><p>for <span class="math notranslate nohighlight">\(k=0,1,2,...\)</span> do</p>
+<ol class="arabic">
+<li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\Tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
+<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE (Schulman 2016)</p></li>
+<li><p>Compute policy update
+<span class="math notranslate nohighlight">\(\theta_{k+1} = argmax \mathcal{L} \)</span>
+by taking <span class="math notranslate nohighlight">\(K\)</span> steps of minibatch SGD (via Adam), where</p>
+<p>(Schulman 2017)</p>
 </li>
 </ol>
 </li>
@@ -413,7 +413,7 @@ for all edges <span class="math notranslate nohighlight">\((u,v) \in p\)</span>:
 </section>
 </div><div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
+<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
 </div>
 </section>
 <section id="agent-implementation">
@@ -430,7 +430,7 @@ for all edges <span class="math notranslate nohighlight">\((u,v) \in p\)</span>:
 <span id="game-analysis-methodology"></span><h2>Analysis<a class="headerlink" href="#analysis" title="Permalink to this heading">#</a></h2>
 <hr class="footnotes docutils" />
 <aside class="footnote brackets" id="details-ppo" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/</a></p>
 </aside>
 </section>
