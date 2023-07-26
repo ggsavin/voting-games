@@ -115,21 +115,40 @@ env = pare(num_agents=config["config_game"]["gameplay"]["num_agents"],
             #rewards=self.config["config_game"]['rewards']
             )
 
-finished_one = False
-for _ in range(50):
-    try:
-        trainer = PPOTrainer(env,
-                             config=config,
-                             wolf_policy=random_wolf,
-                             run_id="Approval_256",
-                             device=torch.device("cpu"),
-                             mlflow_uri="http://mlflow:5000",
-                             voting_type="approval")
-        trainer.train(voting_type="approval", save_threshold=25)
-        finished_one = True
-    except ValueError as e:
-        if ("nan" in str(e)):
-            print("It was value errors, trying again")
-    finally:
-        if finished_one == True:
-            break
+## mlflow setting
+mlflow.set_tracking_uri("http://mlflow:5000")
+experiment = mlflow.get_experiment_by_name("Approval Training")
+
+if experiment == None:
+    experiment_id = mlflow.create_experiment(
+        "Approval Training",
+        tags={"version": "v1", "priority": "P1"},
+    )
+else:
+    experiment_id = experiment.experiment_id
+
+accusation_phases = [1,2,3,4]
+
+for accusation_phase_num in accusation_phases:
+
+    completed_training = 0
+    for _ in range(10):
+        try:
+            trainer = PPOTrainer(env,
+                                config=config,
+                                wolf_policy=random_wolf,
+                                run_id=f'Approval_10_{accusation_phase_num}',
+                                device=torch.device("cpu"),
+                                voting_type="approval")
+            
+            with mlflow.start_run(run_name=f'{accusation_phase_num}_accusations',
+                                  ):
+                
+                trainer.train(voting_type="approval", save_threshold=25)
+                completed_training += 1
+        except ValueError as e:
+            if ("nan" in str(e)):
+                print("It was value errors, trying again")
+        finally:
+            if completed_training >= 2:
+                break
