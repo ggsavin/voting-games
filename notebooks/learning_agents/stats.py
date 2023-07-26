@@ -315,36 +315,54 @@ def aggregate_stats_from_replays(game_replays, voting_type=None):
                 f'day_{day}_voting_p_targetting_dead_players': voting_info[-1][3],
                 f'day_{day}_voting_p_targetting_dead_wolf': voting_info[-1][4],
             }
-        # indicator_stats = {
-        #     "unq_villager_targets": avg_records[0],
-        #     "avg_self_vote": avg_records[1],
-        #     "p_targetting_wolves": avg_records[2],
-        #     "p_targetting_dead_players": avg_records[3],
-        #     "p_targetting_dead_wolf": avg_records[4]
-        # }
-
 
     elif voting_type == "approval":
         avg_records = _game_avg_records(game_replays, _approval_target_indicators)
-        indicator_stats = {
-            "avg_targets": avg_records[0],
-            "avg_likes": avg_records[1],
-            "avg_neutrals": avg_records[2],
-            "avg_self_target": avg_records[3],
-            "avg_self_like": avg_records[4],
-            "common_target_count": avg_records[5],
-            "wolves_in_common_targets": avg_records[6],
-            "common_like_count": avg_records[7],
-            "wolves_in_common_likes": avg_records[8],
-            "p_targetting_dead_players": avg_records[9],
-            "p_targetting_wolves": avg_records[10],
-            "p_targetting_dead_wolves": avg_records[11],
-            "p_targetting_live_wolves": avg_records[12],
-            "p_liking_live_villagers": avg_records[13],
-            "p_liking_dead_villagers": avg_records[14],
-            "p_liking_dead_wolves": avg_records[15],
-            "p_liking_live_wolves": avg_records[16]
-        }
+
+        # Given what we have going on with plurality and the ballooning of metrics,
+        # we are going  to only use a subset of the information for now
+        indicator_stats = {}
+        for day, voting_info in avg_records.items():
+
+            for i, accusations in enumerate(voting_info[0:-1]):
+                indicator_stats = {
+                    **indicator_stats,
+                    f'day_{day}_accusation_{i}_avg_targets': accusations[0],
+                    f'day_{day}_accusation_{i}_avg_likes': accusations[1],
+                    f'day_{day}_accusation_{i}_avg_neutrals': accusations[2],
+                    f'day_{day}_accusation_{i}_p_targetting_wolves': accusations[2],
+                    f'day_{day}_accusation_{i}_p_targetting_dead_players': accusations[3],
+                    f'day_{day}_accusation_{i}_p_targetting_dead_wolf': accusations[4],
+                }
+            
+            # voting r ound
+            indicator_stats = {
+                **indicator_stats,
+                f'day_{day}_voting_unq_villager_targets': voting_info[-1][0],
+                f'day_{day}_voting_avg_self_vote': voting_info[-1][1],
+                f'day_{day}_voting_p_targetting_wolves': voting_info[-1][2],
+                f'day_{day}_voting_p_targetting_dead_players': voting_info[-1][3],
+                f'day_{day}_voting_p_targetting_dead_wolf': voting_info[-1][4],
+            }
+        # indicator_stats = {
+        #     "avg_targets": avg_records[0],
+        #     "avg_likes": avg_records[1],
+        #     "avg_neutrals": avg_records[2],
+        #     "avg_self_target": avg_records[3],
+        #     "avg_self_like": avg_records[4],
+        #     "common_target_count": avg_records[5],
+        #     "wolves_in_common_targets": avg_records[6],
+        #     "common_like_count": avg_records[7],
+        #     "wolves_in_common_likes": avg_records[8],
+        #     "p_targetting_dead_players": avg_records[9],
+        #     "p_targetting_wolves": avg_records[10],
+        #     "p_targetting_dead_wolves": avg_records[11],
+        #     "p_targetting_live_wolves": avg_records[12],
+        #     "p_liking_live_villagers": avg_records[13],
+        #     "p_liking_dead_villagers": avg_records[14],
+        #     "p_liking_dead_wolves": avg_records[15],
+        #     "p_liking_live_wolves": avg_records[16]
+        # }
 
     return {
         "avg_days_until_win": days_until_win,
