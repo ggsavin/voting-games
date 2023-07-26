@@ -14,14 +14,14 @@ INitializations and hyper-parameter choices were greatly influenced by the exhau
 
 Because we are implementing an LSTM, the action $a_t$ selected by the policy $\pi_{\theta}$ depends on both the observation $o_t$ and the hidden state $h_t$.
 
-```{prf:algorithm} Proximal Policy Optimization w/ Clipped Surrogate {cite}`schulman2017proximal`
+```{prf:algorithm} Proximal Policy Optimization w/ Clipped Surrogate
 :label: ppo-alg
 
 **Inputs** Initial policy parameters $theta_0$, clipping threshold $\epsilon$
 1. for $k=0,1,2,...$ do
     1. Collect set of trajectories $\tau$ on policy $\pi_k = \pi(\theta_k)$
     2. Estimate advatanges $A^{\pi_k}$ using GAE {cite}`schulman2015high`
-    3. Compute policy update
+    3. Compute policy update {cite}`schulman2017proximal`
 
     $$
     \theta_{k+1} = argmax \mathcal{L}^{CVH} 
