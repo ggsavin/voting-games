@@ -31,13 +31,13 @@ class ActorCriticAgent(torch.nn.Module):
 
     def _layer_init(self, layer, std=np.sqrt(2), bias_const=0.0):
         torch.nn.init.orthogonal_(layer.weight, std)
-        # torch.nn.init.constant_(layer.bias, bias_const)
+        torch.nn.init.constant_(layer.bias, bias_const)
         return layer
 
     def _rec_layer_init(self, layer, std=np.sqrt(2), bias_const=0.0):
         for name, param in layer.named_parameters():
-            # if "bias" in name:
-                # torch.nn.init.constant_(param, bias_const)
+            if "bias" in name:
+                torch.nn.init.constant_(param, bias_const)
             if "weight" in name:
                 torch.nn.init.orthogonal_(param, std)
         return layer

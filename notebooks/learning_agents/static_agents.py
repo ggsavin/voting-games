@@ -1,5 +1,28 @@
 
 import torch
+import random
+
+def random_plurality_wolf(env, agent, action=None):
+    villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])
+    return action if action != None else int(random.choice(list(villagers_remaining)).split("_")[-1])
+
+def random_approval_wolf(env, agent, action=None):
+    if action != None:
+        return action
+
+    villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])
+    wolves_remaining = set(env.world_state["werewolves"]) & set(env.world_state['alive'])
+
+    # pick a living target
+    target = random.choice(list(villagers_remaining))
+
+    action = [0] * len(env.possible_agents)
+    action[int(target.split("_")[-1])] = -1
+    for curr_wolf in wolves_remaining:
+        action[int(curr_wolf.split("_")[-1])] = 1
+
+    return action
+
 
 class RandomRecurrentPluralityAgent(torch.nn.Module):
     def __init__(self, voting_type=None):
