@@ -26,8 +26,11 @@ def _when_did_wolves_get_killed(game):
     
     return days_wolves_executed
 
-def _game_tie_info(game, voting_type=None):
-    wolves = game[0]['werewolves']
+def _game_tie_info(game_replay, voting_type=None):
+    wolves = game_replay[0]['werewolves']
+
+    # keep tie information based on days and phases
+    tie_record = {}
 
     just_votes = []
     tie_days = []
@@ -36,7 +39,15 @@ def _game_tie_info(game, voting_type=None):
     lucky_wolf_day = []
     wolf_tie_day = []
 
-    for step in game:
+    vote_rounds = []
+    for i, step in enumerate(game_replay):
+        if step["phase"] == Phase.NIGHT or i == 0:
+            continue
+        if step["phase"] == Phase.VOTING:
+            vote_rounds.append(step)
+
+        if step['day'] not in tie_record.keys():
+            tie_record[step['day']] = []
 
         if voting_type == "plurality":
             villager_votes = [vote for player, vote in step['votes'].items() if player not in wolves]
@@ -47,44 +58,48 @@ def _game_tie_info(game, voting_type=None):
             wolf_votes = np.concatenate([np.where(np.array(vote) == -1)[0] for player, vote in step['votes'].items() if player in wolves]).tolist()
             all_votes = np.concatenate([np.where(np.array(vote) == -1)[0] for player, vote in step['votes'].items()]).tolist()
 
-        villager_vote_counter = Counter(villager_votes)
-        all_vote_counter = Counter(all_votes)
-
+        # who are the dead players, and who was killed this turn
+        # this information helps us avoid errors counting and including dead players
         if step["phase"] == Phase.VOTING:
-            just_votes.append(step)
+            if len(vote_rounds) == 1:
+                dead_players = []
+                dead_wolves = []
+                executed_this_round = step['executed'][0]
+            else:
+                dead_players = list((set(step['executed']) & set(vote_rounds[-2]['executed'])) | set(step['killed']))
+                dead_wolves = list(set(wolves) & set(dead_players))
+                executed_this_round = list(set(step['executed']) - set(vote_rounds[-2]['executed']))[0]
+        else:
+            dead_players = list(set(step['executed']) | set(step['killed']))
+            dead_wolves = list(set(wolves) & set(dead_players))
+            executed_this_round = None
+        
+        # update the counters given the dead_players and dead _wolves infomration
+        
+        villager_vote_counter = Counter([vote for vote in villager_votes if f'player_{vote}' not in dead_players])
+        all_vote_counter = Counter([vote for vote in all_votes if f'player_{vote}' not in dead_players])
 
-            # was the vote a tie? did it lead to 
-            max_votes_on_target = max(all_vote_counter.values())
-            targets = [k for k in all_vote_counter if all_vote_counter[k] == max_votes_on_target]
+        max_votes_on_target = max(all_vote_counter.values())
+        targets = [k for k in all_vote_counter if all_vote_counter[k] == max_votes_on_target]
+        
+        was_there_a_tie = False
+        is_a_target_a_living_wolf = bool(sum([f'player_{target}' in wolves for target in targets if target not in dead_players]))
+        did_wolf_die_this_round = False
+        # we have a tie
 
-            # we have a tie
-            if len(targets) > 1:
-                tie_days.append(step["day"])
-                # are one of the targets a wolf target?
-                is_a_target_a_wolf_target = sum([target in wolf_votes for target in targets])
-                
-                # is the tie between a dead player and a live player?
-                # this won't  trigger a tie trigger though
-                if len(step['executed']) == 1:
-                    dead_players = list(set(step['executed']) | set(step['killed']))
-                    killed_this_turn = step['executed'][0]
-                else:
-                    dead_players =  list((set(step['executed']) & set(just_votes[-2]['executed'])) | set(step['killed']))
-                    killed_this_turn = list(set(step['executed']) - set(just_votes[-2]['executed']))[0]
+        if len(targets) > 1:
+            was_there_a_tie = True
+            if step["phase"] == Phase.VOTING:
+                if executed_this_round in wolves:
+                    did_wolf_die_this_round = True
 
-                # is the tie only between dead players?
-                is_a_target_a_living_wolf = sum([f'player_{target}' in wolves for target in targets if target not in dead_players])
+        tie_record[step['day']].append([
+            was_there_a_tie,
+            is_a_target_a_living_wolf,
+            did_wolf_die_this_round
+        ])
 
-                # so now, we want to know if we have at tie between a wolf target and a living wolf
-                if is_a_target_a_living_wolf and is_a_target_a_wolf_target:
-                    if killed_this_turn not in wolves:
-                        # wolves got lucky
-                        lucky_wolf_day.append(step["day"])
-
-                if is_a_target_a_living_wolf:
-                    wolf_tie_day.append(step["day"])
-
-    return tie_days, lucky_wolf_day, wolf_tie_day
+    return tie_record
 
 def _game_avg_records(game_replays, indicator_func):
     records = [indicator_func(game_replay, verbose=False) for game_replay in game_replays]
