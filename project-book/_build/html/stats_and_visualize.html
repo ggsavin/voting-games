@@ -769,9 +769,9 @@ Average amount of days until the next wolf was killed in approval games for 2 wo
 
     
     return [tie_in_accusation_count/total_accusation_rounds, 
-            tie_in_voting_count/max_days, 
-            vote_tie_if_accusation_tie_count/max(tie_in_accusation_day_count, 1.0),
-            same_target_after_tie_if_wolf_lived/max(lucky_wolf_day, 1.0)
+            tie_in_voting_count/max_days,
+            np.nan if tie_in_accusation_day_count == 0.0 else vote_tie_if_accusation_tie_count/tie_in_accusation_day_count,
+            np.nan if lucky_wolf_day == 0.0 else same_target_after_tie_if_wolf_lived/lucky_wolf_day
             ]
 </pre></div>
 </div>
@@ -779,12 +779,16 @@ Average amount of days until the next wolf was killed in approval games for 2 wo
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>process_tie_info(game_tie_info(trained_plurality_villager_wins[0], voting_type=&#39;plurality&#39;))
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>g1 = process_tie_info(game_tie_info(trained_plurality_villager_wins[0], voting_type=&#39;plurality&#39;))
+g2 = process_tie_info(game_tie_info(trained_plurality_villager_wins[3], voting_type=&#39;plurality&#39;))
+print(g1)
+print(g2)
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.16666666666666666, 0.0, 0.0, 0.0]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.16666666666666666, 0.0, 0.0, nan]
+[0.0, 0.3333333333333333, nan, nan]
 </pre></div>
 </div>
 </div>
@@ -800,12 +804,12 @@ tie_game_approval_stats = [process_tie_info(game_tie_info(trained_villager_win, 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.mean(np.stack(tie_game_plurality_stats), axis=0)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.nanmean(np.stack(tie_game_plurality_stats), axis=0)
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.28763441, 0.19623656, 0.16362007, 0.01290323])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.28763441, 0.19623656, 0.19212963, 0.10909091])
 </pre></div>
 </div>
 </div>
