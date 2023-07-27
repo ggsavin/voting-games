@@ -26,6 +26,7 @@ def _when_did_wolves_get_killed(game):
     
     return days_wolves_executed
 
+### TIE GAMES ###
 def _game_tie_info(game_replay, voting_type=None):
     wolves = game_replay[0]['werewolves']
 
@@ -83,23 +84,82 @@ def _game_tie_info(game_replay, voting_type=None):
         targets = [k for k in all_vote_counter if all_vote_counter[k] == max_votes_on_target]
         
         was_there_a_tie = False
-        is_a_target_a_living_wolf = bool(sum([f'player_{target}' in wolves for target in targets if target not in dead_players]))
+        living_wolf_target = [target for target in targets if target not in dead_players and f'player_{target}' in wolves]
         did_wolf_die_this_round = False
         # we have a tie
 
         if len(targets) > 1:
             was_there_a_tie = True
-            if step["phase"] == Phase.VOTING:
-                if executed_this_round in wolves:
-                    did_wolf_die_this_round = True
+            
+        if step["phase"] == Phase.VOTING:
+            if executed_this_round in wolves:
+                did_wolf_die_this_round = True
 
         tie_record[step['day']].append([
             was_there_a_tie,
-            is_a_target_a_living_wolf,
+            living_wolf_target,
             did_wolf_die_this_round
         ])
 
     return tie_record
+
+def _process_tie_info(tie_records):
+    max_days = max(tie_records.keys())
+
+    total_accusation_rounds = 0.0
+    tie_in_accusation_count = 0.0
+    tie_in_accusation_day_count = 0.0
+    tie_in_voting_count = 0.0
+
+    vote_tie_if_accusation_tie_count = 0.0
+
+    lucky_wolf_day = 0.0
+    same_target_after_tie_if_wolf_lived = 0.0
+
+    for day in range(1, max_days+1):
+
+        tie_in_accusation = False
+        # accusation
+        for i, accusation in enumerate(tie_records[day][0:-1]):
+            tie_in_accusation_count += int(accusation[0]) # was there a tie?
+            tie_in_accusation = tie_in_accusation | accusation[0]
+            total_accusation_rounds += 1
+
+        tie_in_accusation_day_count += int(tie_in_accusation)
+
+        ## voting ##
+        vote = tie_records[day][-1]
+
+        # if there was a tie
+        if vote[0]:
+
+            tie_in_voting_count += 1
+
+            if tie_in_accusation:
+                vote_tie_if_accusation_tie_count += 1
+
+            # if there is a wolf target
+            if len(vote[1]) > 0:
+                if vote[2] != True:
+                    lucky_wolf_day += 1
+
+        # if we have a wolf in the tie and they did not die, update for the next vote round check
+        if len(vote[1]) > 0 and day > 1:
+            last_vote = tie_records[day-1][-1]
+            
+            # TODO : make sure this count is actually increased outside of if there was a tie
+            # if the target was the same as last target, and the last round the wolf got lucky
+            if last_vote[1] == vote[1] and last_vote[2] != True:
+                same_target_after_tie_if_wolf_lived += 1
+
+    
+    return [tie_in_accusation_count/total_accusation_rounds, 
+            tie_in_voting_count/max_days,
+            np.nan if tie_in_accusation_day_count == 0.0 else vote_tie_if_accusation_tie_count/tie_in_accusation_day_count,
+            np.nan if lucky_wolf_day == 0.0 else same_target_after_tie_if_wolf_lived/lucky_wolf_day
+            ]
+
+### TARGETTING ### 
 
 def _game_avg_records(game_replays, indicator_func):
     records = [indicator_func(game_replay, verbose=False) for game_replay in game_replays]
