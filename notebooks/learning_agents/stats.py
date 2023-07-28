@@ -319,12 +319,9 @@ def _approval_target_indicators(game, verbose=False):
                                            v_avg_neutral_count,
                                            avg_vself_target,
                                            avg_vself_like,
-                                           most_common_n_targets,
-                                           len(wolves_in_most_common_targets),
-                                           most_common_n_likes,
-                                           len(wolves_in_most_common_likes),
+                                           len(wolves_in_most_common_targets)/most_common_n_targets,
+                                           len(wolves_in_most_common_likes)/most_common_n_likes,
                                            percent_of_vtargets_toward_dead_players,
-                                           percent_of_vtargets_toward_wolves,
                                            percent_of_vtargets_toward_dead_wolves,
                                            percent_of_vtargets_toward_alive_wolves,
                                            percentage_of_vlikes_for_alive_villagers,
@@ -337,12 +334,14 @@ def _approval_target_indicators(game, verbose=False):
         if verbose:
             phase_name = "Voting Phase" if step['phase'] == Phase.VOTING else "Accusation Phase"
             print(f'Day : {step["day"]} | Phase : {step["phase"]} - {phase_name} | Round : {step["round"]}')
-            print(f'\t | - avg targetted {v_avg_target_count:.2f}, liked {v_avg_like_count:.2f}, neutral {v_avg_neutral_count:.2f}, with {avg_vself_target:.2f} share of villagers targetting themselves, and {avg_vself_like:.2f} liking themselves')
-            print(f'\t | -{len(wolves_in_most_common_targets)} wolves targetted in top {most_common_n_targets} votes')
-            print(f'\t | -{len(wolves_in_most_common_likes)} wolves liked in top {most_common_n_likes} likes')
-            print(f'\t | - % of votes towards dead players ({percent_of_vtargets_toward_dead_players:.2f}), towards dead wolves ({percent_of_vtargets_toward_dead_wolves:.2f}), towards wolves ({percent_of_vtargets_toward_wolves:.2f}), towards living wolves ({percent_of_vtargets_toward_alive_wolves:.2f})')
-            print(f'\t | - % of likes towards dead wolves ({percentage_of_vlikes_for_dead_wolves:.2f}), towards alive wolves ({percentage_of_vlikes_for_alive_wolves:.2f})')
-            print(f'\t | - % of likes towards dead villagers ({percentage_of_vlikes_for_dead_villagers:.2f}), towards alive villagers ({percentage_of_vlikes_for_alive_villagers:.2f})')
+            print(f'\t | - avg targetted {v_avg_target_count:.2f}, liked {v_avg_like_count:.2f}, neutral {v_avg_neutral_count:.2f}')
+            print(f'\t | - {avg_vself_target:.2f} share of villagers targeted themselves, and {avg_vself_like:.2f} liked themselves')
+            print(f'\t | - {len(wolves_in_most_common_targets)/most_common_n_targets} wolves targetted in top votes')
+            print(f'\t | - {len(wolves_in_most_common_likes)/most_common_n_likes} wolves liked in top likes')
+            print(f'\t | - % of votes towards dead players ({percent_of_vtargets_toward_dead_players:.2f}')
+            print(f'\t | - % of votes for dead wolves ({percent_of_vtargets_toward_dead_wolves:.2f}), and towards living wolves ({percent_of_vtargets_toward_alive_wolves:.2f})')
+            print(f'\t | - % of likes towards dead wolves ({percentage_of_vlikes_for_dead_wolves:.2f}) and towards living wolves ({percentage_of_vlikes_for_alive_wolves:.2f})')
+            print(f'\t | - % of likes towards dead villagers ({percentage_of_vlikes_for_dead_villagers:.2f}), and towards living villagers ({percentage_of_vlikes_for_alive_villagers:.2f})')
             print("\n")
 
     return target_record

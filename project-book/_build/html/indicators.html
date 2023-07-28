@@ -1,0 +1,1075 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Gameplay Indicators &#8212; Hidden Role Games and Voting</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'indicators';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bibliography" href="bibliography.html" />
+    <link rel="prev" title="Training" href="training.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/midjourney-werewolves.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/midjourney-werewolves.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    COMP 5903 - Voting impact on hidden role games
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="literature-review.html">Literature Review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voting-game.html">Werewolf - The Game</a></li>
+<li class="toctree-l1"><a class="reference internal" href="methodology.html">Methodology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Gameplay Indicators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/ggsavin/voting-games" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Findicators.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/indicators.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gameplay Indicators</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-up-data">Load up data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plurality-agent">Plurality Agent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-agent">Approval Agent</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-indicators">Behavioral Indicators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-elapsed-before-a-villager-win">Days elapsed before a villager win</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-executions">Days between wolf executions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#targetting-indicators">Targetting Indicators</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plurality">Plurality</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#approval">Approval</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ties">Ties</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import torch
+import sys
+sys.path.append(&#39;../&#39;)
+from voting_games.werewolf_env_v0 import plurality_env, pare, Phase, Roles
+import random
+import copy
+from tqdm import tqdm
+from collections import Counter
+import matplotlib.pyplot as plt
+from notebooks.learning_agents.models import ActorCriticAgent
+from notebooks.learning_agents.utils import play_recurrent_game
+from notebooks.learning_agents.static_agents import random_approval_wolf, random_plurality_wolf
+import notebooks.learning_agents.stats as indicators 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/root/.local/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="gameplay-indicators">
+<h1>Gameplay Indicators<a class="headerlink" href="#gameplay-indicators" title="Permalink to this heading">#</a></h1>
+<p>Now that we have trained agents, we want to see what kind of indicators possibly match up with learned voting behaviors, and how explainable they are. We do this for both plurality and approval voting mechanisms.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The way the environment stores history is slightly different than observations. Whereas the latter stores the prior votes, env.history steps have the votes and the outcomes that occured at that particular day/phase/round.</p>
+</div>
+<section id="load-up-data">
+<h2>Load up data<a class="headerlink" href="#load-up-data" title="Permalink to this heading">#</a></h2>
+<p>We are going to use replays from our trained agents to investigate these various markers. 1000 games of each voting type will be used.</p>
+<section id="plurality-agent">
+<h3>Plurality Agent<a class="headerlink" href="#plurality-agent" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
+observations, _, _, _, _ = env.reset()
+
+obs_size= env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
+
+untrained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128, 
+                                        &quot;rec_layers&quot;: 1,
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 1,
+                                        &quot;approval_states&quot;: 10},
+                                        num_players=10,
+                                        obs_size=obs_size)
+
+trained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128,
+                                        &quot;rec_layers&quot;: 1, 
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 1,
+                                        &quot;approval_states&quot;: 10},
+                                        num_players=10,
+                                        obs_size=obs_size)
+trained_plurality_agent.load_state_dict(torch.load(&quot;stored_agents/lstm_first_no_one_hot_128_128/plurality_agent_10_score_46&quot;))
+
+# random_agent = None
+
+trained_plurality_wins, trained_plurality_replays = play_recurrent_game(env, random_plurality_wolf, trained_plurality_agent, num_times=1000, hidden_state_size=128, voting_type=&quot;plurality&quot;)
+untrained_plurality_wins, untrained_plurality_replays = play_recurrent_game(env, random_plurality_wolf, untrained_plurality_agent, num_times=1000, hidden_state_size=128, voting_type=&quot;plurality&quot;)
+# random_wins, random_replays = play_recurrent_game_w_replays(env, random_coordinated_single_wolf, random_agent, num_times=1000, hidden_state_size=128, voting_type=&quot;plurality&quot;)
+
+trained_plurality_villager_wins = [r for r in trained_plurality_replays if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+print(f&#39;Trained villagers won {trained_plurality_wins} games&#39;)
+untrained_plurality_villager_wins = [r for r in untrained_plurality_replays if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+print(f&#39;Untrained villagers won {untrained_plurality_wins} games&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trained villagers won 486 games
+Untrained villagers won 47 games
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="approval-agent">
+<h3>Approval Agent<a class="headerlink" href="#approval-agent" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = pare(num_agents=10, werewolves=2, num_accusations=2)
+observations, _, _, _, _ = env.reset()
+
+obs_size= env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
+observations[&#39;player_0&#39;][&#39;observation&#39;]
+
+untrained_approval_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 256, 
+                                        &quot;rec_layers&quot;: 1,
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 10,
+                                        &quot;approval_states&quot;: 3},
+                                        num_players=10,
+                                        obs_size=obs_size)
+
+trained_approval_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 256,
+                                        &quot;rec_layers&quot;: 1, 
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 10,
+                                        &quot;approval_states&quot;: 3},
+                                        num_players=10,
+                                        obs_size=obs_size)
+trained_approval_agent.load_state_dict(torch.load(&quot;stored_agents/lstm_first_no_one_hot_256_128/approval_agent_10_score_49&quot;))
+
+# random_agent = None
+
+trained_approval_wins, trained_approval_replays = play_recurrent_game(env, random_approval_wolf, trained_approval_agent, num_times=1000, hidden_state_size=256, voting_type=&quot;approval&quot;)
+untrained_approval_wins, untrained_approval_replays = play_recurrent_game(env, random_approval_wolf, untrained_approval_agent, num_times=1000, hidden_state_size=256, voting_type=&quot;approval&quot;)
+# random_wins, random_replays = play_recurrent_game_w_replays(env, random_coordinated_single_wolf, random_agent, num_times=1000, hidden_state_size=128, voting_type=&quot;plurality&quot;)
+
+trained_approval_villager_wins = [r for r in trained_approval_replays if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+print(f&#39;Trained villagers won {trained_approval_wins} games&#39;)
+untrained_approval_villager_wins = [r for r in untrained_approval_replays if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+print(f&#39;Untrained villagers won {untrained_approval_wins} games&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trained villagers won 507 games
+Untrained villagers won 62 games
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="behavioral-indicators">
+<h2>Behavioral Indicators<a class="headerlink" href="#behavioral-indicators" title="Permalink to this heading">#</a></h2>
+<section id="days-elapsed-before-a-villager-win">
+<h3>Days elapsed before a villager win<a class="headerlink" href="#days-elapsed-before-a-villager-win" title="Permalink to this heading">#</a></h3>
+<p>Looking at the average amount of days elapsed before villagers win is a metric that highlights positive learning and collaboration trends</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Average amount of days until a win is achieved by villagers in plurality games&quot;)
+print(f&#39;\t Trained villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in trained_plurality_villager_wins]):2f}&#39;)
+print(f&#39;\t Untrained villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in untrained_plurality_villager_wins]):2f}&#39;)
+
+print(&quot;\n&quot;)
+
+print(&quot;Average amount of days until a win is achieved by villagers in approval games&quot;)
+print(f&#39;\t Trained villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in trained_approval_villager_wins]):2f}&#39;)
+print(f&#39;\t Untrained villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in untrained_approval_villager_wins]):2f}&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average amount of days until a win is achieved by villagers in plurality games
+	 Trained villagers : 2.987368
+	 Untrained villagers : 3.076923
+
+
+Average amount of days until a win is achieved by villagers in approval games
+	 Trained villagers : 2.970833
+	 Untrained villagers : 3.376471
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="days-between-wolf-executions">
+<h3>Days between wolf executions<a class="headerlink" href="#days-between-wolf-executions" title="Permalink to this heading">#</a></h3>
+<p>Looking at the distance in days between wolf executions also highlights positive trends in learning and collaboration, as the lower the number, the more likely villagers were able to confidently coordinate and identify the wolves.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Average amount of days until the next wolf was killed in plurality games for 2 wolf environments&quot;)
+wolf_execution_days = \
+    [indicators._when_did_wolves_get_killed(trained_villager_win) for trained_villager_win in trained_plurality_villager_wins]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for trained agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+
+wolf_execution_days = \
+    [indicators._when_did_wolves_get_killed(untrained_villager_win) for untrained_villager_win in untrained_plurality_villager_wins]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for untrained agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+
+print(&quot;\n&quot;)
+
+print(&quot;Average amount of days until the next wolf was killed in approval games for 2 wolf environments&quot;)
+wolf_execution_days = \
+    [indicators._when_did_wolves_get_killed(trained_villager_win) for trained_villager_win in trained_approval_villager_wins]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for trained agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+
+wolf_execution_days = \
+    [indicators._when_did_wolves_get_killed(untrained_villager_win) for untrained_villager_win in untrained_approval_villager_wins]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for untrained agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average amount of days until the next wolf was killed in plurality games for 2 wolf environments
+	Days between wolf kills for trained agents : 1.581
+	Days between wolf kills for untrained agents : 1.667
+
+
+Average amount of days until the next wolf was killed in approval games for 2 wolf environments
+	Days between wolf kills for trained agents : 1.448
+	Days between wolf kills for untrained agents : 1.659
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="targetting-indicators">
+<h3>Targetting Indicators<a class="headerlink" href="#targetting-indicators" title="Permalink to this heading">#</a></h3>
+<p>Picking the right indicators to try and describe targetting behavior is not straightforward, and differs between plurality and approval voting. Below are the ones currently chosen for both game types, along with a rendering of them across days and phases in a randomly selected game.</p>
+<p>For further analysis, we also use <code class="docutils literal notranslate"><span class="pre">indicators._game_avg_records(replays,indicator_function)</span></code> to average these values across phases and days for every replay.</p>
+<section id="plurality">
+<h4>Plurality<a class="headerlink" href="#plurality" title="Permalink to this heading">#</a></h4>
+<p>To try an make sense of targetting, we chose to look at:</p>
+<ul class="simple">
+<li><p>Ratio of unique villager targets</p></li>
+<li><p>Ratio of villagers voting for themselves</p></li>
+<li><p>Percentage of villagers targetting dead players</p></li>
+<li><p>Percentage of villager votes targetting wolves and dead wolves</p></li>
+</ul>
+<p>These should be good enough to indicate cooperation as well as general role comprehension.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>record = indicators._plurality_target_indicators(trained_plurality_villager_wins[0], verbose=True)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Wolves : [&#39;player_0&#39;, &#39;player_3&#39;]
+
+Day : 1 | Phase : 0 | Round : 0
+Villager votes : [9, 9, 9, 3, 9, 9, 5, 2]
+	 | - Ratio of unique players targetted : 0.5
+	 | - 0.125 of the votes targetting wolves
+	 | - 0.125 of villagers targetting themselves
+	 | - 0.000 share of villager votes targetting dead players
+	 | - 0.000 share of villager votes targetting dead wolves
+
+Day : 1 | Phase : 0 | Round : 1
+Villager votes : [3, 9, 9, 7, 7, 8, 6, 7]
+	 | - Ratio of unique players targetted : 0.625
+	 | - 0.125 of the votes targetting wolves
+	 | - 0.125 of villagers targetting themselves
+	 | - 0.000 share of villager votes targetting dead players
+	 | - 0.000 share of villager votes targetting dead wolves
+
+Day : 1 | Phase : 1 | Round : 0
+Villager votes : [2, 8, 9, 8, 9, 0, 3, 8]
+	 | - Ratio of unique players targetted : 0.625
+	 | - 0.250 of the votes targetting wolves
+	 | - 0.0 of villagers targetting themselves
+	 | - 0.000 share of villager votes targetting dead players
+	 | - 0.000 share of villager votes targetting dead wolves
+
+Day : 2 | Phase : 0 | Round : 0
+Villager votes : [9, 6, 9, 8, 3, 8]
+	 | - Ratio of unique players targetted : 0.6666666666666666
+	 | - 0.167 of the votes targetting wolves
+	 | - 0.0 of villagers targetting themselves
+	 | - 0.333 share of villager votes targetting dead players
+	 | - 0.000 share of villager votes targetting dead wolves
+
+Day : 2 | Phase : 0 | Round : 1
+Villager votes : [8, 3, 3, 8, 3, 8]
+	 | - Ratio of unique players targetted : 0.3333333333333333
+	 | - 0.500 of the votes targetting wolves
+	 | - 0.0 of villagers targetting themselves
+	 | - 0.000 share of villager votes targetting dead players
+	 | - 0.000 share of villager votes targetting dead wolves
+
+Day : 2 | Phase : 1 | Round : 0
+Villager votes : [7, 3, 0, 0, 0, 0]
+	 | - Ratio of unique players targetted : 0.5
+	 | - 0.833 of the votes targetting wolves
+	 | - 0.0 of villagers targetting themselves
+	 | - 0.000 share of villager votes targetting dead players
+	 | - 0.000 share of villager votes targetting dead wolves
+
+Day : 3 | Phase : 0 | Round : 0
+Villager votes : [3, 8, 8, 0, 9]
+	 | - Ratio of unique players targetted : 0.8
+	 | - 0.400 of the votes targetting wolves
+	 | - 0.0 of villagers targetting themselves
+	 | - 0.400 share of villager votes targetting dead players
+	 | - 0.200 share of villager votes targetting dead wolves
+
+Day : 3 | Phase : 0 | Round : 1
+Villager votes : [8, 7, 3, 3, 8]
+	 | - Ratio of unique players targetted : 0.6
+	 | - 0.400 of the votes targetting wolves
+	 | - 0.0 of villagers targetting themselves
+	 | - 0.000 share of villager votes targetting dead players
+	 | - 0.000 share of villager votes targetting dead wolves
+
+Day : 3 | Phase : 1 | Round : 0
+Villager votes : [3, 3, 6, 3, 6]
+	 | - Ratio of unique players targetted : 0.4
+	 | - 0.600 of the votes targetting wolves
+	 | - 0.2 of villagers targetting themselves
+	 | - 0.000 share of villager votes targetting dead players
+	 | - 0.000 share of villager votes targetting dead wolves
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="approval">
+<h4>Approval<a class="headerlink" href="#approval" title="Permalink to this heading">#</a></h4>
+<p>Because of the extra dimensions and expressability of approval voting, trying to determine behavior for these agents is much harder. We thus collect many different and interelated indicators to see what combinations of them might give us the most insight.</p>
+<p>The ones we are currently looking at are:</p>
+<ul class="simple">
+<li><p>average target count</p></li>
+<li><p>average like count</p></li>
+<li><p>average neutral count</p></li>
+<li><p>average self target</p></li>
+<li><p>average self like</p></li>
+<li><p>percentage of wolves in top targets</p></li>
+<li><p>percentage of wolves in top likes</p></li>
+<li><p>percent of votes targetting dead players</p></li>
+<li><p>percent of votes targetting wolves by tracking:</p>
+<ul>
+<li><p>percent of votes targetting dead wolves</p></li>
+<li><p>percent of votes targetting wolves that are still alive</p></li>
+</ul>
+</li>
+<li><p>percent of likes towards wolves by tracking:</p>
+<ul>
+<li><p>percent of likes for dead wolves</p></li>
+<li><p>percent of likes for wolves that are still alive</p></li>
+</ul>
+</li>
+<li><p>percent of likes towards villagers by tracking:</p>
+<ul>
+<li><p>percent of likes towards dead villagers</p></li>
+<li><p>perceent of likes towards villagers that are still alive</p></li>
+</ul>
+</li>
+</ul>
+<p>There might be more complicated tracking indicators that look at changes in between targets, however these have not been implemented yet.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>_ = indicators._approval_target_indicators(trained_approval_villager_wins[0], verbose=True)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Day : 1 | Phase : 0 - Accusation Phase | Round : 0
+	 | - avg targetted 3.75, liked 3.00, neutral 3.25
+	 | - 0.50 share of villagers targeted themselves, and 0.38 liked themselves
+	 | - 0.0 wolves targetted in top votes
+	 | - 0.0 wolves liked in top likes
+	 | - % of votes towards dead players (0.00
+	 | - % of votes for dead wolves (0.00), and towards living wolves (0.20)
+	 | - % of likes towards dead wolves (0.00) and towards living wolves (0.17)
+	 | - % of likes towards dead villagers (0.00), and towards living villagers (0.83)
+
+
+Day : 1 | Phase : 0 - Accusation Phase | Round : 1
+	 | - avg targetted 2.62, liked 3.38, neutral 4.00
+	 | - 0.12 share of villagers targeted themselves, and 0.38 liked themselves
+	 | - 0.3333333333333333 wolves targetted in top votes
+	 | - 0.0 wolves liked in top likes
+	 | - % of votes towards dead players (0.00
+	 | - % of votes for dead wolves (0.00), and towards living wolves (0.24)
+	 | - % of likes towards dead wolves (0.00) and towards living wolves (0.19)
+	 | - % of likes towards dead villagers (0.00), and towards living villagers (0.81)
+
+
+Day : 1 | Phase : 1 - Voting Phase | Round : 0
+	 | - avg targetted 3.25, liked 3.25, neutral 3.50
+	 | - 0.25 share of villagers targeted themselves, and 0.25 liked themselves
+	 | - 0.0 wolves targetted in top votes
+	 | - 0.5 wolves liked in top likes
+	 | - % of votes towards dead players (0.00
+	 | - % of votes for dead wolves (0.00), and towards living wolves (0.12)
+	 | - % of likes towards dead wolves (0.00) and towards living wolves (0.31)
+	 | - % of likes towards dead villagers (0.00), and towards living villagers (0.69)
+
+
+Day : 2 | Phase : 0 - Accusation Phase | Round : 0
+	 | - avg targetted 3.33, liked 3.83, neutral 2.83
+	 | - 0.33 share of villagers targeted themselves, and 0.50 liked themselves
+	 | - 0.5 wolves targetted in top votes
+	 | - 0.0 wolves liked in top likes
+	 | - % of votes towards dead players (0.25
+	 | - % of votes for dead wolves (0.00), and towards living wolves (0.20)
+	 | - % of likes towards dead wolves (0.00) and towards living wolves (0.17)
+	 | - % of likes towards dead villagers (0.17), and towards living villagers (0.65)
+
+
+Day : 2 | Phase : 0 - Accusation Phase | Round : 1
+	 | - avg targetted 3.00, liked 4.00, neutral 3.00
+	 | - 0.33 share of villagers targeted themselves, and 0.50 liked themselves
+	 | - 0.5 wolves targetted in top votes
+	 | - 0.0 wolves liked in top likes
+	 | - % of votes towards dead players (0.22
+	 | - % of votes for dead wolves (0.00), and towards living wolves (0.22)
+	 | - % of likes towards dead wolves (0.00) and towards living wolves (0.21)
+	 | - % of likes towards dead villagers (0.17), and towards living villagers (0.62)
+
+
+Day : 2 | Phase : 1 - Voting Phase | Round : 0
+	 | - avg targetted 3.17, liked 3.17, neutral 3.67
+	 | - 0.17 share of villagers targeted themselves, and 0.33 liked themselves
+	 | - 0.5 wolves targetted in top votes
+	 | - 0.0 wolves liked in top likes
+	 | - % of votes towards dead players (0.32
+	 | - % of votes for dead wolves (0.00), and towards living wolves (0.37)
+	 | - % of likes towards dead wolves (0.00) and towards living wolves (0.11)
+	 | - % of likes towards dead villagers (0.16), and towards living villagers (0.74)
+
+
+Day : 3 | Phase : 0 - Accusation Phase | Round : 0
+	 | - avg targetted 4.25, liked 3.25, neutral 2.50
+	 | - 0.00 share of villagers targeted themselves, and 0.75 liked themselves
+	 | - 0.0 wolves targetted in top votes
+	 | - 0.0 wolves liked in top likes
+	 | - % of votes towards dead players (0.65
+	 | - % of votes for dead wolves (0.00), and towards living wolves (0.18)
+	 | - % of likes towards dead wolves (0.00) and towards living wolves (0.15)
+	 | - % of likes towards dead villagers (0.08), and towards living villagers (0.77)
+
+
+Day : 3 | Phase : 0 - Accusation Phase | Round : 1
+	 | - avg targetted 2.50, liked 3.25, neutral 4.25
+	 | - 0.00 share of villagers targeted themselves, and 0.50 liked themselves
+	 | - 1.0 wolves targetted in top votes
+	 | - 0.5 wolves liked in top likes
+	 | - % of votes towards dead players (0.30
+	 | - % of votes for dead wolves (0.00), and towards living wolves (0.50)
+	 | - % of likes towards dead wolves (0.00) and towards living wolves (0.23)
+	 | - % of likes towards dead villagers (0.31), and towards living villagers (0.46)
+
+
+Day : 3 | Phase : 1 - Voting Phase | Round : 0
+	 | - avg targetted 3.25, liked 2.25, neutral 4.50
+	 | - 0.00 share of villagers targeted themselves, and 0.00 liked themselves
+	 | - 1.0 wolves targetted in top votes
+	 | - 0.0 wolves liked in top likes
+	 | - % of votes towards dead players (0.38
+	 | - % of votes for dead wolves (0.00), and towards living wolves (0.46)
+	 | - % of likes towards dead wolves (0.00) and towards living wolves (0.11)
+	 | - % of likes towards dead villagers (0.56), and towards living villagers (0.33)
+
+
+Day : 4 | Phase : 0 - Accusation Phase | Round : 0
+	 | - avg targetted 3.33, liked 3.67, neutral 3.00
+	 | - 0.33 share of villagers targeted themselves, and 0.67 liked themselves
+	 | - 0.0 wolves targetted in top votes
+	 | - 0.0 wolves liked in top likes
+	 | - % of votes towards dead players (0.50
+	 | - % of votes for dead wolves (0.10), and towards living wolves (0.20)
+	 | - % of likes towards dead wolves (0.18) and towards living wolves (0.09)
+	 | - % of likes towards dead villagers (0.36), and towards living villagers (0.36)
+
+
+Day : 4 | Phase : 0 - Accusation Phase | Round : 1
+	 | - avg targetted 4.00, liked 2.00, neutral 4.00
+	 | - 0.00 share of villagers targeted themselves, and 0.00 liked themselves
+	 | - 0.0 wolves targetted in top votes
+	 | - 0.0 wolves liked in top likes
+	 | - % of votes towards dead players (0.75
+	 | - % of votes for dead wolves (0.17), and towards living wolves (0.17)
+	 | - % of likes towards dead wolves (0.17) and towards living wolves (0.17)
+	 | - % of likes towards dead villagers (0.33), and towards living villagers (0.33)
+
+
+Day : 4 | Phase : 1 - Voting Phase | Round : 0
+	 | - avg targetted 3.00, liked 4.33, neutral 2.67
+	 | - 0.33 share of villagers targeted themselves, and 0.33 liked themselves
+	 | - 0.5 wolves targetted in top votes
+	 | - 0.0 wolves liked in top likes
+	 | - % of votes towards dead players (0.56
+	 | - % of votes for dead wolves (0.11), and towards living wolves (0.22)
+	 | - % of likes towards dead wolves (0.08) and towards living wolves (0.08)
+	 | - % of likes towards dead villagers (0.46), and towards living villagers (0.38)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="ties">
+<h3>Ties<a class="headerlink" href="#ties" title="Permalink to this heading">#</a></h3>
+<p>Ties are quite common, and could possibly be used strategically. Knowning when/if ties are occuring could possibly lead to a better understanding of agent voting patterns.</p>
+<p>What we are currenly looking for is:</p>
+<ul class="simple">
+<li><p>What percentage of voting rounds are ties?</p></li>
+<li><p>How often do ties in accusation rounds lead to ties in voting rounds?</p></li>
+<li><p>If a wolf gets lucky and survives a tied voting round, how likey is it they get executed the next voting round?</p></li>
+</ul>
+<p>There are two functions we use to achieve this:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">indicators._game_tie_info(game_replay,</span> <span class="pre">voting_type=None)</span></code> which returns if there was a tie, if and which wolf was targetted, and if a wolf died during the phase. This is done for every day and every phase in a game</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">indicators._process_tie_info(tie_records)</span></code> takes the results above and returns:</p>
+<ul>
+<li><p>percentage of ties in accusation phases per game</p></li>
+<li><p>percentage of ties in voting phases per game</p></li>
+<li><p>likelihood of a tie in a voting phase given a tie in the prior accusation phases</p></li>
+<li><p>likelihood of a wolf getting targetting in a subsequent voting round after getting lucky and surviving a tie round where they were a target</p></li>
+</ul>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tgps = \
+    np.nanmean(np.stack([indicators._process_tie_info(indicators._game_tie_info(trained_villager_win, voting_type=&quot;plurality&quot;)) for trained_villager_win in trained_plurality_villager_wins]),axis= 0)
+tgas = \
+    np.nanmean(np.stack([indicators._process_tie_info(indicators._game_tie_info(trained_villager_win, voting_type=&quot;approval&quot;)) for trained_villager_win in trained_approval_villager_wins]), axis=0)
+
+print(&quot;Plurality tie indicators&quot;)
+print(f&#39;\tLikelihood of ties in accusation phases : {tgps[0]:.2f}&#39;)
+print(f&#39;\tLikelihood of ties in voting phases : {tgps[1]:.2f}&#39;)
+print(f&#39;\tLikelihood of a tie in a voting phase given a tie in the prior accusation phases {tgps[2]:.2f}&#39;)
+print(f&#39;\tLikelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : {tgps[3]:.2f}&#39;)
+print(&quot;\n&quot;)
+print(&quot;Approval tie indicators&quot;)
+print(f&#39;\tLikelihood of ties in accusation phases : {tgas[0]:.2f}&#39;)
+print(f&#39;\tLikelihood of ties in voting phases : {tgas[1]:.2f}&#39;)
+print(f&#39;\tLikelihood of a tie in a voting phase given a tie in the prior accusation phases {tgas[2]:.2f}&#39;)
+print(f&#39;\tLikelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : {tgas[3]:.2f}&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plurality tie indicators
+	Likelihood of ties in accusation phases : 0.29
+	Likelihood of ties in voting phases : 0.19
+	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.21
+	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.77
+
+
+Approval tie indicators
+	Likelihood of ties in accusation phases : 0.36
+	Likelihood of ties in voting phases : 0.31
+	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.32
+	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.63
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="training.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Training</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="bibliography.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bibliography</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-up-data">Load up data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plurality-agent">Plurality Agent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-agent">Approval Agent</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-indicators">Behavioral Indicators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-elapsed-before-a-villager-win">Days elapsed before a villager win</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-executions">Days between wolf executions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#targetting-indicators">Targetting Indicators</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plurality">Plurality</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#approval">Approval</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ties">Ties</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By George Savin
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
