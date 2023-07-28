@@ -194,8 +194,9 @@ def _plurality_target_indicators(game_replay, verbose=False):
         villager_vote_counter = Counter(villager_votes)
         all_vote_counter = Counter(all_votes)
 
-        unique_villager_votes = len(villager_vote_counter)
+        unique_villager_votes = len(villager_vote_counter)/float(len(villager_votes))
         avg_self_vote = sum([1 for k,v in step['votes'].items() if int(k.split("_")[-1]) == v and k not in wolves]) / float(len(villager_votes))
+
         percent_of_villagers_targetting_wolves = sum([villager_vote_counter[int(wolf.split("_")[-1])] for wolf in wolves]) / float(len(villager_votes))
 
 
@@ -225,11 +226,14 @@ def _plurality_target_indicators(game_replay, verbose=False):
         if verbose:
             print(f'Day : {step["day"]} | Phase : {step["phase"]} | Round : {step["round"]}')
             print(f'Villager votes : {villager_votes}')
-            print(f'\t | - {unique_villager_votes} players targetted, with {percent_of_villagers_targetting_wolves:.3f} of the votes targetting wolves and around  {avg_self_vote} of villagers targetting themselves')
-            print(f'\t | - {percent_of_villagers_targetting_dead_players:.3f} share of the votes targetting dead players')
-            print(f'\t | - {percent_of_villagers_targetting_a_dead_wolf:.3f} share of the votes targetting dead wolves\n')
+            print(f'\t | - Ratio of unique players targetted : {unique_villager_votes:.3f}')
+            print(f'\t | - {percent_of_villagers_targetting_wolves:.3f} of the votes targetting wolves')
+            print(f'\t | - {avg_self_vote} of villagers targetting themselves')
+            print(f'\t | - {percent_of_villagers_targetting_dead_players:.3f} share of villager votes targetting dead players')
+            print(f'\t | - {percent_of_villagers_targetting_a_dead_wolf:.3f} share of villager votes targetting dead wolves\n')
 
     return target_record
+
 
 def _approval_target_indicators(game, verbose=False):
     wolves = game[0]['werewolves']
