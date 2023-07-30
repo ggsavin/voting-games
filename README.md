@@ -4,6 +4,10 @@
 
 Run `jupyter-book build --all project-book/` in the docker container at the project root level
 
+## Make sure graphviz is installed for visualizing model
+
+`apt-get install graphviz`
+
 ## What is this project trying to achieve?
 
 Provide an SGD environment where voting is a core mechanism so we can study how agents learn given different parameters and hopefully make inferences based on the voting mechanisms in play.
