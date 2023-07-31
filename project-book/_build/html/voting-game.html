@@ -447,7 +447,7 @@ document.write(`
 </section>
 <section id="action-space-and-observation-space">
 <h4>Action Space and Observation Space<a class="headerlink" href="#action-space-and-observation-space" title="Permalink to this heading">#</a></h4>
-<p>The action space is simply the vote of the agent</p>
+<p>The action space is simply the vote of the agent. In the plurality version, it is the player ID the agent wishes to taget. In the approval setting, it is a multi-discrete array of length #-players, where each value is (-1 - dissaproval, 0 - neutral, 1 - like)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plurality</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">action_spaces</span> <span class="o">=</span> <span class="p">{</span> <span class="n">name</span><span class="p">:</span> <span class="n">Discrete</span><span class="p">(</span><span class="n">num_agents</span><span class="p">)</span>  <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="p">}</span>
 

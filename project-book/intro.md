@@ -1,12 +1,15 @@
 # COMP 5903 - Voting impact on hidden role games
 
 ## Introduction
-Social Deduction Games model tentative cooperation between groups with uncertain motives.
+Social Deduction Games model tentative cooperation between groups with uncertain motives. In these games, different players and teams/coalitions have access to different information, with their goals ranging from cooperative to atagonistic{cite}`Dafoe2020-ds`.
+
+In these environments, communication and deception present unique challenges for AI agents trying to learn optimal strategies. 
+
+
 
 Mechanisms employed in Mafia/Werewolf
 {bdg-primary}`Hidden Roles`, {bdg-primary}`Negotiation`, {bdg-primary}`Asymmetric information`, {bdg-primary}`Voting`, {bdg-primary}`Elimination`,
 
-Shared goals, conflicting motives {cite}`Dafoe2020-ds`.
 
 Werewolf/mafia are interchangeable names for the same underlying game, so any 
 

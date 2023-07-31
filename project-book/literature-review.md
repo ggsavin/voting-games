@@ -39,10 +39,14 @@ We implemented our own following some works in truncated BPTT and CLeanRL, howev
 ## Game theoretic work done in mafia
 
 
+
+{cite}`braverman2008mafia` answer the question of how large should a sub-group be (the werewolves/mafia) to dominate the game. They explore games with and without a seer or detective that is fed information on the true roles of players.
+
 ## Mafia and Werewolf RL
 
 AIWolf {cite}`toriumi2017ai` is a popular Werewolf game framework and yearly competition run out of Japan *cite the competition and the framework*, which pits agents against eachother in full NLP or protocol limited communication modes. Agents have been trained *cite*
 
+{cite}`Eger2018-hx` explore commitment to an apparent goal through messaging in agents playing ultaimte werewolf.
 
 RLupus {cite}`Brandizzi2021RLupusCT` explored explicit communication in Werewolf, by adding a signal channel to the action. A follow up {cite}`Lipinski2022EMP` showed that a single word vocabulary is a good enough heuristic. They also explored longer communication rounds, much like we allow multiple accusation rounds.
 

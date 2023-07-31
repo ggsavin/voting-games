@@ -50,7 +50,7 @@ Because we are implementing an LSTM, the action $a_t$ selected by the policy $\p
 The 37 implementation details of PPO[^37-details-ppo] is a great blog post detailing many more intricacies of PPO implementations
 ```
 
-## Agent Implementation
+## Agent Design
 
 Use pytorchviz or torchview to visualize the pytorch graph
 
