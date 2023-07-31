@@ -43,7 +43,7 @@ def __init__(self, num_agents=5, werewolves=1, num_accusations=1, rewards=REWARD
 We allow for a variable number of agents as well as number of accusation rounds before an execution vote. We also allow for custom reward values along with [default values](game-rewards)
 
 ```{note}
-square root of the number of agents is the max allowed werewolf count, reason being *cite game theory work on this*
+square root of the number of agents is the max allowed werewolf count given game theoretic advantages for werewolves {cite}`braverman2008mafia`
 ```
 
 A permutation of roles given the above choice is taken, and assigned to players.

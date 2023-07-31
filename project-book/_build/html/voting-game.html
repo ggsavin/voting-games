@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Werewolf - The Game &#8212; Hidden Role Games and Voting</title>
+    <title>Werewolf - The Game &#8212; Voting in Hidden Role Games</title>
   
   
   
@@ -155,7 +155,7 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    COMP 5903 - Voting impact on hidden role games
+                    COMP 5903 - Voting in Hidden Role Games
                 </a>
             </li>
         </ul>
@@ -425,7 +425,7 @@ document.write(`
 <p>We allow for a variable number of agents as well as number of accusation rounds before an execution vote. We also allow for custom reward values along with <a class="reference internal" href="#game-rewards"><span class="std std-ref">default values</span></a></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>square root of the number of agents is the max allowed werewolf count, reason being <em>cite game theory work on this</em></p>
+<p>square root of the number of agents is the max allowed werewolf count given game theoretic advantages for werewolves <span id="id6">[]</span></p>
 </div>
 <p>A permutation of roles given the above choice is taken, and assigned to players.</p>
 </section>
@@ -509,7 +509,7 @@ document.write(`
 </section>
 <section id="rewards">
 <span id="game-rewards"></span><h4>Rewards<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h4>
-<p>The following object is the default reward structure for the game, and it was based on reward structures found in other Werewolf focused papers <span id="id6">[<a class="reference internal" href="bibliography.html#id4" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id15" title="Georgi Ventsislavov Velikov. RLereWolf–Reinforcement Learning Agent Development Framework For The Social Deduction Game Werewolf. PhD thesis, University of Aberdeen, 2021.">Vel21</a>]</span>.</p>
+<p>The following object is the default reward structure for the game, and it was based on reward structures found in other Werewolf focused papers <span id="id7">[<a class="reference internal" href="bibliography.html#id4" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id15" title="Georgi Ventsislavov Velikov. RLereWolf–Reinforcement Learning Agent Development Framework For The Social Deduction Game Werewolf. PhD thesis, University of Aberdeen, 2021.">Vel21</a>]</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">REWARDS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;player_death&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>

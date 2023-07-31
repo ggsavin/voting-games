@@ -1,9 +1,14 @@
-# COMP 5903 - Voting impact on hidden role games
+# COMP 5903 - Voting in Hidden Role Games
 
 ## Introduction
-Social Deduction Games model tentative cooperation between groups with uncertain motives. In these games, different players and teams/coalitions have access to different information, with their goals ranging from cooperative to atagonistic{cite}`Dafoe2020-ds`.
+
+Social Deduction Games model tentative cooperation between groups with uncertain motives. In these games, different players and teams/coalitions have access to different information, with their goals ranging from cooperative to atagonistic{cite}`Dafoe2020-ds`. A special type of SDG is a Hidden Role game where the smaller team of players with an information advantage over the majority group also have their roles masked to "blend" into this majority. It is then up to the uniformed majority to build trust amongst themselves while ferreting out the deceptors. Well known games such as Amongst Us, Avalon, Secret Hitler and Mafia fall in this category. 
+
+
 
 In these environments, communication and deception present unique challenges for AI agents trying to learn optimal strategies. 
+
+Interesting problem space that has led to many different approaches to algorithms, techniques, and communication. There is even a
 
 
 
