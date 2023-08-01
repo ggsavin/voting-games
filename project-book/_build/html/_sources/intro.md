@@ -4,8 +4,7 @@
 
 Social Deduction Games model tentative cooperation between groups with uncertain motives. In these games, different players and teams/coalitions have access to different information, with their goals ranging from cooperative to atagonistic{cite}`Dafoe2020-ds`. A special type of SDG is a Hidden Role game where the smaller team of players with an information advantage over the majority group also have their roles masked to "blend" into this majority. It is then up to the uniformed majority to build trust amongst themselves while ferreting out the deceptors. Well known games such as Amongst Us, Avalon, Secret Hitler and Mafia fall in this category. 
 
-```{note}
-Mechanisms employed in Mafia/Werewolf
+```{admonition} Mechanisms employed in Mafia/Werewolf
 {bdg-primary}`Hidden Roles`, {bdg-primary}`Negotiation`, {bdg-primary}`Asymmetric information`, {bdg-primary}`Voting`, {bdg-primary}`Elimination`
 ```
 Given this dichotomy and duplicity, SDGs are ripe for psychological analysis, and indeed, mafia was first played in the Psychology Department of Moscow State University[^mafia-wikipedia]. A gamut of emotions are experienced playing these types of games, from catharsis when identifying deceptors, to perverse joy from lying, cheating and manipulating[^amongst-us-article]. Other psychological uses of SDGs have been to treat anxiety through symbolic interaction {cite}`Conner2022-iu`, quantifying entertainment dynamics of SDGs{cite}`Ri2022-ih` and studying non-verbal communication.

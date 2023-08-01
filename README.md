@@ -12,6 +12,10 @@ Run `jupyter-book build --all project-book/` in the docker container at the proj
 
 Provide an SGD environment where voting is a core mechanism so we can study how agents learn given different parameters and hopefully make inferences based on the voting mechanisms in play.
 
+TODO:
+- Commitment as another indicator. On average how often do agents change their votes. From Wolf to Villager? From Villager to wolf? Villager to Villager? Wolf to Wolf?
+- Make Jupyter Project Book more interactive
+
 
 Ranking 
 https://towardsdatascience.com/learning-to-rank-a-complete-guide-to-ranking-using-machine-learning-4c9688d370d4
