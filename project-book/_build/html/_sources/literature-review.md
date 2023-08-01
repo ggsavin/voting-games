@@ -40,9 +40,16 @@ We implemented our own following some works in truncated BPTT and CLeanRL, howev
 
 
 
-{cite}`braverman2008mafia` answer the question of how large should a sub-group be (the werewolves/mafia) to dominate the game. They explore games with and without a seer or detective that is fed information on the true roles of players.
+{cite}`braverman2008mafia` answer the question of how large should a sub-group be (the werewolves/mafia) to dominate the game. If no special roles exist other than villagers and mafia, they found that a random strategy was optimal for both groups. 
+
+{cite}`yao2008theoretical` prove the theorems in {cite}`braverman2008mafia` for the no detective setting, and place upper-bounds on win-rates of players following their described optimal random policy. 
+
+
+
 
 ## Mafia and Werewolf RL
+
+Analyzing game logs 
 
 AIWolf {cite}`toriumi2017ai` is a popular Werewolf game framework and yearly competition run out of Japan *cite the competition and the framework*, which pits agents against eachother in full NLP or protocol limited communication modes. Agents have been trained *cite*
 
@@ -58,13 +65,6 @@ Our work takes the voting mechanism and replaces it with an approval variant, to
 {cite}`Serrino2019-ge` develop a neural network model based on counterfactual regret minimization to train agents to play The Resistance Avalon.
 
 {cite}`Reinhardt2020-bs` developped a variant of Monte-Carlo Tree Search to play Secret Hitler, and showed that it can play as well as simpler rule based agents.
-
-
-## Psychology
-
-Initial Werewolf work, 
-Werewolf was used {cite}`Conner2022-iu` to teach symbolic interaction and to help students overcome anxiety when confronted with sociological theory by using active learning approaches. {cite}`Ri2022-ih` looked at the different dynamics at play between the minority and majority teams in Mafia and tried to give it an entertainment score based on these dynamics.
-
 
 
 ## SDGs

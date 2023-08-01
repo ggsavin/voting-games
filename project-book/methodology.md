@@ -51,6 +51,7 @@ The 37 implementation details of PPO[^37-details-ppo] is a great blog post detai
 ```
 
 ## Agent Design
+We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale
 
 Use pytorchviz or torchview to visualize the pytorch graph
 

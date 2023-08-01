@@ -164,6 +164,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indicators.html">Gameplay Indicators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="game_visualization.html">Replay visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="future.html">Future Directions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -364,6 +365,7 @@ document.write(`
 <h1>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h1>
 <p>With MLP sizes of 128, 128, hard to learn</p>
 <p>We need at least an LSTM of 256 and 256 MLP hidden</p>
+<p>We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale</p>
 </section>
 
     <script type="text/x-thebe-config">
