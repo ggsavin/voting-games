@@ -7,7 +7,7 @@ Social Deduction Games model tentative cooperation between groups with uncertain
 ```{admonition} Mechanisms employed in Mafia/Werewolf
 {bdg-primary}`Hidden Roles`, {bdg-primary}`Negotiation`, {bdg-primary}`Asymmetric information`, {bdg-primary}`Voting`, {bdg-primary}`Elimination`
 ```
-Given this dichotomy and duplicity, SDGs are ripe for psychological analysis, and indeed, mafia was first played in the Psychology Department of Moscow State University[^mafia-wikipedia]. A gamut of emotions are experienced playing these types of games, from catharsis when identifying deceptors, to perverse joy from lying, cheating and manipulating[^amongst-us-article]. Other psychological uses of SDGs have been to treat anxiety through symbolic interaction {cite}`Conner2022-iu`, quantifying entertainment dynamics of SDGs{cite}`Ri2022-ih` and studying non-verbal communication.
+Given this dichotomy and duplicity, SDGs are ripe for psychological analysis, and indeed, mafia was first played in the Psychology Department of Moscow State University[^mafia-wikipedia]. A gamut of emotions are experienced playing these types of games, from catharsis when identifying deceptors, to perverse joy from lying, cheating and manipulating[^amongst-us-article]. Other psychological uses of SDGs have been to treat anxiety through symbolic interaction {cite}`Conner2022-iu`, quantifying entertainment dynamics of SDGs{cite}`Ri2022-ih` and studying non-verbal communication {cite}`katagami2014investigation`.
 
 
 IN SDGs, communication and deception present unique challenges for AI agents trying to learn optimal strategies on top of the already challenging Multi-Agent-RL (MARL) setting {cite}`Dafoe2020-ds`. To better study these topics along with machine learning, multi-agent simulation, human-agent interaction and cognitive science, an yearly competition called AIWolf {cite}`toriumi2017ai` was started that is still being held to this day. Werewolf, the game played in this competition is simply a re-imagining of Mafia where the mafia are now werewolves, and villagers vote to eliminate who they believe are werewolves during the day.
@@ -23,6 +23,7 @@ Approval voting has more implicit and explicit information, and allows for more 
 - Creation of a custom environment using PettingZoo[^petting-zoo] for the purpose of voting mechanism research within the Werewolf SGD. 
 - Sucessfully implemented approval voting as the voting mechanism in our environment
 - Successfully trained plurality and approval RL agents in our environment
+- Designed a wide range of indicators to explore behavior and voting patterns of agents
 
 We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale
 

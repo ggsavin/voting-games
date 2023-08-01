@@ -13,7 +13,7 @@ Werewolf is a multi player game between two competing teams comprised of village
 
 Gameplay alternates between day and night phases. During the day, villagers vote on who amongst them should be executed for the crime of being a werewolf, and at night, wolves vote on which helpless villager to kill.
 
-Once a player dies, they reveal their role to the rest of the team.
+Once a player dies, they reveal their role to the rest of the players.
 
 Different versions of the game slightly alter rules, or introduce various new roles with their own special abilities. In our case, we have simplified the game as much as possible to focus on the voting mechanisms used by agents to determine who to execute and kill.
 
@@ -157,7 +157,6 @@ REWARDS = {
     "no_sleep": -1,
 }
 ```
-
 
 #### Game loop
 

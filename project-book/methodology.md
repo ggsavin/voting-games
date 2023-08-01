@@ -6,6 +6,8 @@ Markov Decision Process
 
 ## POMDPs
 
+https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process
+
 ## PPO
 
 PPO was chosen because it stil seems to be the most widely used on-policy algorithm.
@@ -49,6 +51,12 @@ Because we are implementing an LSTM, the action $a_t$ selected by the policy $\p
 ```{note}
 The 37 implementation details of PPO[^37-details-ppo] is a great blog post detailing many more intricacies of PPO implementations
 ```
+
+### Why did we choose PPO
+
+A majority of the works we looked at used PPO {cite}`Matsunami2020-wt, Brandizzi2021RLupusCT`, , as it has nice learning properties and good overall success.
+
+We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.
 
 ## Agent Design
 We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale

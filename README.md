@@ -15,7 +15,8 @@ Provide an SGD environment where voting is a core mechanism so we can study how 
 TODO:
 - Commitment as another indicator. On average how often do agents change their votes. From Wolf to Villager? From Villager to wolf? Villager to Villager? Wolf to Wolf?
 - Make Jupyter Project Book more interactive
-
+- Bigger penalty for voting for dead players 
+- Tianshou env?
 
 Ranking 
 https://towardsdatascience.com/learning-to-rank-a-complete-guide-to-ranking-using-machine-learning-4c9688d370d4

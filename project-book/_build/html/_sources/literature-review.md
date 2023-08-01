@@ -1,6 +1,13 @@
 # Literature Review
 
+While the idea of using different voting mechanisms in a SGD seems to be a novel permutation, research involving SGDs is not, and there is a lot of work done in many different directions of interest.
+
+
+
+
+
 Reward designing to try to shape behavior and outcomes is very hard, and can usally lead to unintended behavior that still optimizes *cite* (look at inverse RL paper for these citations, use the upside-down helicopter picture)
+
 
 ## Voting RL
 
@@ -28,23 +35,18 @@ Similar to MD VCG is the idea of counterfactuals by Forester *cite* transition t
 In our problem space, we have competition between subsets of agents that are not actually known to one group. Agents also die, and cannot continue.
 
 
-## Why did we choose PPO
-
-A majority of the works we looked at used PPO {cite}`Matsunami2020-wt, Brandizzi2021RLupusCT`, , as it has nice learning properties and good overall success.
-
-We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.
-
-
 
 ## Game theoretic work done in mafia
 
+Early iterative game theoretic research in mafia/werewolf {cite}`braverman2008mafia, yao2008theoretical, migdal2010mathematical` answered questions such as how large does the minority group ($\geq$ to $\sqrt(n)$) need to be to dominate a game aand what strategies should they follow (random policy). Although the game model was kept simple, and advanced behavior was not considered, it provided very good baseline insights for which further work could leverage. 
+
+## AIWolf
 
 
-{cite}`braverman2008mafia` answer the question of how large should a sub-group be (the werewolves/mafia) to dominate the game. If no special roles exist other than villagers and mafia, they found that a random strategy was optimal for both groups. 
+### Identification of deceptive players 
 
-{cite}`yao2008theoretical` prove the theorems in {cite}`braverman2008mafia` for the no detective setting, and place upper-bounds on win-rates of players following their described optimal random policy. 
-
-
+{cite}`ibraheem2022putting` investigated player role in the language they used and built models to classify these players.
+{cite}`azaria2015agent` does the same thing.
 
 
 ## Mafia and Werewolf RL
@@ -57,8 +59,6 @@ AIWolf {cite}`toriumi2017ai` is a popular Werewolf game framework and yearly com
 
 RLupus {cite}`Brandizzi2021RLupusCT` explored explicit communication in Werewolf, by adding a signal channel to the action. A follow up {cite}`Lipinski2022EMP` showed that a single word vocabulary is a good enough heuristic. They also explored longer communication rounds, much like we allow multiple accusation rounds.
 
-
-Other works {cite}`Ibraheem2020-mw` looked to classify roles in mafia based on their textual interactions and properties.
 
 Our work takes the voting mechanism and replaces it with an approval variant, to see if there is any difference. 
 

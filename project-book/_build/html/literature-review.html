@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'literature-review';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -360,8 +362,11 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#voting-rl">Voting RL</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-did-we-choose-ppo">Why did we choose PPO</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#game-theoretic-work-done-in-mafia">Game theoretic work done in mafia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aiwolf">AIWolf</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identification-of-deceptive-players">Identification of deceptive players</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mafia-and-werewolf-rl">Mafia and Werewolf RL</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sdgs">SDGs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-we-try-to-answer">Questions we try to answer?</a></li>
@@ -378,6 +383,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="literature-review">
 <h1>Literature Review<a class="headerlink" href="#literature-review" title="Permalink to this heading">#</a></h1>
+<p>While the idea of using different voting mechanisms in a SGD seems to be a novel permutation, research involving SGDs is not, and there is a lot of work done in many different directions of interest.</p>
 <p>Reward designing to try to shape behavior and outcomes is very hard, and can usally lead to unintended behavior that still optimizes <em>cite</em> (look at inverse RL paper for these citations, use the upside-down helicopter picture)</p>
 <section id="voting-rl">
 <h2>Voting RL<a class="headerlink" href="#voting-rl" title="Permalink to this heading">#</a></h2>
@@ -389,32 +395,33 @@ document.write(`
 <p>Similar to MD VCG is the idea of counterfactuals by Forester <em>cite</em> transition to work on hidden role games.</p>
 <p>In our problem space, we have competition between subsets of agents that are not actually known to one group. Agents also die, and cannot continue.</p>
 </section>
-<section id="why-did-we-choose-ppo">
-<h2>Why did we choose PPO<a class="headerlink" href="#why-did-we-choose-ppo" title="Permalink to this heading">#</a></h2>
-<p>A majority of the works we looked at used PPO <span id="id9">[<a class="reference internal" href="bibliography.html#id4" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id8" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>, , as it has nice learning properties and good overall success.</p>
-<p>We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.</p>
-</section>
 <section id="game-theoretic-work-done-in-mafia">
 <h2>Game theoretic work done in mafia<a class="headerlink" href="#game-theoretic-work-done-in-mafia" title="Permalink to this heading">#</a></h2>
-<p><span id="id10">[<a class="reference internal" href="bibliography.html#id26">BEM08</a>]</span> answer the question of how large should a sub-group be (the werewolves/mafia) to dominate the game. If no special roles exist other than villagers and mafia, they found that a random strategy was optimal for both groups.</p>
-<p><span id="id11">[<a class="reference internal" href="bibliography.html#id27" title="Erlin Yao. A theoretical study of mafia games. arXiv preprint arXiv:0804.0071, 2008.">Yao08</a>]</span> prove the theorems in <span id="id12">[<a class="reference internal" href="bibliography.html#id26">BEM08</a>]</span> for the no detective setting, and place upper-bounds on win-rates of players following their described optimal random policy.</p>
+<p>Early iterative game theoretic research in mafia/werewolf <span id="id9">[<a class="reference internal" href="bibliography.html#id26">BEM08</a>, <a class="reference internal" href="bibliography.html#id29" title="Piotr Migdał. A mathematical model of the mafia game. arXiv preprint arXiv:1009.1031, 2010.">Migdal10</a>, <a class="reference internal" href="bibliography.html#id27" title="Erlin Yao. A theoretical study of mafia games. arXiv preprint arXiv:0804.0071, 2008.">Yao08</a>]</span> answered questions such as how large does the minority group (<span class="math notranslate nohighlight">\(\geq\)</span> to <span class="math notranslate nohighlight">\(\sqrt(n)\)</span>) need to be to dominate a game aand what strategies should they follow (random policy). Although the game model was kept simple, and advanced behavior was not considered, it provided very good baseline insights for which further work could leverage.</p>
+</section>
+<section id="aiwolf">
+<h2>AIWolf<a class="headerlink" href="#aiwolf" title="Permalink to this heading">#</a></h2>
+<section id="identification-of-deceptive-players">
+<h3>Identification of deceptive players<a class="headerlink" href="#identification-of-deceptive-players" title="Permalink to this heading">#</a></h3>
+<p><span id="id10">[<a class="reference internal" href="bibliography.html#id28" title="Samee Ibraheem, Gaoyue Zhou, and John DeNero. Putting the con in context: identifying deceptive actors in the game of mafia. 2022. arXiv:2207.02253.">IZD22</a>]</span> investigated player role in the language they used and built models to classify these players.
+<span id="id11">[<a class="reference internal" href="bibliography.html#id30" title="Amos Azaria, Ariella Richardson, and Sarit Kraus. An agent for deception detection in discussion based environments. In Proceedings of the 18th ACM Conference on Computer Supported Cooperative Work &amp; Social Computing, 218–227. 2015.">ARK15</a>]</span> does the same thing.</p>
+</section>
 </section>
 <section id="mafia-and-werewolf-rl">
 <h2>Mafia and Werewolf RL<a class="headerlink" href="#mafia-and-werewolf-rl" title="Permalink to this heading">#</a></h2>
 <p>Analyzing game logs</p>
-<p>AIWolf <span id="id13">[<a class="reference internal" href="bibliography.html#id6" title="Fujio Toriumi, Hirotaka Osawa, Michimasa Inaba, Daisuke Katagami, Kosuke Shinoda, and Hitoshi Matsubara. Ai wolf contest—development of game ai using collective intelligence—. In Computer Games: 5th Workshop on Computer Games, CGW 2016, and 5th Workshop on General Intelligence in Game-Playing Agents, GIGA 2016, Held in Conjunction with the 25th International Conference on Artificial Intelligence, IJCAI 2016, New York, USA, July 9-10, 2016, Revised Selected Papers 5, 101–115. Springer, 2017.">TOI+17</a>]</span> is a popular Werewolf game framework and yearly competition run out of Japan <em>cite the competition and the framework</em>, which pits agents against eachother in full NLP or protocol limited communication modes. Agents have been trained <em>cite</em></p>
-<p><span id="id14">[<a class="reference internal" href="bibliography.html#id25" title="Markus Eger and Chris Martens. Keeping the story straight: a comparison of commitment strategies for a social deduction game. AIIDE, 14(1):24–30, September 2018.">EM18</a>]</span> explore commitment to an apparent goal through messaging in agents playing ultaimte werewolf.</p>
-<p>RLupus <span id="id15">[<a class="reference internal" href="bibliography.html#id4" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>]</span> explored explicit communication in Werewolf, by adding a signal channel to the action. A follow up <span id="id16">[<a class="reference internal" href="bibliography.html#id5">LSCN22</a>]</span> showed that a single word vocabulary is a good enough heuristic. They also explored longer communication rounds, much like we allow multiple accusation rounds.</p>
-<p>Other works <span id="id17">[<a class="reference internal" href="bibliography.html#id16" title="Samee Ibraheem, Vael Gates, John DeNero, and Tom Griffiths. Investigating the behavior of malicious actors through the game of mafia. In CogSci. 2020.">IGDG20</a>]</span> looked to classify roles in mafia based on their textual interactions and properties.</p>
+<p>AIWolf <span id="id12">[<a class="reference internal" href="bibliography.html#id6" title="Fujio Toriumi, Hirotaka Osawa, Michimasa Inaba, Daisuke Katagami, Kosuke Shinoda, and Hitoshi Matsubara. Ai wolf contest—development of game ai using collective intelligence—. In Computer Games: 5th Workshop on Computer Games, CGW 2016, and 5th Workshop on General Intelligence in Game-Playing Agents, GIGA 2016, Held in Conjunction with the 25th International Conference on Artificial Intelligence, IJCAI 2016, New York, USA, July 9-10, 2016, Revised Selected Papers 5, 101–115. Springer, 2017.">TOI+17</a>]</span> is a popular Werewolf game framework and yearly competition run out of Japan <em>cite the competition and the framework</em>, which pits agents against eachother in full NLP or protocol limited communication modes. Agents have been trained <em>cite</em></p>
+<p><span id="id13">[<a class="reference internal" href="bibliography.html#id25" title="Markus Eger and Chris Martens. Keeping the story straight: a comparison of commitment strategies for a social deduction game. AIIDE, 14(1):24–30, September 2018.">EM18</a>]</span> explore commitment to an apparent goal through messaging in agents playing ultaimte werewolf.</p>
+<p>RLupus <span id="id14">[<a class="reference internal" href="bibliography.html#id4" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>]</span> explored explicit communication in Werewolf, by adding a signal channel to the action. A follow up <span id="id15">[<a class="reference internal" href="bibliography.html#id5">LSCN22</a>]</span> showed that a single word vocabulary is a good enough heuristic. They also explored longer communication rounds, much like we allow multiple accusation rounds.</p>
 <p>Our work takes the voting mechanism and replaces it with an approval variant, to see if there is any difference.</p>
-<p><span id="id18">[<a class="reference internal" href="bibliography.html#id19" title="Jack Serrino, Max Kleiman-Weiner, David C Parkes, and Josh Tenenbaum. Finding friend and foe in multi-agent games. Adv. Neural Inf. Process. Syst., 2019.">SKWPT19</a>]</span> develop a neural network model based on counterfactual regret minimization to train agents to play The Resistance Avalon.</p>
-<p><span id="id19">[<a class="reference internal" href="bibliography.html#id20">Rei20</a>]</span> developped a variant of Monte-Carlo Tree Search to play Secret Hitler, and showed that it can play as well as simpler rule based agents.</p>
+<p><span id="id16">[<a class="reference internal" href="bibliography.html#id19" title="Jack Serrino, Max Kleiman-Weiner, David C Parkes, and Josh Tenenbaum. Finding friend and foe in multi-agent games. Adv. Neural Inf. Process. Syst., 2019.">SKWPT19</a>]</span> develop a neural network model based on counterfactual regret minimization to train agents to play The Resistance Avalon.</p>
+<p><span id="id17">[<a class="reference internal" href="bibliography.html#id20">Rei20</a>]</span> developped a variant of Monte-Carlo Tree Search to play Secret Hitler, and showed that it can play as well as simpler rule based agents.</p>
 </section>
 <section id="sdgs">
 <h2>SDGs<a class="headerlink" href="#sdgs" title="Permalink to this heading">#</a></h2>
 <p>Organize around different approaches taken on hidden role, elimination games.</p>
-<p>A paired down clone of Among Us was explored in <span id="id20">[<a class="reference internal" href="bibliography.html#id13">KDuenezGuzmanM+22</a>]</span>. how individuals might learn to synthesize potentially unreliable information about others. Given the richness of the 2D environment, different strategic behaviors were observed such as camping and chasing and ability to vote properly.</p>
-<p>Some work in SGDs explore algorithms for better play <span id="id21">[<a class="reference internal" href="bibliography.html#id19" title="Jack Serrino, Max Kleiman-Weiner, David C Parkes, and Josh Tenenbaum. Finding friend and foe in multi-agent games. Adv. Neural Inf. Process. Syst., 2019.">SKWPT19</a>]</span>
+<p>A paired down clone of Among Us was explored in <span id="id18">[<a class="reference internal" href="bibliography.html#id13">KDuenezGuzmanM+22</a>]</span>. how individuals might learn to synthesize potentially unreliable information about others. Given the richness of the 2D environment, different strategic behaviors were observed such as camping and chasing and ability to vote properly.</p>
+<p>Some work in SGDs explore algorithms for better play <span id="id19">[<a class="reference internal" href="bibliography.html#id19" title="Jack Serrino, Max Kleiman-Weiner, David C Parkes, and Josh Tenenbaum. Finding friend and foe in multi-agent games. Adv. Neural Inf. Process. Syst., 2019.">SKWPT19</a>]</span>
 <em>J. Reinhardt, Finding friend and foe in multi-agent games, Application of deep reinforcement learning in werewolf game agents.</em>, communication for better play <em>RLupus, wdad</em></p>
 </section>
 <section id="questions-we-try-to-answer">
@@ -491,8 +498,11 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#voting-rl">Voting RL</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-did-we-choose-ppo">Why did we choose PPO</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#game-theoretic-work-done-in-mafia">Game theoretic work done in mafia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aiwolf">AIWolf</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identification-of-deceptive-players">Identification of deceptive players</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mafia-and-werewolf-rl">Mafia and Werewolf RL</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sdgs">SDGs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-we-try-to-answer">Questions we try to answer?</a></li>
