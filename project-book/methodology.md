@@ -1,18 +1,14 @@
 # Methodology
 
-## MDPs
-
-Markov Decision Process
-
 ## POMDPs
 
 https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process
 
+## RL \& MARL
+
 ## PPO
 
-PPO was chosen because it stil seems to be the most widely used on-policy algorithm.
-
-INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in {cite}`Andrychowicz2020-fs` and {cite}`pleines2022memory` for the LSTM portion.
+Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm.
 
 Because we are implementing an LSTM, the action $a_t$ selected by the policy $\pi_{\theta}$ depends on both the observation $o_t$ and the hidden state $h_t$.
 
@@ -54,25 +50,9 @@ The 37 implementation details of PPO[^37-details-ppo] is a great blog post detai
 
 ### Why did we choose PPO
 
-A majority of the works we looked at used PPO {cite}`Matsunami2020-wt, Brandizzi2021RLupusCT`, , as it has nice learning properties and good overall success.
+Other works involving the werewolf game we looked at used PPO {cite}`Matsunami2020-wt, Brandizzi2021RLupusCT`, , as it has nice learning properties and good overall success.
 
 We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.
-
-## Agent Design
-We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale
-
-Use pytorchviz or torchview to visualize the pytorch graph
-
-
-
-### Utilities
-
-(convert-obs)=
-#### Convert observation to vector
-
-
-(game-analysis-methodology)=
-## Analysis
 
 
 

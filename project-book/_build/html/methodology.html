@@ -361,20 +361,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mdps">MDPs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pomdps">POMDPs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rl-marl">RL &amp; MARL</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo">PPO</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-did-we-choose-ppo">Why did we choose PPO</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-design">Agent Design</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-observation-to-vector">Convert observation to vector</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis">Analysis</a></li>
 </ul>
             </nav>
         </div>
@@ -388,18 +380,16 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="methodology">
 <h1>Methodology<a class="headerlink" href="#methodology" title="Permalink to this heading">#</a></h1>
-<section id="mdps">
-<h2>MDPs<a class="headerlink" href="#mdps" title="Permalink to this heading">#</a></h2>
-<p>Markov Decision Process</p>
-</section>
 <section id="pomdps">
 <h2>POMDPs<a class="headerlink" href="#pomdps" title="Permalink to this heading">#</a></h2>
 <p><a class="reference external" href="https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process">https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process</a></p>
 </section>
+<section id="rl-marl">
+<h2>RL &amp; MARL<a class="headerlink" href="#rl-marl" title="Permalink to this heading">#</a></h2>
+</section>
 <section id="ppo">
 <h2>PPO<a class="headerlink" href="#ppo" title="Permalink to this heading">#</a></h2>
-<p>PPO was chosen because it stil seems to be the most widely used on-policy algorithm.</p>
-<p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id1">[<a class="reference internal" href="bibliography.html#id21">ARStanczyk+20</a>]</span> and <span id="id2">[<a class="reference internal" href="bibliography.html#id24" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
+<p>Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm.</p>
 <p>Because we are implementing an LSTM, the action <span class="math notranslate nohighlight">\(a_t\)</span> selected by the policy <span class="math notranslate nohighlight">\(\pi_{\theta}\)</span> depends on both the observation <span class="math notranslate nohighlight">\(o_t\)</span> and the hidden state <span class="math notranslate nohighlight">\(h_t\)</span>.</p>
 <div class="proof algorithm admonition" id="ppo-alg">
 <p class="admonition-title"><span class="caption-number">Algorithm 1 </span> (Proximal Policy Optimization w/ Clipped Surrogate)</p>
@@ -409,8 +399,8 @@ document.write(`
 <li><p>for <span class="math notranslate nohighlight">\(k=0,1,2,...\)</span> do</p>
 <ol class="arabic simple">
 <li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
-<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id3">[<a class="reference internal" href="bibliography.html#id23" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
-<li><p>Compute policy update <span id="id4">[<a class="reference internal" href="bibliography.html#id22" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
+<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id1">[<a class="reference internal" href="bibliography.html#id23" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
+<li><p>Compute policy update <span id="id2">[<a class="reference internal" href="bibliography.html#id22" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
 </ol>
 <div class="math notranslate nohighlight">
 \[
@@ -435,32 +425,18 @@ $<span class="math notranslate nohighlight">\(
 </section>
 </div><div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
+<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
 </div>
 <section id="why-did-we-choose-ppo">
 <h3>Why did we choose PPO<a class="headerlink" href="#why-did-we-choose-ppo" title="Permalink to this heading">#</a></h3>
-<p>A majority of the works we looked at used PPO <span id="id6">[<a class="reference internal" href="bibliography.html#id4" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id8" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>, , as it has nice learning properties and good overall success.</p>
+<p>Other works involving the werewolf game we looked at used PPO <span id="id4">[<a class="reference internal" href="bibliography.html#id4" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id8" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>, , as it has nice learning properties and good overall success.</p>
 <p>We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.</p>
-</section>
-</section>
-<section id="agent-design">
-<h2>Agent Design<a class="headerlink" href="#agent-design" title="Permalink to this heading">#</a></h2>
-<p>We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale</p>
-<p>Use pytorchviz or torchview to visualize the pytorch graph</p>
-<section id="utilities">
-<h3>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">#</a></h3>
-<section id="convert-observation-to-vector">
-<span id="convert-obs"></span><h4>Convert observation to vector<a class="headerlink" href="#convert-observation-to-vector" title="Permalink to this heading">#</a></h4>
-</section>
-</section>
-</section>
-<section id="analysis">
-<span id="game-analysis-methodology"></span><h2>Analysis<a class="headerlink" href="#analysis" title="Permalink to this heading">#</a></h2>
 <hr class="footnotes docutils" />
 <aside class="footnote brackets" id="details-ppo" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/</a></p>
 </aside>
+</section>
 </section>
 </section>
 
@@ -531,20 +507,12 @@ $<span class="math notranslate nohighlight">\(
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mdps">MDPs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pomdps">POMDPs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rl-marl">RL &amp; MARL</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo">PPO</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-did-we-choose-ppo">Why did we choose PPO</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-design">Agent Design</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-observation-to-vector">Convert observation to vector</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis">Analysis</a></li>
 </ul>
   </nav></div>
 

@@ -42,6 +42,9 @@ Early iterative game theoretic research in mafia/werewolf {cite}`braverman2008ma
 
 ## AIWolf
 
+Q-learning in Estimation : https://www.jstage.jst.go.jp/article/pjsai/JSAI2019/0/JSAI2019_2O5E303/_pdf/-char/ja
+
+
 
 ### Identification of deceptive players 
 

@@ -359,8 +359,18 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reward-shaping">Reward Shaping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-design">Agent Design</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-observation-to-vector">Convert observation to vector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis">Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reward-shaping">Reward Shaping</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -372,16 +382,31 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="training">
+  <section class="tex2jax_ignore mathjax_ignore" id="training">
 <h1>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h1>
+<section id="agent-design">
+<h2>Agent Design<a class="headerlink" href="#agent-design" title="Permalink to this heading">#</a></h2>
+<p>We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale</p>
+<p>Use pytorchviz or torchview to visualize the pytorch graph</p>
+<section id="utilities">
+<h3>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">#</a></h3>
+<section id="convert-observation-to-vector">
+<span id="convert-obs"></span><h4>Convert observation to vector<a class="headerlink" href="#convert-observation-to-vector" title="Permalink to this heading">#</a></h4>
+</section>
+</section>
+</section>
+<section id="analysis">
+<span id="game-analysis-methodology"></span><h2>Analysis<a class="headerlink" href="#analysis" title="Permalink to this heading">#</a></h2>
 <p>With MLP sizes of 128, 128, hard to learn</p>
 <p>We need at least an LSTM of 256 and 256 MLP hidden</p>
 <p>We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale</p>
+<p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id1">[<a class="reference internal" href="bibliography.html#id21">ARStanczyk+20</a>]</span> and <span id="id2">[<a class="reference internal" href="bibliography.html#id24" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
 <section id="hyperparameters">
-<h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h2>
+<h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h3>
 </section>
 <section id="reward-shaping">
-<h2>Reward Shaping<a class="headerlink" href="#reward-shaping" title="Permalink to this heading">#</a></h2>
+<h3>Reward Shaping<a class="headerlink" href="#reward-shaping" title="Permalink to this heading">#</a></h3>
+</section>
 </section>
 </section>
 
@@ -452,8 +477,18 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reward-shaping">Reward Shaping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-design">Agent Design</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-observation-to-vector">Convert observation to vector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis">Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reward-shaping">Reward Shaping</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
