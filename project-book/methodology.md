@@ -6,8 +6,8 @@ Partially Observable Markov Decision Processes (POMDPs[^POMDPs]) are a special c
 - $S$, a set of states
 - $A$, a set of actions
 - $T$, a set of transition probabilities between states
-- $R: S \cross A \rightarrow \mathbb{R}$ is the rewaard function
-- $\omega$, a set of observations
+- $R: S \times A \rightarrow \mathbb{R}$ is the rewaard function
+- $\Omega$, a set of observations
 - $O$, a set of observation probabilities
 - $\gamma$ is a discount factor, bounded by $[0,1)$
 
