@@ -7,6 +7,16 @@ While the idea of using different voting mechanisms in an SDG seems to be a nove
 
 Early iterative game theoretic research in mafia/werewolf {cite}`braverman2008mafia, yao2008theoretical, migdal2010mathematical` answered questions such as how large does the minority group ($\geq$ to $\sqrt{n}$) need to be to dominate a game aand what strategies should they follow (random policy). Although the game model was kept simple, and advanced behavior was not considered, it provided very good baseline insights for which further work could leverage. 
 
+## AIwolf
+
+A more complete werewolf environment, AIWolf {cite}`toriumi2017ai`, was proposed to study communication in Werewolf and featured both protocol and later on, full NLP variants. 
+
+Q-Learning has been used for both determining actions, and for 
+
+*Fill this out with more AIWolf papers, maybe? Why?*
+
+
+
 ## Communication
 
 - Communicatoin with symbols
@@ -38,6 +48,7 @@ Similar to MD VCG is the idea of counterfactuals by Forester *cite* transition t
 In our problem space, we have competition between subsets of agents that are not actually known to one group. Agents also die, and cannot continue.
 
 ## AIWolf
+Cite paper Zenovi passed
 
 {cite}`hagiwara2019using` Q-learning for  wolf actions and Naive Bayes to classify roles. We on the other hand do both with the PPO network.
 
@@ -60,10 +71,8 @@ AIWolf {cite}`toriumi2017ai` is a popular Werewolf game framework and yearly com
 
 {cite}`Eger2018-hx` explore commitment to an apparent goal through messaging in agents playing ultaimte werewolf.
 
-RLupus {cite}`Brandizzi2021RLupusCT` explored explicit communication in Werewolf, by adding a signal channel to the action. A follow up {cite}`Lipinski2022EMP` showed that a single word vocabulary is a good enough heuristic. They also explored longer communication rounds, much like we allow multiple accusation rounds.
+RLupus {cite}`Brandizzi2021RLupusCT` explored explicit communication in Werewolf, by adding a signal channel to the action. A follow up {cite}`Lipinski2022EMP` showed that a single word vocabulary is a good enough heuristic. They also explored longer communication rounds, much like we allow multiple accusation rounds. This matches the idea in {cite}`8916754` that a single utterance is really all that is necessary.
 
-
-Our work takes the voting mechanism and replaces it with an approval variant, to see if there is any difference. 
 
 {cite}`Serrino2019-ge` develop a neural network model based on counterfactual regret minimization to train agents to play The Resistance Avalon.
 
