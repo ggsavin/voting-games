@@ -141,7 +141,10 @@ For both approval and plurality voting, if there is a tie vote, a target is take
 (game-rewards)=
 #### Rewards
 
+Reward designing to try to shape behavior and outcomes is very hard, and can usally lead to unintended behavior that still optimizes *cite* (look at inverse RL paper for these citations, use the upside-down helicopter picture)
+
 The following object is the default reward structure for the game, and it was based on reward structures found in other Werewolf focused papers {cite}`Brandizzi2021RLupusCT, Velikov2021-vt`.
+
 
 ```python
 REWARDS = {

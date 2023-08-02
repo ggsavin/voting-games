@@ -14,18 +14,16 @@ IN SDGs, communication and deception present unique challenges for AI agents try
 
 ## Motivation
 
-Social Choice Theory[^soc-choice] underpins a core mechanism of all SGDs in the gathering and enforcment of choices made by each individual agent. In all the works we have looked through, it seems as though this aspect of SGDs have not been permuted and explored. *By changing the underlying voting mechanism, we are interested in seeing how the dynamics between groups change*
+Social Choice Theory[^soc-choice] underpins a core mechanism of all SDGs in the gathering and enforcment of choices made by each individual agent. In all the works we have looked through, it seems as though this aspect of SDGs have not been permuted and explored. *By changing the underlying voting mechanism, we are interested in seeing how the dynamics between groups change*
 
 Approval voting has more implicit and explicit information, and allows for more expression when voting. Naturally, we ask ourselves what kind of impact changing the voting mechanism underlying werewolf would have on the ability of the simulated agents to learn and their chances of winning.
 
 ## Contribution
 
-- Creation of a custom environment using PettingZoo[^petting-zoo] for the purpose of voting mechanism research within the Werewolf SGD. 
+- Creation of a custom environment using PettingZoo[^petting-zoo] for the purpose of voting mechanism research within the Werewolf SDG. 
 - Sucessfully implemented approval voting as the voting mechanism in our environment
 - Successfully trained plurality and approval RL agents in our environment
 - Designed a wide range of indicators to explore behavior and voting patterns of agents
-
-We use Independent Learners with a shared policy for all the agents vs a JAL because we  dont want action space to scale
 
 
 [^mafia-wikipedia]: https://en.wikipedia.org/wiki/Mafia_(party_game)
