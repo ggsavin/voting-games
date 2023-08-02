@@ -382,10 +382,32 @@ document.write(`
 <h1>Methodology<a class="headerlink" href="#methodology" title="Permalink to this heading">#</a></h1>
 <section id="pomdps">
 <h2>POMDPs<a class="headerlink" href="#pomdps" title="Permalink to this heading">#</a></h2>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process">https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process</a></p>
+<p>Partially Observable Markov Decision Processes (POMDPs<a class="footnote-reference brackets" href="#id6" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) are a special case of a Markov Decision Process (MDP) where the agent does not have direct observability to the state, but rather gets their own, possibly unique, observation. Formally, it is a tuple consisting of:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(S\)</span>, a set of states</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span>, a set of actions</p></li>
+<li><p><span class="math notranslate nohighlight">\(T\)</span>, a set of transition probabilities between states</p></li>
+<li><p><span class="math notranslate nohighlight">\(R: S \cross A \rightarrow \mathbb{R}\)</span> is the rewaard function</p></li>
+<li><p><span class="math notranslate nohighlight">\(\omega\)</span>, a set of observations</p></li>
+<li><p><span class="math notranslate nohighlight">\(O\)</span>, a set of observation probabilities</p></li>
+<li><p><span class="math notranslate nohighlight">\(\gamma\)</span> is a discount factor, bounded by <span class="math notranslate nohighlight">\([0,1)\)</span></p></li>
+</ul>
 </section>
 <section id="rl-marl">
 <h2>RL &amp; MARL<a class="headerlink" href="#rl-marl" title="Permalink to this heading">#</a></h2>
+<p>Reference pictures here : <a class="reference external" href="https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b">https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b</a></p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Single Agent RL</p></th>
+<th class="head"><p>Multi Agent RL</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><img alt="Single-Agent-RL" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png" /></p></td>
+<td><p><img alt="Multi-Agent-RL" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png" /></p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="ppo">
 <h2>PPO<a class="headerlink" href="#ppo" title="Permalink to this heading">#</a></h2>
@@ -394,13 +416,13 @@ document.write(`
 <div class="proof algorithm admonition" id="ppo-alg">
 <p class="admonition-title"><span class="caption-number">Algorithm 1 </span> (Proximal Policy Optimization w/ Clipped Surrogate)</p>
 <section class="algorithm-content" id="proof-content">
-<p><strong>Inputs</strong> Initial policy parameters <span class="math notranslate nohighlight">\(theta_0\)</span>, clipping threshold <span class="math notranslate nohighlight">\(\epsilon\)</span></p>
+<p><strong>Inputs</strong> Initial policy parameters <span class="math notranslate nohighlight">\(\theta_0\)</span>, clipping threshold <span class="math notranslate nohighlight">\(\epsilon\)</span></p>
 <ol class="arabic">
 <li><p>for <span class="math notranslate nohighlight">\(k=0,1,2,...\)</span> do</p>
 <ol class="arabic simple">
 <li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
-<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id1">[<a class="reference internal" href="bibliography.html#id33" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
-<li><p>Compute policy update <span id="id2">[<a class="reference internal" href="bibliography.html#id32" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
+<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id2">[<a class="reference internal" href="bibliography.html#id33" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
+<li><p>Compute policy update <span id="id3">[<a class="reference internal" href="bibliography.html#id32" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
 </ol>
 <div class="math notranslate nohighlight">
 \[
@@ -425,15 +447,19 @@ $<span class="math notranslate nohighlight">\(
 </section>
 </div><div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
+<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
 </div>
 <section id="why-did-we-choose-ppo">
 <h3>Why did we choose PPO<a class="headerlink" href="#why-did-we-choose-ppo" title="Permalink to this heading">#</a></h3>
-<p>Other works involving the werewolf game we looked at used PPO <span id="id4">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id9" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>, , as it has nice learning properties and good overall success.</p>
+<p>Other works involving the werewolf game we looked at used PPO <span id="id5">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id9" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>, , as it has nice learning properties and good overall success.</p>
 <p>We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.</p>
 <hr class="footnotes docutils" />
+<aside class="footnote brackets" id="id6" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process">https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process</a></p>
+</aside>
 <aside class="footnote brackets" id="details-ppo" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">2</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/</a></p>
 </aside>
 </section>

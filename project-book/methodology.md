@@ -2,9 +2,23 @@
 
 ## POMDPs
 
-https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process
+Partially Observable Markov Decision Processes (POMDPs[^POMDPs]) are a special case of a Markov Decision Process (MDP) where the agent does not have direct observability to the state, but rather gets their own, possibly unique, observation. Formally, it is a tuple consisting of:
+- $S$, a set of states
+- $A$, a set of actions
+- $T$, a set of transition probabilities between states
+- $R: S \cross A \rightarrow \mathbb{R}$ is the rewaard function
+- $\omega$, a set of observations
+- $O$, a set of observation probabilities
+- $\gamma$ is a discount factor, bounded by $[0,1)$
 
 ## RL \& MARL
+
+Reference pictures here : https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b
+
+| Single Agent RL | Multi Agent RL | 
+| ---- | --- |
+| ![Single-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png) | ![Multi-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png) |
+
 
 ## PPO
 
@@ -15,7 +29,7 @@ Because we are implementing an LSTM, the action $a_t$ selected by the policy $\p
 ```{prf:algorithm} Proximal Policy Optimization w/ Clipped Surrogate
 :label: ppo-alg
 
-**Inputs** Initial policy parameters $theta_0$, clipping threshold $\epsilon$
+**Inputs** Initial policy parameters $\theta_0$, clipping threshold $\epsilon$
 1. for $k=0,1,2,...$ do
     1. Collect set of trajectories $\tau$ on policy $\pi_k = \pi(\theta_k)$
     2. Estimate advatanges $A^{\pi_k}$ using GAE {cite}`schulman2015high`
@@ -57,3 +71,4 @@ We implemented our own following some works in truncated BPTT and CLeanRL, howev
 
 
 [^37-details-ppo]:https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/
+[^POMDPs]:https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process
