@@ -2,7 +2,7 @@
 
 ## Abstract
 
-Social Deduction Games (SDGs), and especially Hidden Role variants such as Werewolf provide players with challenging and dynamic gameplay as teams with asymmetric information try to win. This imbalance of information favors the smaller, deceptive team as the majority try to figure out who the traitors are before it is too late. While player communication and elucidation of traitors has been a main focus of research, the voting mechanism underpinning the games is quite overlooked. In this project, we substitute the usual plurality scheme with an approval one in a custom Werewolf environment, and show that it is possible to train approval agents without using communication. We hope this spurs more social choice theory research in SDGs.
+Social Deduction Games (SDGs), and especially Hidden Role variants such as Werewolf provide players with challenging and dynamic gameplay as teams with asymmetric information try to win. This imbalance of information favors the smaller, deceptive team as the majority try to figure out who the traitors are before it is too late. While player communication and elucidation of traitors has been a main focus of research, the voting mechanism underpinning the games is quite overlooked and is in general computationally challenging in Multi-Agent settings {cite}`Dodevska2019ComputationalSC`. In this project, we substitute the usual plurality scheme with an approval one in a custom Werewolf environment, and show that it is possible to train approval agents without using communication. We hope this spurs more social choice theory research in SDGs.
 
 
 ## Introduction

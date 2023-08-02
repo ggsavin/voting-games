@@ -399,8 +399,8 @@ document.write(`
 <li><p>for <span class="math notranslate nohighlight">\(k=0,1,2,...\)</span> do</p>
 <ol class="arabic simple">
 <li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
-<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id1">[<a class="reference internal" href="bibliography.html#id26" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
-<li><p>Compute policy update <span id="id2">[<a class="reference internal" href="bibliography.html#id25" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
+<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id1">[<a class="reference internal" href="bibliography.html#id31" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
+<li><p>Compute policy update <span id="id2">[<a class="reference internal" href="bibliography.html#id30" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
 </ol>
 <div class="math notranslate nohighlight">
 \[
@@ -429,7 +429,7 @@ $<span class="math notranslate nohighlight">\(
 </div>
 <section id="why-did-we-choose-ppo">
 <h3>Why did we choose PPO<a class="headerlink" href="#why-did-we-choose-ppo" title="Permalink to this heading">#</a></h3>
-<p>Other works involving the werewolf game we looked at used PPO <span id="id4">[<a class="reference internal" href="bibliography.html#id4" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id8" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>, , as it has nice learning properties and good overall success.</p>
+<p>Other works involving the werewolf game we looked at used PPO <span id="id4">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id9" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>, , as it has nice learning properties and good overall success.</p>
 <p>We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.</p>
 <hr class="footnotes docutils" />
 <aside class="footnote brackets" id="details-ppo" role="note">
