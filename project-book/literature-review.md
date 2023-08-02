@@ -9,10 +9,7 @@ Early iterative game theoretic research in mafia/werewolf {cite}`braverman2008ma
 
 ## AIWolf and other Werewolf environments
 
-**TODO: Talk about different algorithms here**
-**Application of deep reinforcement learning in werewolf game agents** 
-
-A more complete werewolf environment, AIWolf {cite}`toriumi2017ai`, was proposed to study communication in Werewolf and featured both protocol and later on, full NLP variants. To train agents, Q-learning has been a proved to work {cite}`hagiwara2019using, zhang2021designing`, as it was used in both 5-player and 10+ game settings. However, using AIWolf would have required changing a lot of internal server code, and would have proven to be too much for a project, with minimal impact on the actual desired topic of voting mechanisms. 
+A more complete werewolf environment, AIWolf {cite}`toriumi2017ai`, was proposed to study communication in Werewolf and featured both protocol and later on, full NLP variants. To train agents, Q-learning has been a proved to work {cite}`hagiwara2019using, zhang2021designing, Wang2018-yn`, as it was used in both 5-player and 10+ game settings. Some of these {cite}`Wang2018-yn, hagiwara2019using` even used multiple models for various in-game tasks. However, using AIWolf would have required changing a lot of internal server code, and would have proven to be too much for a project, with minimal impact on the actual desired topic of voting mechanisms. 
 
 RLupus {cite}`Brandizzi2021RLupusCT` is a simplified environment to focus on emergent communication in Werewolf, and we considered extending it, however too much would have had to be changed, and ultimately we went with a focused custom environment.
 
@@ -23,7 +20,7 @@ Hidden Agenda {cite}`Kopparapu2022-bm` is simplified version of Amongst us where
 
 ## Communication
 
-The nature of duplicitous communication in Werewolf and more generally SDGs, leads to a wide range of research focusing solely on various aspects of it. Determining player roles or itentions based on their communication {cite}`Eger2018-hx, ibraheem2022putting, azaria2015agent, nishizaki2016behavior, 8916754, Hirata2016-bu` is a common avenue of research, with interesting variations such as tracking commitment via speech {cite}`Eger2018-hx`. Explicitly studying impacts of communication in Werewolf was also explored by allowing agents to enhance actions with variable length integer vectors {cite}`Brandizzi2021RLupusCT`, and a follow-up in that environment showed that a single word vocabulary was a good enough heuristic. They also explored longer communication rounds, much like we allow multiple accusation rounds. This matches the idea in {cite}`8916754` that a single utterance impacts the learning agents the most.
+The nature of duplicitous communication in Werewolf and more generally SDGs, leads to a wide range of research focusing solely on various aspects of it. Determining player roles or itentions based on their communication {cite}`Eger2018-hx, ibraheem2022putting, azaria2015agent, nishizaki2016behavior, 8916754, Hirata2016-bu, sun2021prediction` is a common avenue of research, with interesting variations such as tracking commitment via speech {cite}`Eger2018-hx` or using sentiment analysis {cite}`sun2021prediction`. Explicitly studying impacts of communication in Werewolf was also explored by allowing agents to enhance actions with variable length integer vectors {cite}`Brandizzi2021RLupusCT`, and a follow-up in that environment showed that a single word vocabulary was a good enough heuristic. They also explored longer communication rounds, much like we allow multiple accusation rounds. This matches the idea in {cite}`8916754` that a single utterance impacts the learning agents the most.
 While communication is inherently critical to such games, we need to cut it out to focus solely on the elucidation the implicit vote signaling can provide to agents. 
 
 ## Voting in RL
