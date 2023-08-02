@@ -11,13 +11,28 @@ Partially Observable Markov Decision Processes (POMDPs[^POMDPs]) are a special c
 - $O$, a set of observation probabilities
 - $\gamma$ is a discount factor, bounded by $[0,1)$
 
+Given a current state $s \in S$, an agent will take an action $a \in A$ based on some observation $o \in O$ and will transition to a new state $s'$ with probability $T(s'|s,a)$ and receive a reward $r = R(s,a)$
+
+RL and MARL enviornments usually satisfy the Markov property that future states depend only on current state and action pairs, and thus can be formulated as MDPs.
+
 ## RL \& MARL
+
+Reinforcement Learning is a training method wherein an agent takes an action in an environment and is either rewarded or punished while transitioning to a new state. This is repeated until the agent reaches a terminal state. Ideally an agent will learn an optimal *policy* that maps observations to actions through many interactions in their environment. 
+
+When it comes to Multi-Agent Learning, multiple agents are either leaarning in a decentralized manner, or being directed by a central policy. The dynamic nature of of Multi-Agent systems make learning much more challenging, although certain algorithms such as PPO and DQN still work.
+
+Agents can learn using value-based, policy-based and model-based algorithms. A good taxonomy of different types of algorithms can be seen in the diagram below.
+
+![Taxonomy of RL Algorithms](https://spinningup.openai.com/en/latest/_images/rl_algorithms_9_15.svg)
+
+A good reference on RL is the timeless book *Reinforcement Learning: An Introduction*[^Sutton-Barto-Book] by Sutton & Barto.
 
 Reference pictures here : https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b
 
 | Single Agent RL | Multi Agent RL | 
 | ---- | --- |
 | ![Single-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png) | ![Multi-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png) |
+
 
 
 ## PPO
@@ -69,6 +84,11 @@ Other works involving the werewolf game we looked at used PPO {cite}`Matsunami20
 We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.
 
 
+## LSTMs
+
+Long-short term memory ML. We use this because we want our agents to have historical information
+
 
 [^37-details-ppo]:https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/
 [^POMDPs]:https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process
+[^Sutton-Barto-Book]:http://incompleteideas.net/book/the-book-2nd.html
