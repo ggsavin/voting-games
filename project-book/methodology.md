@@ -17,9 +17,9 @@ RL and MARL enviornments usually satisfy the Markov property that future states 
 
 ## RL \& MARL
 
-Reinforcement Learning is a training method wherein an agent takes an action in an environment and is either rewarded or punished while transitioning to a new state. This is repeated until the agent reaches a terminal state. Ideally an agent will learn an optimal *policy* that maps observations to actions through many interactions in their environment. 
+[Reinforcement Learning](Single-RL) is a training method wherein an agent takes an action in an environment and is either rewarded or punished while transitioning to a new state. This is repeated until the agent reaches a terminal state. Ideally an agent will learn an optimal *policy* that maps observations to actions through many interactions in their environment. 
 
-When it comes to Multi-Agent Learning, multiple agents are either leaarning in a decentralized manner, or being directed by a central policy. The dynamic nature of of Multi-Agent systems make learning much more challenging, although certain algorithms such as PPO and DQN still work.
+When it comes to [Multi-Agent Learning](Multi-Agent-RL), multiple agents are either leaarning in a decentralized manner, or being directed by a central policy. The dynamic nature of of Multi-Agent systems make learning much more challenging, although certain algorithms such as PPO and DQN still work.
 
 Agents can learn using value-based, policy-based and model-based algorithms. A good taxonomy of different types of algorithms can be seen in the diagram below.
 
@@ -38,7 +38,7 @@ A good reference on RL is the timeless book *Reinforcement Learning: An Introduc
 
 Single Agent Reinforcement Learning
 ```
-```{figure-md} Multi-Agent RL
+```{figure-md} Multi-Agent-RL
 <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png" alt="multi agent RL">
 
 Multi-Agent Reinforcement Learning
