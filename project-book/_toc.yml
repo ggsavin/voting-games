@@ -8,6 +8,7 @@ chapters:
 - file: literature-review
 - file: game-implementation
 - file: terminology
+- file: agent-implementation
 - file: training_agent_info
 - file: indicators
 - file: game_visualization
