@@ -116,7 +116,7 @@ The following function returns the target id as an integer as well as an informa
 def _get_player_to_be_killed(self, actions) -> tuple[int, object]:
 ```
 
-For both approval and plurality voting, if there is a tie vote, a target is taken at raandom from this list of tied agents. If however the target with the majority of votes is a dead player, the next highest targetted agent is taken.
+For both approval and plurality voting, if ties exist, a target is chosen by breaking ties randomly. If however the target with the majority of votes is a dead player, the next highest targetted agent is taken.
 
 
 (game-rewards)=

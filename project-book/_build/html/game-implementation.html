@@ -488,7 +488,7 @@ document.write(`
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_get_player_to_be_killed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">object</span><span class="p">]:</span>
 </pre></div>
 </div>
-<p>For both approval and plurality voting, if there is a tie vote, a target is taken at raandom from this list of tied agents. If however the target with the majority of votes is a dead player, the next highest targetted agent is taken.</p>
+<p>For both approval and plurality voting, if ties exist, a target is chosen by breaking ties randomly. If however the target with the majority of votes is a dead player, the next highest targetted agent is taken.</p>
 </section>
 <section id="rewards">
 <span id="game-rewards"></span><h3>Rewards<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h3>
