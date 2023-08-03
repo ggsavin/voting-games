@@ -4,9 +4,10 @@
 format: jb-book
 root: intro
 chapters:
+- file: game-description
 - file: literature-review
-- file: voting-game
-- file: methodology
+- file: game-implementation
+- file: terminology
 - file: training_agent_info
 - file: indicators
 - file: game_visualization

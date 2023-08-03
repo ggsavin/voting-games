@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Training Agents &#8212; Voting in Hidden Role Games</title>
+    <title>Terminology &#8212; Voting in Hidden Role Games</title>
   
   
   
@@ -64,11 +64,11 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'training_agent_info';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'terminology';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Gameplay Indicators" href="indicators.html" />
-    <link rel="prev" title="Terminology" href="terminology.html" />
+    <link rel="next" title="Training Agents" href="training_agent_info.html" />
+    <link rel="prev" title="Werewolf - The Implementation" href="game-implementation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -163,8 +163,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="game-description.html">Werewolf - The Game</a></li>
 <li class="toctree-l1"><a class="reference internal" href="literature-review.html">Literature Review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="game-implementation.html">Werewolf - The Implementation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Training Agents</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training_agent_info.html">Training Agents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indicators.html">Gameplay Indicators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="game_visualization.html">Replay visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future Directions</a></li>
@@ -240,7 +240,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Ftraining_agent_info.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Fterminology.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -270,7 +270,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/training_agent_info.ipynb" target="_blank"
+      <li><a href="_sources/terminology.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -280,7 +280,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.ipynb</span>
+<span class="btn__text-container">.md</span>
 </a>
 </li>
       
@@ -352,7 +352,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Training Agents</h1>
+    <h1>Terminology</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -362,11 +362,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-architecture">Model Architecture</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-w-ppo">Training w/ PPO</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pomdps">POMDPs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rl-marl">RL &amp; MARL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo">PPO</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lstms">LSTMs</a></li>
 </ul>
             </nav>
         </div>
@@ -378,135 +377,110 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-import torch
-import sys
-sys.path.append(&#39;../&#39;)
-from voting_games.werewolf_env_v0 import plurality_env, pare, Phase, Roles
-import random
-import copy
-from tqdm import tqdm
-from collections import Counter
-from torchview import draw_graph
-import graphviz
-graphviz.set_jupyter_format(&#39;png&#39;)
-import matplotlib.pyplot as plt
-from notebooks.learning_agents.models import ActorCriticAgent
-from notebooks.learning_agents.utils import play_recurrent_game, convert_obs
-from notebooks.learning_agents.static_agents import random_approval_wolf, random_plurality_wolf
-import notebooks.learning_agents.stats as indicators 
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;png&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<section class="tex2jax_ignore mathjax_ignore" id="training-agents">
-<h1>Training Agents<a class="headerlink" href="#training-agents" title="Permalink to this heading">#</a></h1>
-<section id="model-architecture">
-<h2>Model Architecture<a class="headerlink" href="#model-architecture" title="Permalink to this heading">#</a></h2>
-<p>Determining the proper model architecture for Agents is not a straightforward task, and takes some experimentation. Initially we had gone with seperate networks for value and policy models, however, we settled on a shared network for both. We treat agents as independent learners with a shared policy.  Below is a model architecture that is shared amongst plurality and approval agents and has trained villagers with close to <span class="math notranslate nohighlight">\(50%\)</span> winrates.</p>
-<p>Models are  tied to the number of agents per game they were trained on, so a 5-player game environment agent will not work if fed observations from a 10-player game environment.</p>
-<p>Most of the training and work was done in 10-player environments as it allowed for more interesting gameplay in a setting where no communication other than voting is allowed.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
-observations, _, _, _, _ = env.reset()
+  <section class="tex2jax_ignore mathjax_ignore" id="terminology">
+<h1>Terminology<a class="headerlink" href="#terminology" title="Permalink to this heading">#</a></h1>
+<section id="pomdps">
+<h2>POMDPs<a class="headerlink" href="#pomdps" title="Permalink to this heading">#</a></h2>
+<p>Partially Observable Markov Decision Processes (POMDPs<a class="footnote-reference brackets" href="#id7" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) are a special case of a Markov Decision Process (MDP) where the agent does not have direct observability to the state, but rather gets their own, possibly unique, observation. Formally, it is a tuple consisting of:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(S\)</span>, a set of states</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span>, a set of actions</p></li>
+<li><p><span class="math notranslate nohighlight">\(T\)</span>, a set of transition probabilities between states</p></li>
+<li><p><span class="math notranslate nohighlight">\(R: S \times A \rightarrow \mathbb{R}\)</span> is the rewaard function</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Omega\)</span>, a set of observations</p></li>
+<li><p><span class="math notranslate nohighlight">\(O\)</span>, a set of observation probabilities</p></li>
+<li><p><span class="math notranslate nohighlight">\(\gamma\)</span> is a discount factor, bounded by <span class="math notranslate nohighlight">\([0,1)\)</span></p></li>
+</ul>
+<p>Given a current state <span class="math notranslate nohighlight">\(s \in S\)</span>, an agent will take an action <span class="math notranslate nohighlight">\(a \in A\)</span> based on some observation <span class="math notranslate nohighlight">\(o \in O\)</span> and will transition to a new state <span class="math notranslate nohighlight">\(s'\)</span> with probability <span class="math notranslate nohighlight">\(T(s'|s,a)\)</span> and receive a reward <span class="math notranslate nohighlight">\(r = R(s,a)\)</span></p>
+<p>RL and MARL enviornments usually satisfy the Markov property that future states depend only on current state and action pairs, and thus can be formulated as MDPs.</p>
+</section>
+<section id="rl-marl">
+<h2>RL &amp; MARL<a class="headerlink" href="#rl-marl" title="Permalink to this heading">#</a></h2>
+<p><a class="reference internal" href="#single-rl"><span class="std std-ref">Reinforcement Learning</span></a> is a training method wherein an agent takes an action in an environment and is either rewarded or punished while transitioning to a new state. This is repeated until the agent reaches a terminal state. Ideally an agent will learn an optimal <em>policy</em> that maps observations to actions through many interactions in their environment.</p>
+<p>When it comes to <a class="reference internal" href="#multi-agent-rl"><span class="std std-ref">Multi-Agent Learning</span></a>, multiple agents are either leaarning in a decentralized manner, or being directed by a central policy. The dynamic nature of of Multi-Agent systems make learning much more challenging, although certain algorithms such as PPO and DQN still work.</p>
+<p>Agents can learn using value-based, policy-based and model-based algorithms. A good taxonomy of different types of algorithms can be seen in the diagram below.</p>
+<p><img alt="Taxonomy of RL Algorithms" src="https://spinningup.openai.com/en/latest/_images/rl_algorithms_9_15.svg" /></p>
+<p>A good reference on RL is the timeless book <em>Reinforcement Learning: An Introduction</em><a class="footnote-reference brackets" href="#sutton-barto-book" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> by Sutton &amp; Barto.</p>
+<!-- Reference pictures here : https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b
 
-obs_size= env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
-
-untrained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128, 
-                                        &quot;rec_layers&quot;: 1,
-                                        &quot;joint_mlp_size&quot;: 128,
-                                        &quot;split_mlp_size&quot;: 128,
-                                        &quot;num_votes&quot;: 1,
-                                        &quot;approval_states&quot;: 10},
-                                        num_players=10,
-                                        obs_size=obs_size)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>obs = convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;], voting_type=&#39;plurality&#39;)
-obs = torch.unsqueeze(obs,0)
-hxcs = (torch.zeros((1,1,128), dtype=torch.float32), torch.zeros((1,1,128), dtype=torch.float32))
-
-model_graph = draw_graph(untrained_plurality_agent, input_data=[obs,hxcs], device=torch.device(&#39;cpu&#39;))
-model_graph.visual_graph
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/0227968ac2f23bf101c7f964c326316ae275c935a5df3862bd49978592a7ff0e.png" src="_images/0227968ac2f23bf101c7f964c326316ae275c935a5df3862bd49978592a7ff0e.png" />
-</div>
-</div>
-<section id="hyperparameters">
-<h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h3>
-<p>There are just under 20 hyperparameters, and can be split between gameplay parameters, neural network model parameters and PPO training parameters. Each value in this configuration object below can be changed, and is passed throughout training functions.</p>
-<p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id1">[<a class="reference internal" href="bibliography.html#id31" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>]</span> and <span id="id2">[<a class="reference internal" href="bibliography.html#id34" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config_training</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;recurrent_layers&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;recurrent_hidden_size&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> 
-        <span class="s2">&quot;joint_mlp_size&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-        <span class="s2">&quot;split_mlp_size&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-        <span class="s2">&quot;num_votes&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s2">&quot;approval_states&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;training&quot;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> 
-        <span class="s2">&quot;epochs&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> 
-        <span class="s2">&quot;updates&quot;</span><span class="p">:</span> <span class="mi">501</span><span class="p">,</span> 
-        <span class="s2">&quot;buffer_games_per_update&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span> 
-        <span class="s2">&quot;clip_range&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> 
-        <span class="s2">&quot;value_loss_coefficient&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> 
-        <span class="s2">&quot;max_grad_norm&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> 
-        <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> 
-        <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">,</span> 
-        <span class="s2">&quot;adam_eps&quot;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span> 
-        <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.99</span><span class="p">,</span> 
-        <span class="s2">&quot;gae_lambda&quot;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span> 
-    <span class="p">}</span>
-<span class="p">}</span>
-
-
-<span class="n">config_game</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;rewards&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;player_death&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;player_win&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s2">&quot;player_loss&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;self_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;dead_villager&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;dead_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;dead_wolf&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;no_viable_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;no_sleep&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;gameplay&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;accusation_phases&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s2">&quot;num_agents&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s2">&quot;num_werewolves&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;config_game&quot;</span><span class="p">:</span> <span class="n">config_game</span><span class="p">,</span>
-    <span class="s2">&quot;config_training&quot;</span><span class="p">:</span> <span class="n">config_training</span><span class="p">,</span>
-<span class="p">}</span>
-</pre></div>
+| Single Agent RL | Multi Agent RL | 
+| ---- | --- |
+| ![Single-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png) | ![Multi-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png) | -->
+<figure class="align-default" id="single-rl">
+<img alt="single agent RL" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Single Agent Reinforcement Learning</span><a class="headerlink" href="#single-rl" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="multi-agent-rl">
+<img alt="multi agent RL" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Multi-Agent Reinforcement Learning</span><a class="headerlink" href="#multi-agent-rl" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="ppo">
+<h2>PPO<a class="headerlink" href="#ppo" title="Permalink to this heading">#</a></h2>
+<p>Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm and it was also used in a similar setting as our work <span id="id3">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id9" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>.</p>
+<p>Because we are also implementing an LSTM, the action <span class="math notranslate nohighlight">\(a_t\)</span> selected by the policy <span class="math notranslate nohighlight">\(\pi_{\theta}\)</span> depends on both the observation <span class="math notranslate nohighlight">\(o_t\)</span> and the hidden state <span class="math notranslate nohighlight">\(h_t\)</span>.</p>
+<p>We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.</p>
+<div class="proof algorithm admonition" id="ppo-alg">
+<p class="admonition-title"><span class="caption-number">Algorithm 1 </span> (Proximal Policy Optimization w/ Clipped Surrogate)</p>
+<section class="algorithm-content" id="proof-content">
+<p><strong>Inputs</strong> Initial policy parameters <span class="math notranslate nohighlight">\(\theta_0\)</span>, clipping threshold <span class="math notranslate nohighlight">\(\epsilon\)</span></p>
+<ol class="arabic">
+<li><p>for <span class="math notranslate nohighlight">\(k=0,1,2,...\)</span> do</p>
+<ol class="arabic simple">
+<li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
+<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id4">[<a class="reference internal" href="bibliography.html#id33" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
+<li><p>Compute policy update <span id="id5">[<a class="reference internal" href="bibliography.html#id32" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+    \theta_{k+1} = argmax \mathcal{L}^{CVH} 
+    \]</div>
+<p>by taking <span class="math notranslate nohighlight">\(K\)</span> steps of minibatch SGD (via Adam), where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+        \mathcal{L}^C(\theta) &amp; = E [\sum_{t=0}^{\tau}[min(q_t(\theta)\hat{A}_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]] \\
+        q_t(\theta) &amp; = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
+    \end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[
+        q_t(\theta) = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
+    \]</div>
+<div class="math notranslate nohighlight">
+\[
+    \mathcal{L}^V_t(\theta) = (V_{\theta}(o_t,h_t) - V^{target}_t)^2
+    \]</div>
+<p>Coefficients <span class="math notranslate nohighlight">\(c_1, c_2\)</span> weigh the value fucntion loss and the entropy bonus
+$<span class="math notranslate nohighlight">\(
+ L^{CVH}_t(\theta) = E [\mathcal{L}^C(\theta) - c_1\cdot \mathcal{L}^V_t(\theta) + c_2 \mathcal{H}[\pi_{\theta}](o_t, h_t)]
+ \)</span>$</p>
+</li>
+</ol>
+</section>
+</div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
 </div>
 </section>
-</section>
-<section id="training-w-ppo">
-<h2>Training w/ PPO<a class="headerlink" href="#training-w-ppo" title="Permalink to this heading">#</a></h2>
+<section id="lstms">
+<h2>LSTMs<a class="headerlink" href="#lstms" title="Permalink to this heading">#</a></h2>
+<p>Long-short term memory ML. We use this because we want our agents to have historical information</p>
+<hr class="footnotes docutils" />
+<aside class="footnote brackets" id="id7" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process">https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process</a></p>
+</aside>
+<aside class="footnote brackets" id="sutton-barto-book" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://incompleteideas.net/book/the-book-2nd.html">http://incompleteideas.net/book/the-book-2nd.html</a></p>
+</aside>
+<aside class="footnote brackets" id="details-ppo" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/</a></p>
+</aside>
 </section>
 </section>
 
@@ -542,20 +516,20 @@ model_graph.visual_graph
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="terminology.html"
+       href="game-implementation.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Terminology</p>
+        <p class="prev-next-title">Werewolf - The Implementation</p>
       </div>
     </a>
     <a class="right-next"
-       href="indicators.html"
+       href="training_agent_info.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Gameplay Indicators</p>
+        <p class="prev-next-title">Training Agents</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -577,11 +551,10 @@ model_graph.visual_graph
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-architecture">Model Architecture</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-w-ppo">Training w/ PPO</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pomdps">POMDPs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rl-marl">RL &amp; MARL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo">PPO</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lstms">LSTMs</a></li>
 </ul>
   </nav></div>
 

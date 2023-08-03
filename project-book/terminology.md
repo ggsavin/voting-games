@@ -1,4 +1,4 @@
-# Methodology
+# Terminology
 
 ## POMDPs
 

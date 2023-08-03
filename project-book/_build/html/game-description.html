@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Training Agents &#8212; Voting in Hidden Role Games</title>
+    <title>Werewolf - The Game &#8212; Voting in Hidden Role Games</title>
   
   
   
@@ -62,13 +62,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'training_agent_info';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'game-description';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Gameplay Indicators" href="indicators.html" />
-    <link rel="prev" title="Terminology" href="terminology.html" />
+    <link rel="next" title="Literature Review" href="literature-review.html" />
+    <link rel="prev" title="COMP 5903 - Voting in Hidden Role Games" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -160,11 +158,11 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="game-description.html">Werewolf - The Game</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Werewolf - The Game</a></li>
 <li class="toctree-l1"><a class="reference internal" href="literature-review.html">Literature Review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="game-implementation.html">Werewolf - The Implementation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Training Agents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training_agent_info.html">Training Agents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indicators.html">Gameplay Indicators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="game_visualization.html">Replay visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future Directions</a></li>
@@ -240,7 +238,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Ftraining_agent_info.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Fgame-description.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -270,7 +268,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/training_agent_info.ipynb" target="_blank"
+      <li><a href="_sources/game-description.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -280,7 +278,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.ipynb</span>
+<span class="btn__text-container">.md</span>
 </a>
 </li>
       
@@ -352,7 +350,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Training Agents</h1>
+    <h1>Werewolf - The Game</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -362,11 +360,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-architecture">Model Architecture</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-w-ppo">Training w/ PPO</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-history">Quick History</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description">Description</a></li>
 </ul>
             </nav>
         </div>
@@ -378,135 +373,34 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-import torch
-import sys
-sys.path.append(&#39;../&#39;)
-from voting_games.werewolf_env_v0 import plurality_env, pare, Phase, Roles
-import random
-import copy
-from tqdm import tqdm
-from collections import Counter
-from torchview import draw_graph
-import graphviz
-graphviz.set_jupyter_format(&#39;png&#39;)
-import matplotlib.pyplot as plt
-from notebooks.learning_agents.models import ActorCriticAgent
-from notebooks.learning_agents.utils import play_recurrent_game, convert_obs
-from notebooks.learning_agents.static_agents import random_approval_wolf, random_plurality_wolf
-import notebooks.learning_agents.stats as indicators 
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;png&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<section class="tex2jax_ignore mathjax_ignore" id="training-agents">
-<h1>Training Agents<a class="headerlink" href="#training-agents" title="Permalink to this heading">#</a></h1>
-<section id="model-architecture">
-<h2>Model Architecture<a class="headerlink" href="#model-architecture" title="Permalink to this heading">#</a></h2>
-<p>Determining the proper model architecture for Agents is not a straightforward task, and takes some experimentation. Initially we had gone with seperate networks for value and policy models, however, we settled on a shared network for both. We treat agents as independent learners with a shared policy.  Below is a model architecture that is shared amongst plurality and approval agents and has trained villagers with close to <span class="math notranslate nohighlight">\(50%\)</span> winrates.</p>
-<p>Models are  tied to the number of agents per game they were trained on, so a 5-player game environment agent will not work if fed observations from a 10-player game environment.</p>
-<p>Most of the training and work was done in 10-player environments as it allowed for more interesting gameplay in a setting where no communication other than voting is allowed.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
-observations, _, _, _, _ = env.reset()
-
-obs_size= env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
-
-untrained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128, 
-                                        &quot;rec_layers&quot;: 1,
-                                        &quot;joint_mlp_size&quot;: 128,
-                                        &quot;split_mlp_size&quot;: 128,
-                                        &quot;num_votes&quot;: 1,
-                                        &quot;approval_states&quot;: 10},
-                                        num_players=10,
-                                        obs_size=obs_size)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>obs = convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;], voting_type=&#39;plurality&#39;)
-obs = torch.unsqueeze(obs,0)
-hxcs = (torch.zeros((1,1,128), dtype=torch.float32), torch.zeros((1,1,128), dtype=torch.float32))
-
-model_graph = draw_graph(untrained_plurality_agent, input_data=[obs,hxcs], device=torch.device(&#39;cpu&#39;))
-model_graph.visual_graph
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/0227968ac2f23bf101c7f964c326316ae275c935a5df3862bd49978592a7ff0e.png" src="_images/0227968ac2f23bf101c7f964c326316ae275c935a5df3862bd49978592a7ff0e.png" />
-</div>
-</div>
-<section id="hyperparameters">
-<h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h3>
-<p>There are just under 20 hyperparameters, and can be split between gameplay parameters, neural network model parameters and PPO training parameters. Each value in this configuration object below can be changed, and is passed throughout training functions.</p>
-<p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id1">[<a class="reference internal" href="bibliography.html#id31" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>]</span> and <span id="id2">[<a class="reference internal" href="bibliography.html#id34" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config_training</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;recurrent_layers&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;recurrent_hidden_size&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> 
-        <span class="s2">&quot;joint_mlp_size&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-        <span class="s2">&quot;split_mlp_size&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-        <span class="s2">&quot;num_votes&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s2">&quot;approval_states&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;training&quot;</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> 
-        <span class="s2">&quot;epochs&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> 
-        <span class="s2">&quot;updates&quot;</span><span class="p">:</span> <span class="mi">501</span><span class="p">,</span> 
-        <span class="s2">&quot;buffer_games_per_update&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span> 
-        <span class="s2">&quot;clip_range&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> 
-        <span class="s2">&quot;value_loss_coefficient&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> 
-        <span class="s2">&quot;max_grad_norm&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> 
-        <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> 
-        <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">,</span> 
-        <span class="s2">&quot;adam_eps&quot;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span> 
-        <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.99</span><span class="p">,</span> 
-        <span class="s2">&quot;gae_lambda&quot;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span> 
-    <span class="p">}</span>
-<span class="p">}</span>
-
-
-<span class="n">config_game</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;rewards&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;player_death&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;player_win&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s2">&quot;player_loss&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;self_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;dead_villager&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;dead_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;dead_wolf&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;no_viable_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;no_sleep&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;gameplay&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;accusation_phases&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s2">&quot;num_agents&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s2">&quot;num_werewolves&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;config_game&quot;</span><span class="p">:</span> <span class="n">config_game</span><span class="p">,</span>
-    <span class="s2">&quot;config_training&quot;</span><span class="p">:</span> <span class="n">config_training</span><span class="p">,</span>
-<span class="p">}</span>
-</pre></div>
-</div>
+  <section class="tex2jax_ignore mathjax_ignore" id="werewolf-the-game">
+<h1>Werewolf - The Game<a class="headerlink" href="#werewolf-the-game" title="Permalink to this heading">#</a></h1>
+<section id="quick-history">
+<h2>Quick History<a class="headerlink" href="#quick-history" title="Permalink to this heading">#</a></h2>
+<p>Werewolf is a 1997 re-imagining by Andrew Plotkin <a class="footnote-reference brackets" href="#werewolf-boardgame" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> of a game known as mafia<a class="footnote-reference brackets" href="#mafia-wikipedia" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, credited to Dimitry Davidoff in the Psychology Department of Moscow State University in 1986.</p>
+<p>The game models a conflict between an informed minority (mafiosi) and an unaware majority(villagers).</p>
+<p>Originally created for psychological research, it has spread all over the world and is now in the top 50 most historically and culturally significant games published<a class="footnote-reference brackets" href="#top50" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
 </section>
-</section>
-<section id="training-w-ppo">
-<h2>Training w/ PPO<a class="headerlink" href="#training-w-ppo" title="Permalink to this heading">#</a></h2>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
+<p>Werewolf is a multi player game between two competing teams comprised of villagers and werewolves. The werewolf team is a hidden subset of the villager team as true villagers cannot tell who the werewolves are, and must try and deduce their identities.</p>
+<p>Gameplay alternates between day and night phases. During the day, villagers vote on who amongst them should be executed for the crime of being a werewolf, and at night, wolves vote on which helpless villager to kill.</p>
+<p>Once a player dies, they reveal their role to the rest of the players.</p>
+<p>Different versions of the game slightly alter rules, or introduce various new roles with their own special abilities. In our case, we have simplified the game as much as possible to focus on the voting mechanisms used by agents to determine who to execute and kill.</p>
+<p>The game ends when either all the werewolves have been executed, or there are more werewolves than villagers remaining.</p>
+<hr class="footnotes docutils" />
+<aside class="footnote brackets" id="werewolf-boardgame" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://boardgamegeek.com/boardgame/925/werewolf">https://boardgamegeek.com/boardgame/925/werewolf</a></p>
+</aside>
+<aside class="footnote brackets" id="mafia-wikipedia" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mafia_(party_game)">https://en.wikipedia.org/wiki/Mafia_(party_game)</a></p>
+</aside>
+<aside class="footnote brackets" id="top50" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.thesprucecrafts.com/board-and-card-games-timeline-409387">https://www.thesprucecrafts.com/board-and-card-games-timeline-409387</a></p>
+</aside>
 </section>
 </section>
 
@@ -542,20 +436,20 @@ model_graph.visual_graph
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="terminology.html"
+       href="intro.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Terminology</p>
+        <p class="prev-next-title">COMP 5903 - Voting in Hidden Role Games</p>
       </div>
     </a>
     <a class="right-next"
-       href="indicators.html"
+       href="literature-review.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Gameplay Indicators</p>
+        <p class="prev-next-title">Literature Review</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -577,11 +471,8 @@ model_graph.visual_graph
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-architecture">Model Architecture</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-w-ppo">Training w/ PPO</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-history">Quick History</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description">Description</a></li>
 </ul>
   </nav></div>
 
