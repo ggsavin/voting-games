@@ -36,6 +36,6 @@ sphinx:
   extra_extensions:
     - sphinx_proof
 
-parse:
-  myst_enable_extensions:
-    - amsmath
+# parse:
+#   myst_enable_extensions:
+#     - amsmath

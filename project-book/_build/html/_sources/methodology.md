@@ -56,10 +56,13 @@ Because we are implementing an LSTM, the action $a_t$ selected by the policy $\p
 
     by taking $K$ steps of minibatch SGD (via Adam), where
 
-    \begin{align}
+    $$
         \mathcal{L}^C(\theta) & = E [\sum_{t=0}^{\tau}[min(q_t(\theta)\hat{A}_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]
-            $q_t(\theta) & = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
-    \end{align}
+    $$
+
+    $$
+        $q_t(\theta) & = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
+    $$
     
     $$
     \mathcal{L}^V_t(\theta) = (V_{\theta}(o_t,h_t) - V^{target}_t)^2
