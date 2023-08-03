@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>COMP 5903 - Voting in Hidden Role Games &#8212; Voting in Hidden Role Games</title>
+    <title>Training Agents &#8212; Voting in Hidden Role Games</title>
   
   
   
@@ -62,10 +62,13 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'training_agent_info';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Literature Review" href="literature-review.html" />
+    <link rel="next" title="Gameplay Indicators" href="indicators.html" />
+    <link rel="prev" title="Methodology" href="methodology.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -131,7 +134,7 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="sidebar-primary-item">
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="intro.html">
   
   
   
@@ -150,17 +153,17 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
                     COMP 5903 - Voting in Hidden Role Games
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="literature-review.html">Literature Review</a></li>
 <li class="toctree-l1"><a class="reference internal" href="voting-game.html">Werewolf - The Game</a></li>
 <li class="toctree-l1"><a class="reference internal" href="methodology.html">Methodology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="training_agent_info.html">Training Agents</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Training Agents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indicators.html">Gameplay Indicators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="game_visualization.html">Replay visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future Directions</a></li>
@@ -236,7 +239,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Ftraining_agent_info.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -266,7 +269,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/intro.md" target="_blank"
+      <li><a href="_sources/training_agent_info.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -276,7 +279,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.md</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
 </li>
       
@@ -348,7 +351,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>COMP 5903 - Voting in Hidden Role Games</h1>
+    <h1>Training Agents</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -358,10 +361,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#abstract">Abstract</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contribution">Contribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-architecture">Model Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-w-ppo">Training w/ PPO</a></li>
 </ul>
             </nav>
         </div>
@@ -373,55 +377,136 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="comp-5903-voting-in-hidden-role-games">
-<h1>COMP 5903 - Voting in Hidden Role Games<a class="headerlink" href="#comp-5903-voting-in-hidden-role-games" title="Permalink to this heading">#</a></h1>
-<section id="abstract">
-<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this heading">#</a></h2>
-<p>Social Deduction Games (SDGs), and especially Hidden Role variants such as Werewolf provide players with challenging and dynamic gameplay as teams with asymmetric information try to win. This imbalance of information favors the smaller, deceptive team as the majority try to figure out who the traitors are before it is too late. While player communication and elucidation of traitors has been a main focus of research, the voting mechanism underpinning the games is quite overlooked and is in general computationally challenging in Multi-Agent settings <span id="id1">[<a class="reference internal" href="bibliography.html#id11" title="A Zorica Dodevska. Computational social choice and challenges of voting in multi-agent systems. Tehnika, 2019.">Dod19</a>]</span>. In this project, we substitute the usual plurality scheme with an approval one in a custom Werewolf environment, and show that it is possible to train approval agents without using communication. We hope this spurs more social choice theory research in SDGs.</p>
-</section>
-<section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
-<p>Social Deduction Games model tentative cooperation between groups with uncertain motives. In these games, different players and teams/coalitions have access to different information, with their goals ranging from cooperative to atagonistic<span id="id2">[<a class="reference internal" href="bibliography.html#id15" title="Allan Dafoe, Edward Hughes, Yoram Bachrach, Tantum Collins, Kevin R. McKee, Joel Z. Leibo, K. Larson, and Thore Graepel. Open problems in cooperative ai. ArXiv, 2020. URL: https://api.semanticscholar.org/CorpusID:229220772.">DHB+20</a>]</span>. A special type of SDG is a Hidden Role game where the smaller team of players with an information advantage over the majority group also have their roles masked to “blend” into this majority. It is then up to the uniformed majority to build trust amongst themselves while ferreting out the deceptors. Well known games such as Amongst Us, Avalon, Secret Hitler and Mafia fall in this category.</p>
-<div class="admonition-mechanisms-employed-in-mafia-werewolf admonition">
-<p class="admonition-title">Mechanisms employed in Mafia/Werewolf</p>
-<p><span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Hidden Roles</span>, <span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Negotiation</span>, <span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Asymmetric information</span>, <span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Voting</span>, <span class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">Elimination</span></p>
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import torch
+import sys
+sys.path.append(&#39;../&#39;)
+from voting_games.werewolf_env_v0 import plurality_env, pare, Phase, Roles
+import random
+import copy
+from tqdm import tqdm
+from collections import Counter
+from torchview import draw_graph
+import graphviz
+graphviz.set_jupyter_format(&#39;png&#39;)
+import matplotlib.pyplot as plt
+from notebooks.learning_agents.models import ActorCriticAgent
+from notebooks.learning_agents.utils import play_recurrent_game, convert_obs
+from notebooks.learning_agents.static_agents import random_approval_wolf, random_plurality_wolf
+import notebooks.learning_agents.stats as indicators 
+</pre></div>
 </div>
-<p>Given this dichotomy and duplicity, SDGs are ripe for psychological analysis, and indeed, mafia was first played in the Psychology Department of Moscow State University<a class="footnote-reference brackets" href="#mafia-wikipedia" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. A gamut of emotions are experienced playing these types of games, from catharsis when identifying deceptors, to perverse joy from lying, cheating and manipulating<a class="footnote-reference brackets" href="#amongst-us-article" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Other psychological uses of SDGs have been to treat anxiety through symbolic interaction <span id="id5">[<a class="reference internal" href="bibliography.html#id21" title="Christopher T Conner and Nicholas M Baxter. Are you a werewolf? teaching symbolic interaction theory through game play. Teach. Sociol., 50(1):17–27, January 2022.">CB22</a>]</span>, quantifying entertainment dynamics of SDGs<span id="id6">[<a class="reference internal" href="bibliography.html#id28" title="Hong Ri, Xiaohan Kang, Mohd Nor Akmal Khalid, and Hiroyuki Iida. The dynamics of minority versus majority behaviors: a case study of the mafia game. Information, 13(3):134, March 2022.">RKKI22</a>]</span> and studying non-verbal communication <span id="id7">[<a class="reference internal" href="bibliography.html#id27" title="Daisuke Katagami, Shono Takaku, Michimasa Inaba, Hirotaka Osawa, Kosuke Shinoda, Junji Nishino, and Fujio Toriumi. Investigation of the effects of nonverbal information on werewolf. In 2014 IEEE International Conference on Fuzzy Systems (FUZZ-IEEE), 982–987. IEEE, 2014.">KTI+14</a>]</span>.</p>
-<p>IN SDGs, communication and deception present unique challenges for AI agents trying to learn optimal strategies on top of the already challenging Multi-Agent-RL (MARL) setting <span id="id8">[<a class="reference internal" href="bibliography.html#id15" title="Allan Dafoe, Edward Hughes, Yoram Bachrach, Tantum Collins, Kevin R. McKee, Joel Z. Leibo, K. Larson, and Thore Graepel. Open problems in cooperative ai. ArXiv, 2020. URL: https://api.semanticscholar.org/CorpusID:229220772.">DHB+20</a>]</span>. To better study these topics along with machine learning, multi-agent simulation, human-agent interaction and cognitive science, an yearly competition called AIWolf <span id="id9">[<a class="reference internal" href="bibliography.html#id7" title="Fujio Toriumi, Hirotaka Osawa, Michimasa Inaba, Daisuke Katagami, Kosuke Shinoda, and Hitoshi Matsubara. Ai wolf contest—development of game ai using collective intelligence—. In Computer Games: 5th Workshop on Computer Games, CGW 2016, and 5th Workshop on General Intelligence in Game-Playing Agents, GIGA 2016, Held in Conjunction with the 25th International Conference on Artificial Intelligence, IJCAI 2016, New York, USA, July 9-10, 2016, Revised Selected Papers 5, 101–115. Springer, 2017.">TOI+17</a>]</span> was started that is still being held to this day. Werewolf, the game played in this competition is simply a re-imagining of Mafia where the mafia are now werewolves, and villagers vote to eliminate who they believe are werewolves during the day.</p>
-</section>
-<section id="motivation">
-<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h2>
-<p>Social Choice Theory<a class="footnote-reference brackets" href="#soc-choice" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> underpins a core mechanism of all SDGs in the gathering and enforcment of choices made by each individual agent. In all the works we have looked through, it seems as though this aspect of SDGs have not been permuted and explored. <em>By changing the underlying voting mechanism, we are interested in seeing how the dynamics between groups change</em></p>
-<p>Approval voting has more implicit and explicit information, and allows for more expression when voting. Naturally, we ask ourselves what kind of impact changing the voting mechanism underlying werewolf would have on the ability of the simulated agents to learn and their chances of winning.</p>
-</section>
-<section id="contribution">
-<h2>Contribution<a class="headerlink" href="#contribution" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Creation of a custom environment using PettingZoo<a class="footnote-reference brackets" href="#petting-zoo" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> for the purpose of voting mechanism research within the Werewolf SDG.</p></li>
-<li><p>Sucessfully implemented approval voting as the voting mechanism in our environment</p></li>
-<li><p>Successfully trained plurality and approval RL agents in our environment</p></li>
-<li><p>Designed a wide range of indicators to explore behavior and voting patterns of agents</p></li>
-</ul>
-<hr class="footnotes docutils" />
-<aside class="footnote brackets" id="mafia-wikipedia" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">1</a><span class="fn-bracket">]</span></span>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mafia_(party_game)">https://en.wikipedia.org/wiki/Mafia_(party_game)</a></p>
-</aside>
-<aside class="footnote brackets" id="amongst-us-article" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">2</a><span class="fn-bracket">]</span></span>
-<p><a class="reference external" href="https://www.sportskeeda.com/among-us/the-psychology-among-us">https://www.sportskeeda.com/among-us/the-psychology-among-us</a></p>
-</aside>
-<aside class="footnote brackets" id="soc-choice" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">3</a><span class="fn-bracket">]</span></span>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Social_choice_theory">https://en.wikipedia.org/wiki/Social_choice_theory</a></p>
-</aside>
-<aside class="footnote brackets" id="petting-zoo" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">4</a><span class="fn-bracket">]</span></span>
-<p><a class="reference external" href="https://pettingzoo.farama.org/index.html">https://pettingzoo.farama.org/index.html</a></p>
-</aside>
-</section>
-<div class="toctree-wrapper compound">
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;png&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="training-agents">
+<h1>Training Agents<a class="headerlink" href="#training-agents" title="Permalink to this heading">#</a></h1>
+<section id="model-architecture">
+<h2>Model Architecture<a class="headerlink" href="#model-architecture" title="Permalink to this heading">#</a></h2>
+<p>Determining the proper model architecture for Agents is not a straightforward task, and takes some experimentation. Initially we had gone with seperate networks for value and policy models, however, we settled on a shared network for both. We treat agents as independent learners with a shared policy.  Below is a model architecture that is shared amongst plurality and approval agents and has trained villagers with close to <span class="math notranslate nohighlight">\(50%\)</span> winrates.</p>
+<p>Models are  tied to the number of agents per game they were trained on, so a 5-player game environment agent will not work if fed observations from a 10-player game environment.</p>
+<p>Most of the training and work was done in 10-player environments as it allowed for more interesting gameplay in a setting where no communication other than voting is allowed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
+observations, _, _, _, _ = env.reset()
+
+obs_size= env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
+
+untrained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128, 
+                                        &quot;rec_layers&quot;: 1,
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 1,
+                                        &quot;approval_states&quot;: 10},
+                                        num_players=10,
+                                        obs_size=obs_size)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>obs = convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;], voting_type=&#39;plurality&#39;)
+obs = torch.unsqueeze(obs,0)
+hxcs = (torch.zeros((1,1,128), dtype=torch.float32), torch.zeros((1,1,128), dtype=torch.float32))
+
+model_graph = draw_graph(untrained_plurality_agent, input_data=[obs,hxcs], device=torch.device(&#39;cpu&#39;))
+model_graph.visual_graph
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/0227968ac2f23bf101c7f964c326316ae275c935a5df3862bd49978592a7ff0e.png" src="_images/0227968ac2f23bf101c7f964c326316ae275c935a5df3862bd49978592a7ff0e.png" />
+</div>
+</div>
+<section id="hyperparameters">
+<h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h3>
+<p>There are just under 20 hyperparameters, and can be split between gameplay parameters, neural network model parameters and PPO training parameters. Each value in this configuration object below can be changed, and is passed throughout training functions.</p>
+<p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id1">[<a class="reference internal" href="bibliography.html#id31" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>]</span> and <span id="id2">[<a class="reference internal" href="bibliography.html#id34" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config_training</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;recurrent_layers&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;recurrent_hidden_size&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> 
+        <span class="s2">&quot;joint_mlp_size&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
+        <span class="s2">&quot;split_mlp_size&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
+        <span class="s2">&quot;num_votes&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;approval_states&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;training&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> 
+        <span class="s2">&quot;epochs&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> 
+        <span class="s2">&quot;updates&quot;</span><span class="p">:</span> <span class="mi">501</span><span class="p">,</span> 
+        <span class="s2">&quot;buffer_games_per_update&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span> 
+        <span class="s2">&quot;clip_range&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> 
+        <span class="s2">&quot;value_loss_coefficient&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> 
+        <span class="s2">&quot;max_grad_norm&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> 
+        <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> 
+        <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">,</span> 
+        <span class="s2">&quot;adam_eps&quot;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span> 
+        <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.99</span><span class="p">,</span> 
+        <span class="s2">&quot;gae_lambda&quot;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="n">config_game</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;rewards&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;player_death&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;player_win&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;player_loss&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;self_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;dead_villager&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;dead_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;dead_wolf&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;no_viable_vote&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;no_sleep&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;gameplay&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;accusation_phases&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;num_agents&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;num_werewolves&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;config_game&quot;</span><span class="p">:</span> <span class="n">config_game</span><span class="p">,</span>
+    <span class="s2">&quot;config_training&quot;</span><span class="p">:</span> <span class="n">config_training</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="training-w-ppo">
+<h2>Training w/ PPO<a class="headerlink" href="#training-w-ppo" title="Permalink to this heading">#</a></h2>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -455,12 +540,21 @@ document.write(`
   
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="methodology.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Methodology</p>
+      </div>
+    </a>
     <a class="right-next"
-       href="literature-review.html"
+       href="indicators.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Literature Review</p>
+        <p class="prev-next-title">Gameplay Indicators</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -482,10 +576,11 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#abstract">Abstract</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contribution">Contribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-architecture">Model Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-w-ppo">Training w/ PPO</a></li>
 </ul>
   </nav></div>
 

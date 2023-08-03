@@ -163,7 +163,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="literature-review.html">Literature Review</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Werewolf - The Game</a></li>
 <li class="toctree-l1"><a class="reference internal" href="methodology.html">Methodology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="training.html">Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training_agent_info.html">Training Agents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indicators.html">Gameplay Indicators</a></li>
 <li class="toctree-l1"><a class="reference internal" href="game_visualization.html">Replay visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future Directions</a></li>
@@ -445,6 +445,7 @@ document.write(`
     <span class="n">NIGHT</span> <span class="o">=</span> <span class="mi">2</span>
 </pre></div>
 </div>
+<p>During accusastion phases, agents vote as usual, but nobody dies. It is a way to “finger-point” and allow agents to broadcast their intent.</p>
 </section>
 <section id="action-space-and-observation-space">
 <h4>Action Space and Observation Space<a class="headerlink" href="#action-space-and-observation-space" title="Permalink to this heading">#</a></h4>
@@ -456,7 +457,7 @@ document.write(`
 <span class="bp">self</span><span class="o">.</span><span class="n">action_spaces</span> <span class="o">=</span> <span class="p">{</span> <span class="n">name</span><span class="p">:</span> <span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num_agents</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p>The observation space returned has quite a bit more information, and a seperate <a class="reference internal" href="training.html#convert-obs"><span class="std std-ref">utility function</span></a> is used to convert this observation in the training of agents.</p>
+<p>The observation space returned has quite a bit more information, and a seperate <span class="xref myst">utility function</span> is used to convert this observation in the training of agents.</p>
 <p>The longest possible run-time of the game is chosen as the upper-bound for days</p>
 <p>A self-id is also provided, as the agent has to have a way to know which id is theirs.</p>
 <p>The votes are the previous phases votes, and for villagers after a night round, hides the information as an invalid target.</p>
@@ -498,7 +499,7 @@ document.write(`
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The world state tracks everything happening in the game and is used for both the history and for rendering the game. In the case of game history for <a class="reference internal" href="training.html#game-analysis-methodology"><span class="std std-ref">analysis purposes</span></a> the votes are the actual votes that occured in the current phase, unlike observations which contain the previous phases votes.</p>
+<p>The world state tracks everything happening in the game and is used for both the history and for rendering the game. In the case of game history for <span class="xref myst">analysis purposes</span> the votes are the actual votes that occured in the current phase, unlike observations which contain the previous phases votes.</p>
 </section>
 <section id="voting-mechanisms">
 <h4>Voting Mechanisms<a class="headerlink" href="#voting-mechanisms" title="Permalink to this heading">#</a></h4>

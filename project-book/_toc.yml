@@ -7,7 +7,7 @@ chapters:
 - file: literature-review
 - file: voting-game
 - file: methodology
-- file: training
+- file: training_agent_info
 - file: indicators
 - file: game_visualization
 - file: future
