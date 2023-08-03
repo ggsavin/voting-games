@@ -5,11 +5,13 @@ While the idea of using different voting mechanisms in an SDG seems to be a nove
 
 ## Game theorertic work on mafia/werewolf
 
-Early iterative game theoretic research in mafia/werewolf {cite}`braverman2008mafia, yao2008theoretical, migdal2010mathematical` answered questions such as how large does the minority group ($\geq$ to $\sqrt{n}$) need to be to dominate a game aand what strategies should they follow (random policy). Although the game model was kept simple, and advanced behavior was not considered, it provided very good baseline insights for which further work could leverage. 
+Early iterative game theoretic research in mafia/werewolf {cite}`braverman2008mafia, yao2008theoretical, migdal2010mathematical` answered questions such as how large does the minority group (greater than or equal to the square root of total players) need to be to dominate a game aand what strategies should they follow (random policy). Although the game model was kept simple, and advanced behavior was not considered, it provided very good baseline insights for which further work could leverage. 
 
 ## AIWolf and other Werewolf environments
 
-A more complete werewolf environment, AIWolf {cite}`toriumi2017ai`, was proposed to study communication in Werewolf and featured both protocol and later on, full NLP variants. To train agents, Q-learning has been a proved to work {cite}`hagiwara2019using, zhang2021designing, Wang2018-yn`, as it was used in both 5-player and 10+ game settings. Some of these {cite}`Wang2018-yn, hagiwara2019using` even used multiple models for various in-game tasks. However, using AIWolf would have required changing a lot of internal server code, and would have proven to be too much for a project, with minimal impact on the actual desired topic of voting mechanisms. 
+A more complete werewolf environment, AIWolf {cite}`toriumi2017ai`, was proposed to study communication in the Werewolf game. AIWolf splits the comeptition in two tracks, one where communication is based off of a protocol, and one where the full english vocabulary can be used. This communication occurs during communication phases, and need to be handled in tandem with choosing appropriate actions.
+
+To train agents, Q-learning has been shown to work {cite}`hagiwara2019using, zhang2021designing, Wang2018-yn`, as it was used in both 5-player and 10+ AIWolf game settings. Some of these {cite}`Wang2018-yn, hagiwara2019using` even used multiple models for various in-game tasks. However, using AIWolf would have required changing a lot of internal server code, and would have been too much for a project, with minimal impact on the actual desired topic of voting mechanisms. 
 
 RLupus {cite}`Brandizzi2021RLupusCT` is a simplified environment to focus on emergent communication in Werewolf, and we considered extending it, however too much would have had to be changed, and ultimately we went with a focused custom environment.
 

@@ -11,7 +11,8 @@ Originally created for psychological research, it has spread all over the world 
 
 Werewolf is a multi player game between two competing teams comprised of villagers and werewolves. The werewolf team is a hidden subset of the villager team as true villagers cannot tell who the werewolves are, and must try and deduce their identities.
 
-Gameplay alternates between day and night phases. During the day, villagers vote on who amongst them should be executed for the crime of being a werewolf, and at night, wolves vote on which helpless villager to kill.
+
+Gameplay alternates between day and night phases. During the day, villagers vote on who amongst them should be executed for the crime of being a werewolf, and at night, wolves vote on which helpless villager to kill. Communication between agents either takes place during the voting round, or precedes it in multiple communication rounds.
 
 Once a player dies, they reveal their role to the rest of the players.
 

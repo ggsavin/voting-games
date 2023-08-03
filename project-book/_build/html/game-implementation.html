@@ -404,7 +404,7 @@ document.write(`
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_agents</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">werewolves</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_accusations</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rewards</span><span class="o">=</span><span class="n">REWARDS</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We allow for a variable number of agents as well as number of accusation rounds before an execution vote. We also allow for custom reward values along with <a class="reference internal" href="voting-game.html#game-rewards"><span class="std std-ref">default values</span></a></p>
+<p>We allow for a variable number of agents as well as number of accusation rounds before an execution vote. We also allow for custom reward values along with <a class="reference internal" href="#game-rewards"><span class="std std-ref">default values</span></a></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>square root of the number of agents is the max allowed werewolf count given game theoretic advantages for werewolves <span id="id3">[<a class="reference internal" href="bibliography.html#id36" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span></p>
@@ -511,7 +511,7 @@ document.write(`
 </section>
 <section id="game-loop">
 <h3>Game loop<a class="headerlink" href="#game-loop" title="Permalink to this heading">#</a></h3>
-<p>As seen in the <a class="reference internal" href="voting-game.html#game-flow"><span class="std std-ref">flowchart</span></a>, the logic is all implemented in the <code class="docutils literal notranslate"><span class="pre">env.step()</span></code> function which expects a dictionary of agent ids and their respective actions.</p>
+<p>As seen in the <a class="reference internal" href="#game-flow"><span class="std std-ref">flowchart</span></a>, the logic is all implemented in the <code class="docutils literal notranslate"><span class="pre">env.step()</span></code> function which expects a dictionary of agent ids and their respective actions.</p>
 <p>For every phase, the target is determined via <code class="docutils literal notranslate"><span class="pre">self._get_player_to_be_killed(actions)</span></code>. If this was a voting or night-time phase, the target is added to executed (voting) or killed (night-time) lists, and this dying agent is given a negative reward for dying.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
