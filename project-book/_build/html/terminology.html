@@ -382,7 +382,7 @@ document.write(`
 <h1>Terminology<a class="headerlink" href="#terminology" title="Permalink to this heading">#</a></h1>
 <section id="pomdps">
 <h2>POMDPs<a class="headerlink" href="#pomdps" title="Permalink to this heading">#</a></h2>
-<p>Partially Observable Markov Decision Processes (POMDPs<a class="footnote-reference brackets" href="#id7" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) are a special case of a Markov Decision Process (MDP) where the agent does not have direct observability to the state, but rather gets their own, possibly unique, observation. Formally, it is a tuple consisting of:</p>
+<p>Partially Observable Markov Decision Processes (POMDPs<a class="footnote-reference brackets" href="#id10" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) are a special case of a Markov Decision Process (MDP) where the agent does not have direct observability to the state, but rather gets their own, possibly unique, observation. Formally, it is a tuple consisting of:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(S\)</span>, a set of states</p></li>
 <li><p><span class="math notranslate nohighlight">\(A\)</span>, a set of actions</p></li>
@@ -400,29 +400,28 @@ document.write(`
 <p><a class="reference internal" href="#single-rl"><span class="std std-ref">Reinforcement Learning</span></a> is a training method wherein an agent takes an action in an environment and is either rewarded or punished while transitioning to a new state. This is repeated until the agent reaches a terminal state. Ideally an agent will learn an optimal <em>policy</em> that maps observations to actions through many interactions in their environment.</p>
 <p>When it comes to <a class="reference internal" href="#multi-agent-rl"><span class="std std-ref">Multi-Agent Learning</span></a>, multiple agents are either leaarning in a decentralized manner, or being directed by a central policy. The dynamic nature of of Multi-Agent systems make learning much more challenging, although certain algorithms such as PPO and DQN still work.</p>
 <p>Agents can learn using value-based, policy-based and model-based algorithms. A good taxonomy of different types of algorithms can be seen in the diagram below.</p>
-<p><img alt="Taxonomy of RL Algorithms" src="https://spinningup.openai.com/en/latest/_images/rl_algorithms_9_15.svg" /></p>
-<p>A good reference on RL is the timeless book <em>Reinforcement Learning: An Introduction</em><a class="footnote-reference brackets" href="#sutton-barto-book" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> by Sutton &amp; Barto.</p>
-<!-- Reference pictures here : https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b
-
-| Single Agent RL | Multi Agent RL | 
-| ---- | --- |
-| ![Single-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png) | ![Multi-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png) | -->
+<figure class="align-default" id="rl-taxonomy">
+<img alt="Taxonomy of RL algorithms" src="https://spinningup.openai.com/en/latest/_images/rl_algorithms_9_15.svg" /><figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Taxonomy of RL Algorithms<a class="footnote-reference brackets" href="#rl-tax" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></span><a class="headerlink" href="#rl-taxonomy" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>A good reference on RL is the timeless book <em>Reinforcement Learning: An Introduction</em><a class="footnote-reference brackets" href="#sutton-barto-book" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> by Sutton &amp; Barto.</p>
 <figure class="align-default" id="single-rl">
 <img alt="single agent RL" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Single Agent Reinforcement Learning</span><a class="headerlink" href="#single-rl" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Single Agent Reinforcement Learning<a class="footnote-reference brackets" href="#rl-pictures" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></span><a class="headerlink" href="#single-rl" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-default" id="multi-agent-rl">
 <img alt="multi agent RL" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Multi-Agent Reinforcement Learning</span><a class="headerlink" href="#multi-agent-rl" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Multi-Agent Reinforcement Learning<a class="footnote-reference brackets" href="#rl-pictures" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></span><a class="headerlink" href="#multi-agent-rl" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
 <section id="ppo">
 <h2>PPO<a class="headerlink" href="#ppo" title="Permalink to this heading">#</a></h2>
-<p>Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm and it was also used in a similar setting as our work <span id="id3">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id9" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>.</p>
+<p>Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm and it was also used in a similar setting as our work <span id="id6">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id9" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>.</p>
 <p>Because we are also implementing an LSTM, the action <span class="math notranslate nohighlight">\(a_t\)</span> selected by the policy <span class="math notranslate nohighlight">\(\pi_{\theta}\)</span> depends on both the observation <span class="math notranslate nohighlight">\(o_t\)</span> and the hidden state <span class="math notranslate nohighlight">\(h_t\)</span>.</p>
 <p>We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.</p>
 <div class="proof algorithm admonition" id="ppo-alg">
@@ -433,8 +432,8 @@ document.write(`
 <li><p>for <span class="math notranslate nohighlight">\(k=0,1,2,...\)</span> do</p>
 <ol class="arabic simple">
 <li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
-<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id4">[<a class="reference internal" href="bibliography.html#id33" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
-<li><p>Compute policy update <span id="id5">[<a class="reference internal" href="bibliography.html#id32" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
+<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id7">[<a class="reference internal" href="bibliography.html#id33" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
+<li><p>Compute policy update <span id="id8">[<a class="reference internal" href="bibliography.html#id32" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
 </ol>
 <div class="math notranslate nohighlight">
 \[
@@ -463,23 +462,32 @@ $<span class="math notranslate nohighlight">\(
 </section>
 </div><div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
+<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
 </div>
 </section>
 <section id="lstms">
 <h2>LSTMs<a class="headerlink" href="#lstms" title="Permalink to this heading">#</a></h2>
 <p>Long-short term memory ML. We use this because we want our agents to have historical information</p>
 <hr class="footnotes docutils" />
-<aside class="footnote brackets" id="id7" role="note">
+<aside class="footnote brackets" id="id10" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process">https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process</a></p>
 </aside>
-<aside class="footnote brackets" id="sutton-barto-book" role="note">
+<aside class="footnote brackets" id="rl-tax" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html">https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html</a></p>
+</aside>
+<aside class="footnote brackets" id="sutton-barto-book" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://incompleteideas.net/book/the-book-2nd.html">http://incompleteideas.net/book/the-book-2nd.html</a></p>
 </aside>
+<aside class="footnote brackets" id="rl-pictures" role="note">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
+<p><a class="reference external" href="https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b">https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b</a></p>
+</aside>
 <aside class="footnote brackets" id="details-ppo" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">5</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/</a></p>
 </aside>
 </section>

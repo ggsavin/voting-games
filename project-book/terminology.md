@@ -23,25 +23,23 @@ When it comes to [Multi-Agent Learning](Multi-Agent-RL), multiple agents are eit
 
 Agents can learn using value-based, policy-based and model-based algorithms. A good taxonomy of different types of algorithms can be seen in the diagram below.
 
-![Taxonomy of RL Algorithms](https://spinningup.openai.com/en/latest/_images/rl_algorithms_9_15.svg)
+```{figure-md} RL-Taxonomy
+<img src="https://spinningup.openai.com/en/latest/_images/rl_algorithms_9_15.svg" alt="Taxonomy of RL algorithms">
+
+Taxonomy of RL Algorithms[^rl-tax]
+```
 
 A good reference on RL is the timeless book *Reinforcement Learning: An Introduction*[^Sutton-Barto-Book] by Sutton & Barto.
-
-<!-- Reference pictures here : https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b
-
-| Single Agent RL | Multi Agent RL | 
-| ---- | --- |
-| ![Single-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png) | ![Multi-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png) | -->
 
 ```{figure-md} Single-RL
 <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png" alt="single agent RL">
 
-Single Agent Reinforcement Learning
+Single Agent Reinforcement Learning[^rl-pictures]
 ```
 ```{figure-md} Multi-Agent-RL
 <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png" alt="multi agent RL">
 
-Multi-Agent Reinforcement Learning
+Multi-Agent Reinforcement Learning[^rl-pictures]
 ```
 
 
@@ -101,3 +99,5 @@ Long-short term memory ML. We use this because we want our agents to have histor
 [^37-details-ppo]:https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/
 [^POMDPs]:https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process
 [^Sutton-Barto-Book]:http://incompleteideas.net/book/the-book-2nd.html
+[^rl-pictures]:https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b
+[^rl-tax]:https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html
