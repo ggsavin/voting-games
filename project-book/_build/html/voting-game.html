@@ -62,8 +62,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'voting-game';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -389,7 +387,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="werewolf-the-game">
+  <section id="werewolf-the-game">
 <h1>Werewolf - The Game<a class="headerlink" href="#werewolf-the-game" title="Permalink to this heading">#</a></h1>
 <section id="quick-history">
 <h2>Quick History<a class="headerlink" href="#quick-history" title="Permalink to this heading">#</a></h2>
@@ -438,7 +436,7 @@ document.write(`
     <span class="n">WEREWOLF</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 </div>
-<p>Currently, the day consists of <span class="math notranslate nohighlight">\(n\)</span> accusation phases and one voting phase, while the night is its own phase as wolf policies are static.</p>
+<p>Currently, the day consists of $n$ accusation phases and one voting phase, while the night is its own phase as wolf policies are static.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Phase</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">IntEnum</span><span class="p">):</span>
     <span class="n">ACCUSATION</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">VOTING</span> <span class="o">=</span> <span class="mi">1</span>
@@ -540,15 +538,15 @@ document.write(`
 <hr class="footnotes docutils" />
 <aside class="footnote brackets" id="werewolf-boardgame" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p><a class="reference external" href="https://boardgamegeek.com/boardgame/925/werewolf">https://boardgamegeek.com/boardgame/925/werewolf</a></p>
+<p>https://boardgamegeek.com/boardgame/925/werewolf</p>
 </aside>
 <aside class="footnote brackets" id="mafia-wikipedia" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mafia_(party_game)">https://en.wikipedia.org/wiki/Mafia_(party_game)</a></p>
+<p>https://en.wikipedia.org/wiki/Mafia_(party_game)</p>
 </aside>
 <aside class="footnote brackets" id="top50" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
-<p><a class="reference external" href="https://www.thesprucecrafts.com/board-and-card-games-timeline-409387">https://www.thesprucecrafts.com/board-and-card-games-timeline-409387</a></p>
+<p>https://www.thesprucecrafts.com/board-and-card-games-timeline-409387</p>
 </aside>
 </section>
 </section>
