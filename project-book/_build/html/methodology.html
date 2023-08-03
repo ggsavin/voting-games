@@ -363,10 +363,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pomdps">POMDPs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rl-marl">RL &amp; MARL</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo">PPO</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-did-we-choose-ppo">Why did we choose PPO</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo">PPO</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lstms">LSTMs</a></li>
 </ul>
             </nav>
@@ -403,24 +400,29 @@ document.write(`
 <p>Agents can learn using value-based, policy-based and model-based algorithms. A good taxonomy of different types of algorithms can be seen in the diagram below.</p>
 <p><img alt="Taxonomy of RL Algorithms" src="https://spinningup.openai.com/en/latest/_images/rl_algorithms_9_15.svg" /></p>
 <p>A good reference on RL is the timeless book <em>Reinforcement Learning: An Introduction</em><a class="footnote-reference brackets" href="#sutton-barto-book" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> by Sutton &amp; Barto.</p>
-<p>Reference pictures here : <a class="reference external" href="https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b">https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b</a></p>
-<table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Single Agent RL</p></th>
-<th class="head"><p>Multi Agent RL</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><img alt="Single-Agent-RL" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png" /></p></td>
-<td><p><img alt="Multi-Agent-RL" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png" /></p></td>
-</tr>
-</tbody>
-</table>
+<!-- Reference pictures here : https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b
+
+| Single Agent RL | Multi Agent RL | 
+| ---- | --- |
+| ![Single-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png) | ![Multi-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png) | -->
+<figure class="align-default" id="single-rl">
+<img alt="single agent RL" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Single Agent Reinforcement Learning</span><a class="headerlink" href="#single-rl" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="multi-agent-rl">
+<img alt="multi agent RL" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Multi-Agent Reinforcement Learning</span><a class="headerlink" href="#multi-agent-rl" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 </section>
 <section id="ppo">
 <h2>PPO<a class="headerlink" href="#ppo" title="Permalink to this heading">#</a></h2>
-<p>Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm.</p>
-<p>Because we are implementing an LSTM, the action <span class="math notranslate nohighlight">\(a_t\)</span> selected by the policy <span class="math notranslate nohighlight">\(\pi_{\theta}\)</span> depends on both the observation <span class="math notranslate nohighlight">\(o_t\)</span> and the hidden state <span class="math notranslate nohighlight">\(h_t\)</span>.</p>
+<p>Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm and it was also used in a similar setting as our work <span id="id3">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id9" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>.</p>
+<p>Because we are also implementing an LSTM, the action <span class="math notranslate nohighlight">\(a_t\)</span> selected by the policy <span class="math notranslate nohighlight">\(\pi_{\theta}\)</span> depends on both the observation <span class="math notranslate nohighlight">\(o_t\)</span> and the hidden state <span class="math notranslate nohighlight">\(h_t\)</span>.</p>
+<p>We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.</p>
 <div class="proof algorithm admonition" id="ppo-alg">
 <p class="admonition-title"><span class="caption-number">Algorithm 1 </span> (Proximal Policy Optimization w/ Clipped Surrogate)</p>
 <section class="algorithm-content" id="proof-content">
@@ -429,8 +431,8 @@ document.write(`
 <li><p>for <span class="math notranslate nohighlight">\(k=0,1,2,...\)</span> do</p>
 <ol class="arabic simple">
 <li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
-<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id3">[<a class="reference internal" href="bibliography.html#id33" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
-<li><p>Compute policy update <span id="id4">[<a class="reference internal" href="bibliography.html#id32" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
+<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id4">[<a class="reference internal" href="bibliography.html#id33" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
+<li><p>Compute policy update <span id="id5">[<a class="reference internal" href="bibliography.html#id32" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
 </ol>
 <div class="math notranslate nohighlight">
 \[
@@ -439,11 +441,11 @@ document.write(`
 <p>by taking <span class="math notranslate nohighlight">\(K\)</span> steps of minibatch SGD (via Adam), where</p>
 <div class="math notranslate nohighlight">
 \[
-        \mathcal{L}^C(\theta) &amp; = E [\sum_{t=0}^{\tau}[min(q_t(\theta)\hat{A}_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]
+        \mathcal{L}^C(\theta) = E [\sum_{t=0}^{\tau}[min(q_t(\theta)\hat{A}_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]
     \]</div>
 <div class="math notranslate nohighlight">
 \[
-        $q_t(\theta) &amp; = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
+        $q_t(\theta) = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
     \]</div>
 <div class="math notranslate nohighlight">
 \[
@@ -458,13 +460,8 @@ $<span class="math notranslate nohighlight">\(
 </section>
 </div><div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
+<p>The 37 implementation details of PPO<a class="footnote-reference brackets" href="#details-ppo" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> is a great blog post detailing many more intricacies of PPO implementations</p>
 </div>
-<section id="why-did-we-choose-ppo">
-<h3>Why did we choose PPO<a class="headerlink" href="#why-did-we-choose-ppo" title="Permalink to this heading">#</a></h3>
-<p>Other works involving the werewolf game we looked at used PPO <span id="id6">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id9" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>, , as it has nice learning properties and good overall success.</p>
-<p>We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.</p>
-</section>
 </section>
 <section id="lstms">
 <h2>LSTMs<a class="headerlink" href="#lstms" title="Permalink to this heading">#</a></h2>
@@ -479,7 +476,7 @@ $<span class="math notranslate nohighlight">\(
 <p><a class="reference external" href="http://incompleteideas.net/book/the-book-2nd.html">http://incompleteideas.net/book/the-book-2nd.html</a></p>
 </aside>
 <aside class="footnote brackets" id="details-ppo" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/</a></p>
 </aside>
 </section>
@@ -554,10 +551,7 @@ $<span class="math notranslate nohighlight">\(
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pomdps">POMDPs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rl-marl">RL &amp; MARL</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo">PPO</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-did-we-choose-ppo">Why did we choose PPO</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ppo">PPO</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lstms">LSTMs</a></li>
 </ul>
   </nav></div>

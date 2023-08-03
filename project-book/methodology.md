@@ -27,19 +27,31 @@ Agents can learn using value-based, policy-based and model-based algorithms. A g
 
 A good reference on RL is the timeless book *Reinforcement Learning: An Introduction*[^Sutton-Barto-Book] by Sutton & Barto.
 
-Reference pictures here : https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b
+<!-- Reference pictures here : https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b
 
 | Single Agent RL | Multi Agent RL | 
 | ---- | --- |
-| ![Single-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png) | ![Multi-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png) |
+| ![Single-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png) | ![Multi-Agent-RL](https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png) | -->
 
+```{figure-md} Single-RL
+<img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*Ews7HaMiSn2l8r70eeIszQ.png" alt="single agent RL">
+
+Single Agent Reinforcement Learning
+```
+```{figure-md} Multi-Agent RL
+<img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*1o1oeH3vpzsfJukLbFsekw.png" alt="multi agent RL">
+
+Multi-Agent Reinforcement Learning
+```
 
 
 ## PPO
 
-Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm.
+Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm and it was also used in a similar setting as our work {cite}`Brandizzi2021RLupusCT, Matsunami2020-wt`.
 
-Because we are implementing an LSTM, the action $a_t$ selected by the policy $\pi_{\theta}$ depends on both the observation $o_t$ and the hidden state $h_t$.
+Because we are also implementing an LSTM, the action $a_t$ selected by the policy $\pi_{\theta}$ depends on both the observation $o_t$ and the hidden state $h_t$.
+
+We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.
 
 ```{prf:algorithm} Proximal Policy Optimization w/ Clipped Surrogate
 :label: ppo-alg
@@ -57,11 +69,11 @@ Because we are implementing an LSTM, the action $a_t$ selected by the policy $\p
     by taking $K$ steps of minibatch SGD (via Adam), where
 
     $$
-        \mathcal{L}^C(\theta) & = E [\sum_{t=0}^{\tau}[min(q_t(\theta)\hat{A}_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]
+        \mathcal{L}^C(\theta) = E [\sum_{t=0}^{\tau}[min(q_t(\theta)\hat{A}_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]]
     $$
 
     $$
-        $q_t(\theta) & = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
+        $q_t(\theta) = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
     $$
     
     $$
@@ -79,13 +91,6 @@ Because we are implementing an LSTM, the action $a_t$ selected by the policy $\p
 ```{note}
 The 37 implementation details of PPO[^37-details-ppo] is a great blog post detailing many more intricacies of PPO implementations
 ```
-
-### Why did we choose PPO
-
-Other works involving the werewolf game we looked at used PPO {cite}`Matsunami2020-wt, Brandizzi2021RLupusCT`, , as it has nice learning properties and good overall success.
-
-We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.
-
 
 ## LSTMs
 
