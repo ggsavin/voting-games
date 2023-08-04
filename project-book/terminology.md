@@ -42,6 +42,7 @@ Single Agent Reinforcement Learning[^rl-pictures]
 Multi-Agent Reinforcement Learning[^rl-pictures]
 ```
 
+(ppo-alg-header)=
 ## PPO
 
 Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm and it was also used in a similar setting as our work {cite}`Brandizzi2021RLupusCT, Matsunami2020-wt`.
