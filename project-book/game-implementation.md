@@ -47,6 +47,7 @@ class Phase(enum.IntEnum):
 
 During accusastion phases, agents vote as usual, but nobody dies. It is a way to "finger-point" and allow agents to broadcast their intent.
 
+(env-spaces)=
 ### Action Space and Observation Space
 
 The action space is simply the vote of the agent. In the plurality version, it is the player ID the agent wishes to taget. In the approval setting, it is a multi-discrete array of length #-players, where each value is (-1 - dissaproval, 0 - neutral, 1 - like)

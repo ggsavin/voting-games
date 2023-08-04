@@ -23,7 +23,26 @@ def random_approval_wolf(env, agent, action=None):
 
     return action
 
+def random_approval_villager(env, agent, action=None):
+    if action != None:
+        return action
+    
+    targets = set(env.world_state["alive"]) - set([agent])
+    action = [0] * len(env.possible_agents)
+    action[int(agent.split("_")[-1])] = 1
+    action[int(random.choice(list(targets)).split("_")[-1])] = -1
 
+    return action
+
+def random_plurality_villager(env, agent, action=None):
+    if action != None:
+        return action
+
+    targets = set(env.world_state["alive"]) - set([agent])
+    return int(random.choice(list(targets)).split("_")[-1])
+
+
+    
 class RandomRecurrentPluralityAgent(torch.nn.Module):
     def __init__(self, voting_type=None):
         super().__init__()

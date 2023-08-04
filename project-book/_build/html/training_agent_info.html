@@ -62,8 +62,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'training_agent_info';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -363,10 +361,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-architecture">Model Architecture</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-w-ppo">Training w/ PPO</a></li>
 </ul>
             </nav>
@@ -409,47 +404,8 @@ import notebooks.learning_agents.stats as indicators
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="training-agents">
 <h1>Training Agents<a class="headerlink" href="#training-agents" title="Permalink to this heading">#</a></h1>
-<section id="model-architecture">
-<h2>Model Architecture<a class="headerlink" href="#model-architecture" title="Permalink to this heading">#</a></h2>
-<p>Determining the proper model architecture for Agents is not a straightforward task, and takes some experimentation. Initially we had gone with seperate networks for value and policy models, however, we settled on a shared network for both. We treat agents as independent learners with a shared policy.  Below is a model architecture that is shared amongst plurality and approval agents and has trained villagers with close to <span class="math notranslate nohighlight">\(50%\)</span> winrates.</p>
-<p>Models are  tied to the number of agents per game they were trained on, so a 5-player game environment agent will not work if fed observations from a 10-player game environment.</p>
-<p>Most of the training and work was done in 10-player environments as it allowed for more interesting gameplay in a setting where no communication other than voting is allowed.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
-observations, _, _, _, _ = env.reset()
-
-obs_size= env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
-
-untrained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128, 
-                                        &quot;rec_layers&quot;: 1,
-                                        &quot;joint_mlp_size&quot;: 128,
-                                        &quot;split_mlp_size&quot;: 128,
-                                        &quot;num_votes&quot;: 1,
-                                        &quot;approval_states&quot;: 10},
-                                        num_players=10,
-                                        obs_size=obs_size)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>obs = convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;], voting_type=&#39;plurality&#39;)
-obs = torch.unsqueeze(obs,0)
-hxcs = (torch.zeros((1,1,128), dtype=torch.float32), torch.zeros((1,1,128), dtype=torch.float32))
-
-model_graph = draw_graph(untrained_plurality_agent, input_data=[obs,hxcs], device=torch.device(&#39;cpu&#39;))
-model_graph.visual_graph
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/0227968ac2f23bf101c7f964c326316ae275c935a5df3862bd49978592a7ff0e.png" src="_images/0227968ac2f23bf101c7f964c326316ae275c935a5df3862bd49978592a7ff0e.png" />
-</div>
-</div>
 <section id="hyperparameters">
-<h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h3>
+<h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h2>
 <p>There are just under 20 hyperparameters, and can be split between gameplay parameters, neural network model parameters and PPO training parameters. Each value in this configuration object below can be changed, and is passed throughout training functions.</p>
 <p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id1">[<a class="reference internal" href="bibliography.html#id31" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>]</span> and <span id="id2">[<a class="reference internal" href="bibliography.html#id34" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config_training</span> <span class="o">=</span> <span class="p">{</span>
@@ -504,7 +460,6 @@ model_graph.visual_graph
 <span class="p">}</span>
 </pre></div>
 </div>
-</section>
 </section>
 <section id="training-w-ppo">
 <h2>Training w/ PPO<a class="headerlink" href="#training-w-ppo" title="Permalink to this heading">#</a></h2>
@@ -578,10 +533,7 @@ model_graph.visual_graph
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-architecture">Model Architecture</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-w-ppo">Training w/ PPO</a></li>
 </ul>
   </nav></div>

@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'agent-implementation';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -362,14 +364,18 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#villagers">Villagers</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hand-crafted-policies">Hand-crafted Policies</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-agents">Learning Agents</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hand-crafted-policies">Hand-crafted Policies</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-villagers">Random Villagers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-villagers">Behavioral Villagers</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolves">Werewolves</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Hand-crafted Policies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-agents">Learning Agents</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#model-architecture">Model Architecture</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolves">Werewolves</a></li>
 </ul>
             </nav>
         </div>
@@ -381,23 +387,143 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="agent-implementation">
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import torch
+import sys
+sys.path.append(&#39;../&#39;)
+from voting_games.werewolf_env_v0 import plurality_env, pare, Phase, Roles
+import random
+import copy
+from tqdm import tqdm
+from collections import Counter
+from torchview import draw_graph
+import graphviz
+graphviz.set_jupyter_format(&#39;png&#39;)
+import matplotlib.pyplot as plt
+from notebooks.learning_agents.models import ActorCriticAgent
+from notebooks.learning_agents.utils import play_recurrent_game, convert_obs
+from notebooks.learning_agents.static_agents import random_approval_wolf, random_plurality_wolf
+import notebooks.learning_agents.stats as indicators 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/root/.local/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="agent-implementation">
 <h1>Agent Implementation<a class="headerlink" href="#agent-implementation" title="Permalink to this heading">#</a></h1>
+<p>We have implemented hand-crafted agents for both villager and werewolf roles, along with actor-critic models for villagers that were trained against hand-crafted werewolves. We based our static policies on the work done in past games implementing werewolf <span id="id1">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id6">LSCN22</a>]</span>.</p>
 <section id="villagers">
 <h2>Villagers<a class="headerlink" href="#villagers" title="Permalink to this heading">#</a></h2>
 <section id="hand-crafted-policies">
 <h3>Hand-crafted Policies<a class="headerlink" href="#hand-crafted-policies" title="Permalink to this heading">#</a></h3>
+<section id="random-villagers">
+<h4>Random Villagers<a class="headerlink" href="#random-villagers" title="Permalink to this heading">#</a></h4>
+<p>There are three type of random villager policies we tested. The fully random, the one randomly targetting living players, and the coordinated random target (which was the strategy mentioned in <span id="id2">[<a class="reference internal" href="bibliography.html#id36" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span>).</p>
+<p>The truly random agent simply samples from the <a class="reference internal" href="game-implementation.html#env-spaces"><span class="std std-ref">action space</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">random_agent_action</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+   <span class="k">return</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The other random villagers either act independently, or coordinate on a random target via an action parameter. Approval agents act much the same way, selecting -1 for their target and liking themselves.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">random_plurality_villager</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">action</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">action</span>
+
+    <span class="n">targets</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">world_state</span><span class="p">[</span><span class="s2">&quot;alive&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="n">agent</span><span class="p">])</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">targets</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">random_approval_villager</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    
+    <span class="k">if</span> <span class="n">action</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">action</span>
+    
+    <span class="n">targets</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">world_state</span><span class="p">[</span><span class="s2">&quot;alive&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="n">agent</span><span class="p">])</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">possible_agents</span><span class="p">)</span>
+    <span class="n">action</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">action</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">targets</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">action</span>
+</pre></div>
+</div>
+</section>
+<section id="behavioral-villagers">
+<h4>Behavioral Villagers<a class="headerlink" href="#behavioral-villagers" title="Permalink to this heading">#</a></h4>
+<p>TODO if time allows.</p>
+<p>These agents</p>
+</section>
 </section>
 <section id="learning-agents">
 <h3>Learning Agents<a class="headerlink" href="#learning-agents" title="Permalink to this heading">#</a></h3>
+<section id="model-architecture">
+<h4>Model Architecture<a class="headerlink" href="#model-architecture" title="Permalink to this heading">#</a></h4>
+<p>Determining the proper model architecture for Agents is not a straightforward task, and takes some experimentation. Initially we had gone with seperate networks for value and policy models, however, we settled on a shared network for both. We treat agents as independent learners with a shared policy.</p>
+<p>Models are  tied to the number of agents per game they were trained on, so a 5-player game environment agent will not work if fed observations from a 10-player game environment.</p>
+<p>Most of the training and work was done in 10-player environments as it allowed for more interesting gameplay in a setting where no communication other than voting is allowed.</p>
+<p>Below is a model architecture that is shared amongst plurality and approval agents and has trained villagers with close to <span class="math notranslate nohighlight">\(50%\)</span> winrates. The input tensors are the previous hidden states of the LSTM, and the flattened observations the agent receives from the environment.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
+observations, _, _, _, _ = env.reset()
+
+obs_size= env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
+
+untrained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128, 
+                                        &quot;rec_layers&quot;: 1,
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 1,
+                                        &quot;approval_states&quot;: 10},
+                                        num_players=10,
+                                        obs_size=obs_size)
+
+obs = convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;], voting_type=&#39;plurality&#39;)
+obs = torch.unsqueeze(obs,0)
+hxcs = (torch.zeros((1,1,128), dtype=torch.float32), torch.zeros((1,1,128), dtype=torch.float32))
+
+model_graph = draw_graph(untrained_plurality_agent, input_data=[obs,hxcs], device=torch.device(&#39;cpu&#39;))
+model_graph.visual_graph
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/0227968ac2f23bf101c7f964c326316ae275c935a5df3862bd49978592a7ff0e.png" src="_images/0227968ac2f23bf101c7f964c326316ae275c935a5df3862bd49978592a7ff0e.png" />
+</div>
+</div>
+</section>
 </section>
 </section>
 <section id="werewolves">
 <h2>Werewolves<a class="headerlink" href="#werewolves" title="Permalink to this heading">#</a></h2>
-<p>Werewolf behavior for both plurality and approval environments used hand-crafted policies because the focus was on villager voting. These various wolf behaviors are reasonable and mimic other logical agents employed in AIWolf <span id="id1">[<a class="reference internal" href="bibliography.html#id7" title="Fujio Toriumi, Hirotaka Osawa, Michimasa Inaba, Daisuke Katagami, Kosuke Shinoda, and Hitoshi Matsubara. Ai wolf contest—development of game ai using collective intelligence—. In Computer Games: 5th Workshop on Computer Games, CGW 2016, and 5th Workshop on General Intelligence in Game-Playing Agents, GIGA 2016, Held in Conjunction with the 25th International Conference on Artificial Intelligence, IJCAI 2016, New York, USA, July 9-10, 2016, Revised Selected Papers 5, 101–115. Springer, 2017.">TOI+17</a>]</span> and RLupus <span id="id2">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>]</span>.</p>
-<section id="id3">
-<h3>Hand-crafted Policies<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
-</section>
+<p>Werewolf behavior for both plurality and approval environments used hand-crafted policies because the focus was on villager voting. These various wolf behaviors are reasonable and mimic other logical agents employed in AIWolf <span id="id3">[<a class="reference internal" href="bibliography.html#id7" title="Fujio Toriumi, Hirotaka Osawa, Michimasa Inaba, Daisuke Katagami, Kosuke Shinoda, and Hitoshi Matsubara. Ai wolf contest—development of game ai using collective intelligence—. In Computer Games: 5th Workshop on Computer Games, CGW 2016, and 5th Workshop on General Intelligence in Game-Playing Agents, GIGA 2016, Held in Conjunction with the 25th International Conference on Artificial Intelligence, IJCAI 2016, New York, USA, July 9-10, 2016, Revised Selected Papers 5, 101–115. Springer, 2017.">TOI+17</a>]</span> and RLupus <span id="id4">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>]</span>. We had one random wolf function with a flag that either set the action for the next wolf if they were coordinating, or not, for truly random wolves.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">random_plurality_wolf</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">villagers_remaining</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">world_state</span><span class="p">[</span><span class="s2">&quot;villagers&quot;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">world_state</span><span class="p">[</span><span class="s1">&#39;alive&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">action</span> <span class="k">if</span> <span class="n">action</span> <span class="o">!=</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">villagers_remaining</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">random_approval_wolf</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">action</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">action</span>
+
+    <span class="n">villagers_remaining</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">world_state</span><span class="p">[</span><span class="s2">&quot;villagers&quot;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">world_state</span><span class="p">[</span><span class="s1">&#39;alive&#39;</span><span class="p">])</span>
+    <span class="n">wolves_remaining</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">world_state</span><span class="p">[</span><span class="s2">&quot;werewolves&quot;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">world_state</span><span class="p">[</span><span class="s1">&#39;alive&#39;</span><span class="p">])</span>
+
+    <span class="c1"># pick a living target</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">villagers_remaining</span><span class="p">))</span>
+
+    <span class="n">action</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">possible_agents</span><span class="p">)</span>
+    <span class="n">action</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">curr_wolf</span> <span class="ow">in</span> <span class="n">wolves_remaining</span><span class="p">:</span>
+        <span class="n">action</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">curr_wolf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">action</span>
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -469,14 +595,18 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#villagers">Villagers</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hand-crafted-policies">Hand-crafted Policies</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-agents">Learning Agents</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hand-crafted-policies">Hand-crafted Policies</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-villagers">Random Villagers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-villagers">Behavioral Villagers</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolves">Werewolves</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Hand-crafted Policies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-agents">Learning Agents</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#model-architecture">Model Architecture</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolves">Werewolves</a></li>
 </ul>
   </nav></div>
 
