@@ -388,7 +388,12 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="cell docutils container">
+  <div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
 import torch
@@ -413,6 +418,7 @@ import notebooks.learning_agents.stats as indicators
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="gameplay-indicators">
 <span id="gameplay-indicators-list"></span><h1>Gameplay Indicators<a class="headerlink" href="#gameplay-indicators" title="Permalink to this heading">#</a></h1>

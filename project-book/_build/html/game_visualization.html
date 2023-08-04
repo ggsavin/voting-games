@@ -363,7 +363,12 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="cell docutils container">
+  <div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
 import torch
@@ -389,6 +394,7 @@ import networkx as nx
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="replay-visualization">
 <h1>Replay visualization<a class="headerlink" href="#replay-visualization" title="Permalink to this heading">#</a></h1>
