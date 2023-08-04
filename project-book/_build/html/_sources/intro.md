@@ -7,6 +7,8 @@ Social Deduction Games (SDGs), and especially Hidden Role variants such as Werew
 
 ## Introduction
 
+**DO NOT FORGET TO MENTION HCI, AND HOW AGENTS PLAY GAMES WITH HUMANS, CITE PAPER THAT DID SOMETHING WITH WEREWOLF AND HUMANS**
+
 Social Deduction Games model tentative cooperation between groups with uncertain motives. In these games, different players and teams/coalitions have access to different information, with their goals ranging from cooperative to atagonistic{cite}`Dafoe2020-ds`. A special type of SDG is a Hidden Role game where the smaller team of players with an information advantage over the majority group also have their roles masked to "blend" into this majority. It is then up to the uniformed majority to build trust amongst themselves while ferreting out the deceptors. Well known games such as Amongst Us, Avalon, Secret Hitler and Mafia fall in this category. 
 
 ```{admonition} Mechanisms employed in Mafia/Werewolf
