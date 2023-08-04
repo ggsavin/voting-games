@@ -17,7 +17,18 @@ RLupus {cite}`Brandizzi2021RLupusCT` is a simplified environment to focus on eme
 
 ## Other SDGs
 
-Hidden Agenda {cite}`Kopparapu2022-bm` is simplified version of Amongst us where agents use visual information to synthesize and learn from potentially unreliable information about other agents. Being a 2D environment, visualizing behavior such as camping and chasing were observed, as well as learning to spatially vote (using plurality as the underlying mechanism). Other research developped a neural network model based on counterfactual regret minimization to train agents to play The Resistance Avalon {cite}`Serrino2019-ge`. Variants of Monte-Carlo Tree Search were used to play Secret Hitler, and showed that it can play as well as simpler rule based agents {cite}`Reinhardt2020-bs`.
+Hidden Agenda {cite}`Kopparapu2022-bm` is simplified version of _Among us_ where agents use visual information to synthesize and learn from potentially unreliable information about other agents. Being a 2D environment, visualizing behavior such as camping and chasing were observed, as well as learning to spatially vote (using plurality as the underlying mechanism).
+
+```{admonition} Descriptions of other mentioned SDGs
+
+**Among us**: Inspired by Werewolf, This video game sees 10 players get placed in an alien spaceship, and must complete tasks all the while being stalked by one or more traitorous players looking to murder everyone else.
+
+**Secret Hitler**: A boardgame where players are put onto two teams of "liberals" and "fascists" and compete by enacting policies and completing side-quests related to the Hitler role assigned to a random player. In the same vein as other hidden role games, the liberals are the majority and do not know who the fascists are.
+
+**The Resistance**: Another boardgame for 5-10 players inspired by Werewolf, players are assigned to either resistance operators or imperial spies and have to carry out missions against the empire. Unlike Werewolf, there are no eliminations of players however, players vote on who to carry out missions, and then the mission members choose whether or not to fail or pass the mission. Operators win when three missions succeed.
+```
+
+Other research developped a neural network model based on counterfactual regret minimization to train agents to play The Resistance {cite}`Serrino2019-ge`. Variants of Monte-Carlo Tree Search were used to play Secret Hitler, and showed that it can play as well as simpler rule based agents {cite}`Reinhardt2020-bs`.
 
 
 ## Communication
