@@ -93,7 +93,28 @@ The 37 implementation details of PPO[^37-details-ppo] is a great blog post detai
 
 ## LSTMs
 
-Long-short term memory ML. We use this because we want our agents to have historical information
+Long-short Term Memory (LSTM) networks are a type of deep neural network that is tailored for sequential data. They are an evolution of Recurrent Neural Networks (RNNs) that have been designed to deal with backpropagation issues and can handle much longer sequences {cite}`hochreiter1997long`.
+
+These types of networks have loops in them, allowing information  to persist. In the below [figure](Unrolled-RNN) can see what an unrolled RNN looks like, and in following [figure](LSTM-Internal-Cell) we see the LSTM, along with the inner workings and different gates that compose it's cells.
+
+For our PPO Implementation, we store the hidden state $h_n$ and cell state $c_n$ for each state/action pair taken by an agent so we can use it again the next time we want to call our model or calculate losses.
+
+```{note}
+A great resource to understanding LSTMs and RNNs is [this famous blogpost](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) by Christopher Olah.
+```
+
+```{figure-md} Unrolled-RNN
+<img src="https://colah.github.io/posts/2015-08-Understanding-LSTMs/img/RNN-unrolled.png" alt="unrolled RNN">
+
+An unrolled RNN highlights it's sequential nature[^understand-lstm]
+```
+
+```{figure-md} LSTM-Internal-Cell
+<img src="https://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-chain.png" alt="lstm cell">
+
+LSTM Cells and their internals[^understand-lstm]
+```
+
 
 
 [^37-details-ppo]:https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/
@@ -101,3 +122,4 @@ Long-short term memory ML. We use this because we want our agents to have histor
 [^Sutton-Barto-Book]:http://incompleteideas.net/book/the-book-2nd.html
 [^rl-pictures]:https://towardsdatascience.com/multi-agent-deep-reinforcement-learning-in-15-lines-of-code-using-pettingzoo-e0b963c0820b
 [^rl-tax]:https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html
+[^understand-lstm]:https://colah.github.io/posts/2015-08-Understanding-LSTMs/

@@ -382,7 +382,7 @@ document.write(`
 <h1>Terminology<a class="headerlink" href="#terminology" title="Permalink to this heading">#</a></h1>
 <section id="pomdps">
 <h2>POMDPs<a class="headerlink" href="#pomdps" title="Permalink to this heading">#</a></h2>
-<p>Partially Observable Markov Decision Processes (POMDPs<a class="footnote-reference brackets" href="#id11" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) are a special case of a Markov Decision Process (MDP) where the agent does not have direct observability to the state, but rather gets their own, possibly unique, observation. Formally, it is a tuple consisting of:</p>
+<p>Partially Observable Markov Decision Processes (POMDPs<a class="footnote-reference brackets" href="#id14" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) are a special case of a Markov Decision Process (MDP) where the agent does not have direct observability to the state, but rather gets their own, possibly unique, observation. Formally, it is a tuple consisting of:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(S\)</span>, a set of states</p></li>
 <li><p><span class="math notranslate nohighlight">\(A\)</span>, a set of actions</p></li>
@@ -421,9 +421,9 @@ document.write(`
 </section>
 <section id="ppo">
 <span id="ppo-alg-header"></span><h2>PPO<a class="headerlink" href="#ppo" title="Permalink to this heading">#</a></h2>
-<p>Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm and it was also used in a similar setting as our work <span id="id6">[<a class="reference internal" href="bibliography.html#id5" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id10" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>.</p>
+<p>Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the most widely used on-policy algorithm and it was also used in a similar setting as our work <span id="id6">[<a class="reference internal" href="bibliography.html#id6" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id11" title="Natsuki Matsunami, Shun Okuhara, and Takayuki Ito. Agents that learn to vote for a joint action through Multi-Agent reinforcement learning. In 2020 9th International Congress on Advanced Applied Informatics (IIAI-AAI), 832–833. September 2020.">MOI20</a>]</span>.</p>
 <p>Because we are also implementing an LSTM, the action <span class="math notranslate nohighlight">\(a_t\)</span> selected by the policy <span class="math notranslate nohighlight">\(\pi_{\theta}\)</span> depends on both the observation <span class="math notranslate nohighlight">\(o_t\)</span> and the hidden state <span class="math notranslate nohighlight">\(h_t\)</span>.</p>
-<p>We implemented our own following some works using a truncated BPTT <span id="id7">[<a class="reference internal" href="bibliography.html#id8" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In International Conference on Learning Representations. 2023. URL: https://openreview.net/forum?id=jHc8dCx6DDr.">PPZP23</a>]</span> and CLeanRL, however relying on a framework might have been a better choice.</p>
+<p>We implemented our own following some works using a truncated BPTT <span id="id7">[<a class="reference internal" href="bibliography.html#id9" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In International Conference on Learning Representations. 2023. URL: https://openreview.net/forum?id=jHc8dCx6DDr.">PPZP23</a>]</span> and CLeanRL, however relying on a framework might have been a better choice.</p>
 <div class="proof algorithm admonition" id="ppo-alg">
 <p class="admonition-title"><span class="caption-number">Algorithm 1 </span> (Proximal Policy Optimization w/ Clipped Surrogate)</p>
 <section class="algorithm-content" id="proof-content">
@@ -432,8 +432,8 @@ document.write(`
 <li><p>for <span class="math notranslate nohighlight">\(k=0,1,2,...\)</span> do</p>
 <ol class="arabic simple">
 <li><p>Collect set of trajectories <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi_k = \pi(\theta_k)\)</span></p></li>
-<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id8">[<a class="reference internal" href="bibliography.html#id34" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
-<li><p>Compute policy update <span id="id9">[<a class="reference internal" href="bibliography.html#id33" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
+<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(A^{\pi_k}\)</span> using GAE <span id="id8">[<a class="reference internal" href="bibliography.html#id35" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
+<li><p>Compute policy update <span id="id9">[<a class="reference internal" href="bibliography.html#id34" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p></li>
 </ol>
 <div class="math notranslate nohighlight">
 \[
@@ -467,9 +467,27 @@ $<span class="math notranslate nohighlight">\(
 </section>
 <section id="lstms">
 <h2>LSTMs<a class="headerlink" href="#lstms" title="Permalink to this heading">#</a></h2>
-<p>Long-short term memory ML. We use this because we want our agents to have historical information</p>
+<p>Long-short Term Memory (LSTM) networks are a type of deep neural network that is tailored for sequential data. They are an evolution of Recurrent Neural Networks (RNNs) that have been designed to deal with backpropagation issues and can handle much longer sequences <span id="id11">[<a class="reference internal" href="bibliography.html#id5" title="Sepp Hochreiter and Jürgen Schmidhuber. Long short-term memory. Neural computation, 9(8):1735–1780, 1997.">HS97</a>]</span>.</p>
+<p>These types of networks have loops in them, allowing information  to persist. In the below <a class="reference internal" href="#unrolled-rnn"><span class="std std-ref">figure</span></a> can see what an unrolled RNN looks like, and in following <a class="reference internal" href="#lstm-internal-cell"><span class="std std-ref">figure</span></a> we see the LSTM, along with the inner workings and different gates that compose it’s cells.</p>
+<p>For our PPO Implementation, we store the hidden state <span class="math notranslate nohighlight">\(h_n\)</span> and cell state <span class="math notranslate nohighlight">\(c_n\)</span> for each state/action pair taken by an agent so we can use it again the next time we want to call our model or calculate losses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A great resource to understanding LSTMs and RNNs is <a class="reference external" href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">this famous blogpost</a> by Christopher Olah.</p>
+</div>
+<figure class="align-default" id="unrolled-rnn">
+<img alt="unrolled RNN" src="https://colah.github.io/posts/2015-08-Understanding-LSTMs/img/RNN-unrolled.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">An unrolled RNN highlights it’s sequential nature<a class="footnote-reference brackets" href="#understand-lstm" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></span><a class="headerlink" href="#unrolled-rnn" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="lstm-internal-cell">
+<img alt="lstm cell" src="https://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-chain.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">LSTM Cells and their internals<a class="footnote-reference brackets" href="#understand-lstm" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></span><a class="headerlink" href="#lstm-internal-cell" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 <hr class="footnotes docutils" />
-<aside class="footnote brackets" id="id11" role="note">
+<aside class="footnote brackets" id="id14" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process">https://en.wikipedia.org/wiki/Partially_observable_Markov_decision_process</a></p>
 </aside>
@@ -489,6 +507,11 @@ $<span class="math notranslate nohighlight">\(
 <aside class="footnote brackets" id="details-ppo" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">5</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/</a></p>
+</aside>
+<aside class="footnote brackets" id="understand-lstm" role="note">
+<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id12">1</a>,<a role="doc-backlink" href="#id13">2</a>)</span>
+<p><a class="reference external" href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">https://colah.github.io/posts/2015-08-Understanding-LSTMs/</a></p>
 </aside>
 </section>
 </section>
