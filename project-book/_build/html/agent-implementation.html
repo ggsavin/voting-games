@@ -62,8 +62,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'agent-implementation';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -472,7 +470,7 @@ import notebooks.learning_agents.stats as indicators
 <p>Determining the proper model architecture for Agents is not a straightforward task, and takes some experimentation. Initially we had gone with seperate networks for value and policy models, however, we settled on a shared network for both, inspired by a truncated BPTT implementation with PPO <span id="id3">[<a class="reference internal" href="bibliography.html#id9" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In International Conference on Learning Representations. 2023. URL: https://openreview.net/forum?id=jHc8dCx6DDr.">PPZP23</a>]</span>. We treat agents as independent learners with a shared policy.</p>
 <p>Models are  tied to the number of agents per game they were trained on, so a 5-player game environment agent will not work if fed observations from a 10-player game environment.</p>
 <p>Most of the training and work was done in 10-player environments as it allowed for more interesting gameplay in a setting where no communication other than voting is allowed.</p>
-<p>Below is a model architecture that is shared amongst plurality and approval agents and has trained villagers with close to <span class="math notranslate nohighlight">\(50\%\)</span> winrates. The input tensors are the previous hidden states of the LSTM, and the flattened observations the agent receives from the environment.</p>
+<p>Below is our model architecture that is shared amongst plurality and approval agents and has trained villagers. The input tensors are the previous hidden states of the LSTM, and the flattened observations the agent receives from the environment.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
