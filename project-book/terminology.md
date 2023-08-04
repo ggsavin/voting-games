@@ -49,7 +49,7 @@ Proxmial Policy Optimization (PPO) was chosen because it stil seems to be the mo
 
 Because we are also implementing an LSTM, the action $a_t$ selected by the policy $\pi_{\theta}$ depends on both the observation $o_t$ and the hidden state $h_t$.
 
-We implemented our own following some works in truncated BPTT and CLeanRL, however relying on a framework might have been a better choice.
+We implemented our own following some works using a truncated BPTT {cite}`pleines2023memory` and CLeanRL, however relying on a framework might have been a better choice.
 
 ```{prf:algorithm} Proximal Policy Optimization w/ Clipped Surrogate
 :label: ppo-alg
