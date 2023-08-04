@@ -14,6 +14,13 @@ Social Deduction Games model tentative cooperation between groups with uncertain
 ```
 Given this dichotomy and duplicity, SDGs are ripe for psychological analysis, and indeed, mafia was first played in the Psychology Department of Moscow State University[^mafia-wikipedia]. A gamut of emotions are experienced playing these types of games, from catharsis when identifying deceptors, to perverse joy from lying, cheating and manipulating[^amongst-us-article]. Other psychological uses of SDGs have been to treat anxiety through symbolic interaction {cite}`Conner2022-iu`, quantifying entertainment dynamics of SDGs{cite}`Ri2022-ih` and studying non-verbal communication {cite}`katagami2014investigation`.
 
+```{admonition} What is Mafia/Werewolf?
+Mafia is a hidden role game where a team of villagers try to guess who the mafia members are (by voting to eliminating players), while the actual mafia team who are posing as villagers try to eliminate all the villagers. Mafia players have an advantage because they can both vote with the villagers as well as during their own hidden turn. Villagers on the other hand do not know who the mafia members, so they need to communicate and synthesize misleading information to identify mafiosos and win the game.
+
+Werewolf is simply a more recent re-imagining of the mafia game where the mafia members are swapped with werewolves, and the hidden turn is during the night when villagers sleep, and werewolves plot who to kill.
+
+More information can be found in the game [description](game-desc).
+```
 
 IN SDGs, communication and deception present unique challenges for AI agents trying to learn optimal strategies on top of the already challenging Multi-Agent-RL (MARL) setting {cite}`Dafoe2020-ds`. To better study these topics along with machine learning, multi-agent simulation, human-agent interaction and cognitive science, an yearly competition called AIWolf {cite}`toriumi2017ai` was started that is still being held to this day. Werewolf, the game played in this competition is simply a re-imagining of Mafia where the mafia are now werewolves, and villagers vote to eliminate who they believe are werewolves during the day.
 

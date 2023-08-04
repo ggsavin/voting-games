@@ -1,3 +1,4 @@
+(game-desc)=
 # Werewolf - The Game
 
 ## Quick History
