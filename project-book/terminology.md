@@ -95,9 +95,9 @@ The 37 implementation details of PPO[^37-details-ppo] is a great blog post detai
 
 Long-short Term Memory (LSTM) networks are a type of deep neural network that is tailored for sequential data. They are an evolution of Recurrent Neural Networks (RNNs) that have been designed to deal with backpropagation issues and can handle much longer sequences {cite}`hochreiter1997long`.
 
-These types of networks have loops in them, allowing information  to persist. In the below [figure](Unrolled-RNN) can see what an unrolled RNN looks like, and in following [figure](LSTM-Internal-Cell) we see the LSTM, along with the inner workings and different gates that compose it's cells.
+These types of networks have loops in them, allowing information  to persist. In the below [figure](Unrolled-RNN), we can see what an unrolled RNN looks like, and in following [figure](LSTM-Internal-Cell), we see the LSTM,along with its inner workings and different gates that the cells are composed of.
 
-For our PPO Implementation, we store the hidden state $h_n$ and cell state $c_n$ for each state/action pair taken by an agent so we can use it again the next time we want to call our model or calculate losses.
+For our PPO Implementation, we store the hidden state $h_n$ and cell state $c_n$ from our LSTM output for each state/action pair taken by an agent so we can use it again the next time we want to call our model or calculate losses.
 
 ```{note}
 A great resource to understanding LSTMs and RNNs is [this famous blogpost](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) by Christopher Olah.
