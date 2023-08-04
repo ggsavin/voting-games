@@ -361,6 +361,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">MLflow</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-w-ppo">Training w/ PPO</a></li>
 </ul>
@@ -374,7 +375,12 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="cell docutils container">
+  <div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
 import torch
@@ -385,14 +391,10 @@ import random
 import copy
 from tqdm import tqdm
 from collections import Counter
-from torchview import draw_graph
-import graphviz
-graphviz.set_jupyter_format(&#39;png&#39;)
 import matplotlib.pyplot as plt
 from notebooks.learning_agents.models import ActorCriticAgent
 from notebooks.learning_agents.utils import play_recurrent_game, convert_obs
 from notebooks.learning_agents.static_agents import random_approval_wolf, random_plurality_wolf
-import notebooks.learning_agents.stats as indicators 
 </pre></div>
 </div>
 </div>
@@ -401,13 +403,98 @@ import notebooks.learning_agents.stats as indicators
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="training-agents">
 <h1>Training Agents<a class="headerlink" href="#training-agents" title="Permalink to this heading">#</a></h1>
+<p>Because we used PPO to train our actor-critic truncated BPTT LSTM, we modified our code to closely resemble the work done in <span id="id1">[<a class="reference internal" href="bibliography.html#id35" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span>.
+The steps we follow are very closely related to our <span class="xref myst">PPO Algorithm</span>.</p>
+<p>We first create a trainer class that stores our config and uses it to set up our buffer, our central villager policy and our optimizer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">PPOTrainer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span><span class="nb">dict</span><span class="p">,</span> <span class="n">wolf_policy</span><span class="p">,</span> <span class="n">run_id</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">),</span> <span class="n">voting_type</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>We then call our train function which sets up the main loop consisting of gatheric metrics periodically, filling up our buffer, calculating our loss and updating our neural network.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voting_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_threshold</span><span class="o">=</span><span class="mf">50.0</span><span class="p">):</span>
+
+        <span class="c1"># TODO: put mlflow logging into a callback</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;config_training&quot;</span><span class="p">][</span><span class="s2">&quot;training&quot;</span><span class="p">])</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;config_training&quot;</span><span class="p">][</span><span class="s2">&quot;model&quot;</span><span class="p">])</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;config_game&quot;</span><span class="p">][</span><span class="s1">&#39;gameplay&#39;</span><span class="p">])</span>
+
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;config_training&quot;</span><span class="p">][</span><span class="s2">&quot;training&quot;</span><span class="p">][</span><span class="s2">&quot;updates&quot;</span><span class="p">]),</span> <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># if the average wins when we do periodic checks of the models scoring is above the save threshold, we save or overwrite the model</span>
+        <span class="c1"># model_save_threshold = 50.0</span>
+        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">loop</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">tid</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># print(f&#39;Playing games with our trained agent after {epid} epochs&#39;)</span>
+                <span class="n">loop</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="s2">&quot;Playing games and averaging score&quot;</span><span class="p">)</span>
+                <span class="n">wins</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">score_gathering</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">replays</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">score_gathering</span><span class="p">:</span>
+                    <span class="n">game_wins</span><span class="p">,</span> <span class="n">game_replays</span> <span class="o">=</span> <span class="n">play_recurrent_game</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> 
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">wolf_policy</span><span class="p">,</span> 
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span> 
+                                                    <span class="n">num_times</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                                    <span class="n">hidden_state_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;config_training&quot;</span><span class="p">][</span><span class="s2">&quot;model&quot;</span><span class="p">][</span><span class="s2">&quot;recurrent_hidden_size&quot;</span><span class="p">],</span>
+                                                    <span class="n">voting_type</span><span class="o">=</span><span class="n">voting_type</span><span class="p">)</span>
+                    <span class="n">wins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">game_wins</span><span class="p">)</span>
+                    <span class="n">replays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">game_replays</span><span class="p">)</span>
+                    <span class="n">score_gathering</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Avg wins with current policy : </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">wins</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="c1"># flatten all of our replays and get our current stats</span>
+                <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metrics</span><span class="p">(</span><span class="n">aggregate_stats_from_replays</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">replay</span> <span class="k">for</span> <span class="n">game_replays</span> <span class="ow">in</span> <span class="n">replays</span> <span class="k">for</span> <span class="n">replay</span> <span class="ow">in</span> <span class="n">game_replays</span><span class="p">],</span> <span class="n">voting_type</span><span class="o">=</span><span class="n">voting_type</span><span class="p">))</span>
+
+                <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;avg_wins/100&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">wins</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">wins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">save_threshold</span><span class="p">:</span>
+                    <span class="n">save_threshold</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">wins</span><span class="p">))</span>
+                    <span class="n">mlflow</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">log_state_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">artifact_path</span><span class="o">=</span><span class="s1">&#39;checkpoint&#39;</span><span class="p">)</span>
+                    <span class="c1"># torch.save(self.agent.state_dict(), f&#39;{voting_type}_agent_{self.config[&quot;config_game&quot;][&quot;gameplay&quot;][&quot;num_agents&quot;]}_score_{save_threshold}&#39;)</span>
+
+
+            <span class="n">loop</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="s2">&quot;Filling buffer&quot;</span><span class="p">)</span>
+            <span class="c1"># fill buffer</span>
+            <span class="c1"># _scaled_rewards</span>
+            <span class="n">buff</span> <span class="o">=</span> <span class="n">fill_recurrent_buffer_scaled_rewards</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> 
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;config_training&quot;</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">wolf_policy</span><span class="p">,</span> 
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span>
+                                            <span class="n">voting_type</span><span class="o">=</span><span class="n">voting_type</span><span class="p">)</span>
+
+            <span class="c1"># train info will hold our metrics</span>
+            <span class="n">train_info</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># TODO List how many items we are training on</span>
+            <span class="n">loop</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Epoch Training on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">games</span><span class="si">}</span><span class="s1"> games&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;config_training&#39;</span><span class="p">][</span><span class="s2">&quot;training&quot;</span><span class="p">][</span><span class="s1">&#39;epochs&#39;</span><span class="p">]):</span>
+                <span class="c1"># run through batches and train network</span>
+                <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">buff</span><span class="o">.</span><span class="n">get_minibatch_generator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;config_training&#39;</span><span class="p">][</span><span class="s2">&quot;training&quot;</span><span class="p">][</span><span class="s1">&#39;batch_size&#39;</span><span class="p">]):</span>
+                    <span class="n">train_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calc_minibatch_loss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span> 
+                                                            <span class="n">batch</span><span class="p">,</span> 
+                                                            <span class="n">clip_range</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;config_training&#39;</span><span class="p">][</span><span class="s2">&quot;training&quot;</span><span class="p">][</span><span class="s1">&#39;clip_range&#39;</span><span class="p">],</span> 
+                                                            <span class="n">beta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;config_training&#39;</span><span class="p">][</span><span class="s2">&quot;training&quot;</span><span class="p">][</span><span class="s1">&#39;beta&#39;</span><span class="p">],</span> 
+                                                            <span class="n">v_loss_coef</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;config_training&#39;</span><span class="p">][</span><span class="s2">&quot;training&quot;</span><span class="p">][</span><span class="s1">&#39;value_loss_coefficient&#39;</span><span class="p">],</span>
+                                                            <span class="n">grad_norm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;config_training&#39;</span><span class="p">][</span><span class="s2">&quot;training&quot;</span><span class="p">][</span><span class="s1">&#39;max_grad_norm&#39;</span><span class="p">],</span>
+                                                            <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">))</span>
+
+            <span class="n">train_stats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">train_info</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;policy loss&quot;</span><span class="p">,</span> <span class="n">train_stats</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;value loss&quot;</span><span class="p">,</span> <span class="n">train_stats</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;total loss&quot;</span><span class="p">,</span> <span class="n">train_stats</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;entropy loss&quot;</span><span class="p">,</span> <span class="n">train_stats</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+<section id="mlflow">
+<span id="mlflow-info"></span><h2>MLflow<a class="headerlink" href="#mlflow" title="Permalink to this heading">#</a></h2>
+</section>
 <section id="hyperparameters">
 <h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h2>
 <p>There are just under 20 hyperparameters, and can be split between gameplay parameters, neural network model parameters and PPO training parameters. Each value in this configuration object below can be changed, and is passed throughout training functions.</p>
-<p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id1">[<a class="reference internal" href="bibliography.html#id32" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>]</span> and <span id="id2">[<a class="reference internal" href="bibliography.html#id35" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
+<p>INitializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id2">[<a class="reference internal" href="bibliography.html#id32" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>]</span> and <span id="id3">[<a class="reference internal" href="bibliography.html#id35" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config_training</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;recurrent_layers&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -533,6 +620,7 @@ import notebooks.learning_agents.stats as indicators
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">MLflow</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-w-ppo">Training w/ PPO</a></li>
 </ul>
