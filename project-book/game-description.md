@@ -21,7 +21,7 @@ Gameplay alternates between day and night phases. During the day, villagers vote
 ```{admonition} Gameplay Loop
 The way we have implemented Werewolf consists of interations of the following three phases until the game terminates.
 
-1. **Accusation Phase**: Villagers and Werewolves make their vote known and broadcast it to all other players. There are $K$ accusation rounds before the final decision and vote is taken. Because we have removed any explicit communication channel, we allow for this variable length of accusation rounds so agents can focus on the votes.
+1. **Accusation Phase**: Villagers and Werewolves make their vote known and broadcast it to all other players. There are $K$ accusation rounds before the final decision and vote is taken. Because we have removed any explicit communication channel, we allow for this variable length of accusation rounds so agents can focus on all broadcasted votes.
 
 2. **Vote Phase**: All players vote, and based on the chosen voting mechanism (plurality or approval), a player is selected to be eliminated, and will reveal their role to the rest of the players. 
 

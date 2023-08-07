@@ -396,7 +396,7 @@ document.write(`
 <p class="admonition-title">Gameplay Loop</p>
 <p>The way we have implemented Werewolf consists of interations of the following three phases until the game terminates.</p>
 <ol class="arabic simple">
-<li><p><strong>Accusation Phase</strong>: Villagers and Werewolves make their vote known and broadcast it to all other players. There are <span class="math notranslate nohighlight">\(K\)</span> accusation rounds before the final decision and vote is taken. Because we have removed any explicit communication channel, we allow for this variable length of accusation rounds so agents can focus on the votes.</p></li>
+<li><p><strong>Accusation Phase</strong>: Villagers and Werewolves make their vote known and broadcast it to all other players. There are <span class="math notranslate nohighlight">\(K\)</span> accusation rounds before the final decision and vote is taken. Because we have removed any explicit communication channel, we allow for this variable length of accusation rounds so agents can focus on all broadcasted votes.</p></li>
 <li><p><strong>Vote Phase</strong>: All players vote, and based on the chosen voting mechanism (plurality or approval), a player is selected to be eliminated, and will reveal their role to the rest of the players.</p></li>
 <li><p><strong>Night Phase</strong>: Wolves select which player to kill without leaking any information to the rest of the villagers. All villagers see is a null action, but the identity of the dead player is revealed along with their game role.</p></li>
 </ol>
