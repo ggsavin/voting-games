@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'game-description';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -385,8 +387,26 @@ document.write(`
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
 <p>Werewolf is a multi player game between two competing teams comprised of villagers and werewolves. The werewolf team is a hidden subset of the villager team as true villagers cannot tell who the werewolves are, and must try and deduce their identities.</p>
-<p>Gameplay alternates between day and night phases. During the day, villagers vote on who amongst them should be executed for the crime of being a werewolf, and at night, wolves vote on which helpless villager to kill. Communication between agents either takes place during the voting round, or precedes it in multiple communication rounds.</p>
-<p>Once a player dies, they reveal their role to the rest of the players.</p>
+<div class="admonition-team-composition admonition">
+<p class="admonition-title">Team Composition</p>
+<p>There are a total of <span class="math notranslate nohighlight">\(N\)</span> players, where <span class="math notranslate nohighlight">\(M\)</span> belong to the werewolf team and the remaining <span class="math notranslate nohighlight">\(N-M\)</span> belong to the villager team. At the beginning of the game, each player is given their own identity (werewolf or villager) and every werewolf is also given the identity of all other werewolves.</p>
+</div>
+<p>Gameplay alternates between day and night phases. During the day, villagers vote on who amongst them should be executed for the crime of being a werewolf, and at night, wolves vote on which helpless villager to kill. Communication between agents either takes place during the voting round, or precedes it in multiple communication rounds. Once a player dies, they reveal their role to the rest of the players.</p>
+<div class="admonition-gameplay-loop admonition">
+<p class="admonition-title">Gameplay Loop</p>
+<p>The way we have implemented Werewolf consists of interations of the following three phases until the game terminates.</p>
+<ol class="arabic simple">
+<li><p><strong>Accusation Phase</strong>: Villagers and Werewolves make their vote known and broadcast it to all other players. There are <span class="math notranslate nohighlight">\(K\)</span> accusation rounds before the final decision and vote is taken. Because we have removed any explicit communication channel, we allow for this variable length of accusation rounds so agents can focus on the votes.</p></li>
+<li><p><strong>Vote Phase</strong>: All players vote, and based on the chosen voting mechanism (plurality or approval), a player is selected to be eliminated, and will reveal their role to the rest of the players.</p></li>
+<li><p><strong>Night Phase</strong>: Wolves select which player to kill without leaking any information to the rest of the villagers. All villagers see is a null action, but the identity of the dead player is revealed along with their game role.</p></li>
+</ol>
+<p>A round <span class="math notranslate nohighlight">\(t\)</span> starts in the accusation phase where there are <span class="math notranslate nohighlight">\(N_t = N - 2t\)</span> villagers. <span class="math notranslate nohighlight">\(W_t\)</span> and <span class="math notranslate nohighlight">\(V_t\)</span> denote the numbers of werewolves and villagers at the start of round <span class="math notranslate nohighlight">\(t\)</span> respectively.</p>
+<p><strong>Win conditions</strong>:</p>
+<ul class="simple">
+<li><p>Villagers win when all Werewolves are killed, <span class="math notranslate nohighlight">\(W_t = 0\)</span></p></li>
+<li><p>Werewolves win when there are more werewolves than villagers <span class="math notranslate nohighlight">\(W_t \geq V_t\)</span></p></li>
+</ul>
+</div>
 <p>Different versions of the game slightly alter rules, or introduce various new roles with their own special abilities. In our case, we have simplified the game as much as possible to focus on the voting mechanisms used by agents to determine who to execute and kill.</p>
 <p>The game ends when either all the werewolves have been executed, or there are more werewolves than villagers remaining.</p>
 <hr class="footnotes docutils" />
