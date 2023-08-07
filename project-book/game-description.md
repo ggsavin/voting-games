@@ -34,7 +34,9 @@ A round $t$ starts in the accusation phase where there are $N_t = N - 2t$ villag
 
 **Win conditions**:
 - Villagers win when all Werewolves are killed, $W_t = 0$
-- Werewolves win when there are more werewolves than villagers $W_t \geq V_t$
+- Werewolves win when there are more werewolves than villagers $W_t \geq V_t$.
+
+Whenever $W_t = V_t$, villagers need to force a tie and get a lucky break to avoid a loss.
 ```
 
 Different versions of the game slightly alter rules, or introduce various new roles with their own special abilities. In our case, we have simplified the game as much as possible to focus on the voting mechanisms used by agents to determine who to execute and kill.
