@@ -142,8 +142,6 @@ self.world_state = {
 }
 ```
 
-The world state tracks everything happening in the game and is used for both the history and for rendering the game. In the case of game history for [analysis purposes](game-analysis-methodology) the votes are the actual votes that occured in the current phase, unlike observations which contain the previous phases votes.
-
 The state object is more comprehensive than the observation an agent receives given that this game is represented by a POMDP. It was also designed to make parsing game history easier and to render on-screen via `env.render` while debugging early on in the project.
 
 This state object tracks the following:
@@ -164,20 +162,17 @@ We chose **not** to return this as an observation as it was added later in the p
 
 ### Voting Mechanisms
 
-In many decision-making situations, it is necessary to gather the group consensus. This happens when a group of friends decides which movie to watch, when a company decides which product design to manufacture, and when a democratic country elects its leaders.
-
-While the basic idea of voting is fairly universal, the method by which those votes are used to determine a winner can vary
-
-
-
-The following function returns the target id as an integer as well as an information object detailing which agent voted for themselves, voted for a dead player, had a viable vote, etc...
+Eliminating a player requires gathering and determining a group consensus. Each environment (plurality and approval) has their own function to determine who that target consensus is. 
 
 ```python
 def _get_player_to_be_killed(self, actions) -> tuple[int, object]:
 ```
 
-For both approval and plurality voting, if ties exist, a target is chosen by breaking ties randomly. If however the target with the majority of votes is a dead player, the next highest targetted agent is taken.
+This function also returns an information object with flags for each agent if they voted for themselves, a dead player, or if they had a viable vote. It is this object that is used further inform the rewards individual agents receive each step taken in the environment.
 
+```{admonition} Ties
+For both approval and plurality voting, if ties exist, a target is chosen by breaking ties randomly. If however the target with the majority of votes is a dead player, the next highest targetted agent is taken.
+```
 
 (game-rewards)=
 ### Rewards
@@ -200,6 +195,22 @@ REWARDS = {
     "no_viable_vote": -1,
     "no_sleep": -1,
 }
+```
+
+The rewards object is comrpised of:
+- `day`: a negative reward trying to incentize agents to complete the game faster
+- `player_death`: a negative reward given to the player who was either killed or executed. _This could be further seperated based on killing or execution._
+- `player_win`: the reward given to a player who has won the game
+- `player_loss`: the reward given to losing players.
+- `dead_wolf`: a reward given to villagers who were able to execute a werewolf
+- `dead_villager`: a negative reward given to villagers if an actual villager was executed
+- `self_vote`: a negative reward given if a player targets themselves
+- `dead_vote`: a negative reward given if a player targets another dead player.
+- `no_viable_vote`: An additional penalty if the vote was not a viable one
+- `no_sleep`: This penalty is not currently implemented, but was intended to shape villager learning towards selecting the appropriate `null` action during night votes.
+
+```{admonition} Training Rewards
+Currently, we only further distribute a fractional win/loss reward to dead players during [training](agent-training-rewards), however targetting dead players may be another reward we want to punish with a multiplicative effect proportional to the amount of villagers voting for a dead player.
 ```
 
 ### Game loop

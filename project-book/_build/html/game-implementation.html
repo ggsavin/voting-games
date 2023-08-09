@@ -519,7 +519,6 @@ a custom reward object that <a class="reference internal" href="#game-rewards"><
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The world state tracks everything happening in the game and is used for both the history and for rendering the game. In the case of game history for <span class="xref myst">analysis purposes</span> the votes are the actual votes that occured in the current phase, unlike observations which contain the previous phases votes.</p>
 <p>The state object is more comprehensive than the observation an agent receives given that this game is represented by a POMDP. It was also designed to make parsing game history easier and to render on-screen via <code class="docutils literal notranslate"><span class="pre">env.render</span></code> while debugging early on in the project.</p>
 <p>This state object tracks the following:</p>
 <ul class="simple">
@@ -543,13 +542,15 @@ a custom reward object that <a class="reference internal" href="#game-rewards"><
 </section>
 <section id="voting-mechanisms">
 <h3>Voting Mechanisms<a class="headerlink" href="#voting-mechanisms" title="Permalink to this heading">#</a></h3>
-<p>In many decision-making situations, it is necessary to gather the group consensus. This happens when a group of friends decides which movie to watch, when a company decides which product design to manufacture, and when a democratic country elects its leaders.</p>
-<p>While the basic idea of voting is fairly universal, the method by which those votes are used to determine a winner can vary</p>
-<p>The following function returns the target id as an integer as well as an information object detailing which agent voted for themselves, voted for a dead player, had a viable vote, etc…</p>
+<p>Eliminating a player requires gathering and determining a group consensus. Each environment (plurality and approval) has their own function to determine who that target consensus is.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_get_player_to_be_killed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">object</span><span class="p">]:</span>
 </pre></div>
 </div>
+<p>This function also returns an information object with flags for each agent if they voted for themselves, a dead player, or if they had a viable vote. It is this object that is used further inform the rewards individual agents receive each step taken in the environment.</p>
+<div class="admonition-ties admonition">
+<p class="admonition-title">Ties</p>
 <p>For both approval and plurality voting, if ties exist, a target is chosen by breaking ties randomly. If however the target with the majority of votes is a dead player, the next highest targetted agent is taken.</p>
+</div>
 </section>
 <section id="rewards">
 <span id="game-rewards"></span><h3>Rewards<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h3>
@@ -568,6 +569,23 @@ a custom reward object that <a class="reference internal" href="#game-rewards"><
     <span class="s2">&quot;no_sleep&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
+</div>
+<p>The rewards object is comrpised of:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">day</span></code>: a negative reward trying to incentize agents to complete the game faster</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">player_death</span></code>: a negative reward given to the player who was either killed or executed. <em>This could be further seperated based on killing or execution.</em></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">player_win</span></code>: the reward given to a player who has won the game</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">player_loss</span></code>: the reward given to losing players.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dead_wolf</span></code>: a reward given to villagers who were able to execute a werewolf</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dead_villager</span></code>: a negative reward given to villagers if an actual villager was executed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self_vote</span></code>: a negative reward given if a player targets themselves</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dead_vote</span></code>: a negative reward given if a player targets another dead player.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">no_viable_vote</span></code>: An additional penalty if the vote was not a viable one</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">no_sleep</span></code>: This penalty is not currently implemented, but was intended to shape villager learning towards selecting the appropriate <code class="docutils literal notranslate"><span class="pre">null</span></code> action during night votes.</p></li>
+</ul>
+<div class="admonition-training-rewards admonition">
+<p class="admonition-title">Training Rewards</p>
+<p>Currently, we only further distribute a fractional win/loss reward to dead players during <span class="xref myst">training</span>, however targetting dead players may be another reward we want to punish with a multiplicative effect proportional to the amount of villagers voting for a dead player.</p>
 </div>
 </section>
 <section id="game-loop">
