@@ -79,24 +79,24 @@ For in-game logic and calculation, the $-1$ acts like a plurality vote, where th
 ### Observation Space 
 
 ```python
-        self.observation_spaces = {
-            name: Dict(
-                {
-                    "observation": Dict({
-                        "day": Discrete(int(num_agents/2), start=1),
-                        "phase": Discrete(3),
-                        "self_id": Discrete(num_agents), # TODO: FINISH THIS
-                        "player_status": Box(low=0, high=1, shape=(num_agents,), dtype=bool),
-                        "roles": Box(low=0, high=1, shape=(num_agents,), dtype=int), 
-                        "votes" : Dict({
-                            name: Box(low=-1, high=1, shape=(num_agents,), dtype=int) for name in self.agents}), # approval
-                            name: Box(low=0, high=num_agents, shape=(num_agents,)) for name in self.agents}), # plurality
-                    }),
-                    "action_mask": Box(low=0, high=1, shape=(num_agents,), dtype=bool)
-                }
-            )
-            for name in self.agents
+self.observation_spaces = {
+    name: Dict(
+        {
+            "observation": Dict({
+                "day": Discrete(int(num_agents/2), start=1),
+                "phase": Discrete(3),
+                "self_id": Discrete(num_agents), # TODO: FINISH THIS
+                "player_status": Box(low=0, high=1, shape=(num_agents,), dtype=bool),
+                "roles": Box(low=0, high=1, shape=(num_agents,), dtype=int), 
+                "votes" : Dict({
+                    name: Box(low=-1, high=1, shape=(num_agents,), dtype=int) for name in self.agents}), # approval
+                    name: Box(low=0, high=num_agents, shape=(num_agents,)) for name in self.agents}), # plurality
+            }),
+            "action_mask": Box(low=0, high=1, shape=(num_agents,), dtype=bool)
         }
+    )
+    for name in self.agents
+}
 ```
 
 Each player is returned an observation object and an action mask representing dead or alive players. The player status and action masks are identical, however we have chosen to seperate them like this for more clarity and to conform to more training APIs.
