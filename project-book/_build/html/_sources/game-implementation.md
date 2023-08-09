@@ -29,6 +29,7 @@ square root of the number of agents is the max allowed werewolf count given game
 A permutation of roles (villager or werewolf) based on the initialization values is selected and assigned to the $N$ agents playing the game. 
 
 
+(roles-phases)=
 ### Roles and Phases
 
 We currently implement only two roles, villager or werewolf to simplify the environment for analysis.
@@ -98,17 +99,31 @@ For in-game logic and calculation, the $-1$ acts like a plurality vote, where th
         }
 ```
 
+Each player is returned an observation object and an action mask representing dead or alive players. The player status and action masks are identical, however we have chosen to seperate them like this for more clarity and to conform to more training APIs.
 
+As we have implemented our own PPO loop, we have a seperate [utility function](convert-obs) that we use to convert the observations into an input vector for our neural networks.
 
-The observation space returned has quite a bit more information, and a seperate [utility function](convert-obs) is used to convert this observation in the training of agents.
+In the observation object we return:
+- `day`: an integer representing the current day, starting at $1$
 
-The longest possible run-time of the game is chosen as the upper-bound for days
+```{note}
+Because at the end of a day $t$ we have $N_t = N - 2t$ players left, after half the agents die, one of our win conditions will be met, so we can assume the maximum amount of days will be roughly $N/2$.
+```
 
-A self-id is also provided, as the agent has to have a way to know which id is theirs.
+- `phase`: an integer, corresponding to the current [phase](roles-phases) agents are acting in.
+- `self_id`: an integer between $0,N-1$ representing the current agents ID.
+- `player_status`: an array where each index corresponds to an agent ID, and the value, either $0$ or $1$ signifies if that agent is alive or dead
+- `roles`: an array where each index corresponds to an agent ID, and the value is represented by our [Roles enum](roles-phases). $0$ represents a villager, $1$ a werewolf.
 
-The votes are the previous phases votes, and for villagers after a night round, hides the information as an invalid target.
+```{note}
+As wolves have a role represented by $1$, the only time a villager will see an array with anything other than $0$'s is when a wolf gets killed and has to reveal their role.
+```
 
-Roles are also returned as all villagers for other villagers, except for instances were a wolf was killed, then their role is revealed as per the rules of the game.
+- `votes`: this is a dictionary keyed by a string `player_{n}` where $n$ is the integer corresponding to the player ID. Each value is the vote of that corresponding player, which is either an integer in the case of plurality voting, or an array in the case of approval voting. These values are derived from the action space of agents.
+
+```{warning}
+During the first accusation phase of a day, villagers are not shown the true votes the wolves have taken overnight. Instead they are shown either all votes being $N$, the null vote in the case of plurality voting, or an array of all $0$ for approval voting, representing neutral feelings.
+```
 
 ### Game state
 

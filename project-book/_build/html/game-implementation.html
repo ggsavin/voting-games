@@ -414,7 +414,7 @@ a custom reward object that <a class="reference internal" href="#game-rewards"><
 <p>A permutation of roles (villager or werewolf) based on the initialization values is selected and assigned to the <span class="math notranslate nohighlight">\(N\)</span> agents playing the game.</p>
 </section>
 <section id="roles-and-phases">
-<h3>Roles and Phases<a class="headerlink" href="#roles-and-phases" title="Permalink to this heading">#</a></h3>
+<span id="roles-phases"></span><h3>Roles and Phases<a class="headerlink" href="#roles-and-phases" title="Permalink to this heading">#</a></h3>
 <p>We currently implement only two roles, villager or werewolf to simplify the environment for analysis.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Roles</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">IntEnum</span><span class="p">):</span>
     <span class="n">VILLAGER</span> <span class="o">=</span> <span class="mi">0</span>
@@ -475,11 +475,33 @@ a custom reward object that <a class="reference internal" href="#game-rewards"><
         <span class="p">}</span>
 </pre></div>
 </div>
-<p>The observation space returned has quite a bit more information, and a seperate <span class="xref myst">utility function</span> is used to convert this observation in the training of agents.</p>
-<p>The longest possible run-time of the game is chosen as the upper-bound for days</p>
-<p>A self-id is also provided, as the agent has to have a way to know which id is theirs.</p>
-<p>The votes are the previous phases votes, and for villagers after a night round, hides the information as an invalid target.</p>
-<p>Roles are also returned as all villagers for other villagers, except for instances were a wolf was killed, then their role is revealed as per the rules of the game.</p>
+<p>Each player is returned an observation object and an action mask representing dead or alive players. The player status and action masks are identical, however we have chosen to seperate them like this for more clarity and to conform to more training APIs.</p>
+<p>As we have implemented our own PPO loop, we have a seperate <span class="xref myst">utility function</span> that we use to convert the observations into an input vector for our neural networks.</p>
+<p>In the observation object we return:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">day</span></code>: an integer representing the current day, starting at <span class="math notranslate nohighlight">\(1\)</span></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because at the end of a day <span class="math notranslate nohighlight">\(t\)</span> we have <span class="math notranslate nohighlight">\(N_t = N - 2t\)</span> players left, after half the agents die, one of our win conditions will be met, so we can assume the maximum amount of days will be roughly <span class="math notranslate nohighlight">\(N/2\)</span>.</p>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">phase</span></code>: an integer, corresponding to the current <a class="reference internal" href="#roles-phases"><span class="std std-ref">phase</span></a> agents are acting in.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self_id</span></code>: an integer between <span class="math notranslate nohighlight">\(0,N-1\)</span> representing the current agents ID.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">player_status</span></code>: an array where each index corresponds to an agent ID, and the value, either <span class="math notranslate nohighlight">\(0\)</span> or <span class="math notranslate nohighlight">\(1\)</span> signifies if that agent is alive or dead</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">roles</span></code>: an array where each index corresponds to an agent ID, and the value is represented by our <a class="reference internal" href="#roles-phases"><span class="std std-ref">Roles enum</span></a>. <span class="math notranslate nohighlight">\(0\)</span> represents a villager, <span class="math notranslate nohighlight">\(1\)</span> a werewolf.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As wolves have a role represented by <span class="math notranslate nohighlight">\(1\)</span>, the only time a villager will see an array with anything other than <span class="math notranslate nohighlight">\(0\)</span>’s is when a wolf gets killed and has to reveal their role.</p>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">votes</span></code>: this is a dictionary keyed by a string <code class="docutils literal notranslate"><span class="pre">player_{n}</span></code> where <span class="math notranslate nohighlight">\(n\)</span> is the integer corresponding to the player ID. Each value is the vote of that corresponding player, which is either an integer in the case of plurality voting, or an array in the case of approval voting. These values are derived from the action space of agents.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>During the first accusation phase of a day, villagers are not shown the true votes the wolves have taken overnight. Instead they are shown either all votes being <span class="math notranslate nohighlight">\(N\)</span>, the null vote in the case of plurality voting, or an array of all <span class="math notranslate nohighlight">\(0\)</span> for approval voting, representing neutral feelings.</p>
+</div>
 </section>
 <section id="game-state">
 <h3>Game state<a class="headerlink" href="#game-state" title="Permalink to this heading">#</a></h3>
