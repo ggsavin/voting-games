@@ -7,8 +7,6 @@ Social Deduction Games (SDGs), and especially Hidden Role variants such as Werew
 
 ## Introduction
 
-**DO NOT FORGET TO MENTION HCI, AND HOW AGENTS PLAY GAMES WITH HUMANS, CITE PAPER THAT DID SOMETHING WITH WEREWOLF AND HUMANS**
-
 Social Deduction Games model tentative cooperation between groups with uncertain motives. In these games, different players and teams/coalitions have access to different information, with their goals ranging from cooperative to atagonistic{cite}`Dafoe2020-ds`. A special type of SDG is a Hidden Role game where the smaller team of players with an information advantage over the majority group also have their roles masked to "blend" into this majority. It is then up to the uniformed majority to build trust amongst themselves while ferreting out the deceptors. Well known games such as Amongst Us, Avalon, Secret Hitler and Mafia fall in this category. 
 
 ```{admonition} Mechanisms employed in Mafia/Werewolf
@@ -24,7 +22,9 @@ Werewolf is simply a more recent re-imagining of the mafia game where the mafia 
 More information can be found in the game [description](game-desc).
 ```
 
-IN SDGs, communication and deception present unique challenges for AI agents trying to learn optimal strategies on top of the already challenging Multi-Agent-RL (MARL) setting {cite}`Dafoe2020-ds`. To better study these topics along with machine learning, multi-agent simulation, human-agent interaction and cognitive science, an yearly competition called AIWolf {cite}`toriumi2017ai` was started that is still being held to this day. Werewolf, the game played in this competition is simply a re-imagining of Mafia where the mafia are now werewolves, and villagers vote to eliminate who they believe are werewolves during the day.
+IN SDGs, communication and deception present unique challenges for AI agents trying to learn optimal strategies on top of the already challenging Multi-Agent-RL (MARL) setting {cite}`Dafoe2020-ds`. To better study these topics along with machine learning, multi-agent simulation, human-agent interaction and cognitive science, an yearly competition called AIWolf {cite}`toriumi2017ai` was started that is still being held to this day. Werewolf, the game played in this competition is simply a re-imagining of Mafia where the mafia are now werewolves, and villagers vote to eliminate who they believe are werewolves during the day. 
+
+Successfully trained agents can do more than play against themselves, and have been shown to do well against human players {cite}`Loureiro2017ANL, Serrino2019-ge`, extending into the field of HCI (Human Computer Interaction).
 
 ## Motivation
 
