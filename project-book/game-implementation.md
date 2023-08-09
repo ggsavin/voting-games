@@ -144,7 +144,32 @@ self.world_state = {
 
 The world state tracks everything happening in the game and is used for both the history and for rendering the game. In the case of game history for [analysis purposes](game-analysis-methodology) the votes are the actual votes that occured in the current phase, unlike observations which contain the previous phases votes.
 
+The state object is more comprehensive than the observation an agent receives given that this game is represented by a POMDP. It was also designed to make parsing game history easier and to render on-screen via `env.render` while debugging early on in the project.
+
+This state object tracks the following:
+- `day`: an integer representing the current day, starting at $1$
+- `phase`: an integer, corresponding to the current [phase](roles-phases) agents are acting in.
+- `round`: an integer between $[0,K)$ representing the current accusation round out of $K$ repititions.
+```{warning}
+We chose **not** to return this as an observation as it was added later in the project and our results did not change. In fact, it could act as a reason to remove the day value as well, since actions should be tied more strongly to the `phase`
+```
+- `alive`: an array containing all agents that are still alive
+- `killed`: an array representing agents killed by werewolves
+- `executed`: an array representing agents executed by group consensus
+- `werewolves_remaining`: an array containing the remaining werewolves
+- `villagers_remaining`: an array containing the remaining villagers, excluding werewolves
+- `votes`: this is a dictionary keyed by a string `player_{n}` where $n$ is the integer corresponding to the player ID. Each value is the vote of that corresponding player, which is either an integer in the case of plurality voting, or an array in the case of approval voting. These values are derived from the action space of agents.
+- `winners`: If the game is over, this will either be a $0$ for villagers, or $1$ for werewolves. Otherwise, it will be `null`. It is mainly used as a flag for the main game loop in `env.step`.
+
+
 ### Voting Mechanisms
+
+In many decision-making situations, it is necessary to gather the group consensus. This happens when a group of friends decides which movie to watch, when a company decides which product design to manufacture, and when a democratic country elects its leaders.
+
+While the basic idea of voting is fairly universal, the method by which those votes are used to determine a winner can vary
+
+
+
 The following function returns the target id as an integer as well as an information object detailing which agent voted for themselves, voted for a dead player, had a viable vote, etc...
 
 ```python

@@ -520,9 +520,31 @@ a custom reward object that <a class="reference internal" href="#game-rewards"><
 </pre></div>
 </div>
 <p>The world state tracks everything happening in the game and is used for both the history and for rendering the game. In the case of game history for <span class="xref myst">analysis purposes</span> the votes are the actual votes that occured in the current phase, unlike observations which contain the previous phases votes.</p>
+<p>The state object is more comprehensive than the observation an agent receives given that this game is represented by a POMDP. It was also designed to make parsing game history easier and to render on-screen via <code class="docutils literal notranslate"><span class="pre">env.render</span></code> while debugging early on in the project.</p>
+<p>This state object tracks the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">day</span></code>: an integer representing the current day, starting at <span class="math notranslate nohighlight">\(1\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phase</span></code>: an integer, corresponding to the current <a class="reference internal" href="#roles-phases"><span class="std std-ref">phase</span></a> agents are acting in.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">round</span></code>: an integer between <span class="math notranslate nohighlight">\([0,K)\)</span> representing the current accusation round out of <span class="math notranslate nohighlight">\(K\)</span> repititions.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>We chose <strong>not</strong> to return this as an observation as it was added later in the project and our results did not change. In fact, it could act as a reason to remove the day value as well, since actions should be tied more strongly to the <code class="docutils literal notranslate"><span class="pre">phase</span></code></p>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">alive</span></code>: an array containing all agents that are still alive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">killed</span></code>: an array representing agents killed by werewolves</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">executed</span></code>: an array representing agents executed by group consensus</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">werewolves_remaining</span></code>: an array containing the remaining werewolves</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">villagers_remaining</span></code>: an array containing the remaining villagers, excluding werewolves</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">votes</span></code>: this is a dictionary keyed by a string <code class="docutils literal notranslate"><span class="pre">player_{n}</span></code> where <span class="math notranslate nohighlight">\(n\)</span> is the integer corresponding to the player ID. Each value is the vote of that corresponding player, which is either an integer in the case of plurality voting, or an array in the case of approval voting. These values are derived from the action space of agents.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">winners</span></code>: If the game is over, this will either be a <span class="math notranslate nohighlight">\(0\)</span> for villagers, or <span class="math notranslate nohighlight">\(1\)</span> for werewolves. Otherwise, it will be <code class="docutils literal notranslate"><span class="pre">null</span></code>. It is mainly used as a flag for the main game loop in <code class="docutils literal notranslate"><span class="pre">env.step</span></code>.</p></li>
+</ul>
 </section>
 <section id="voting-mechanisms">
 <h3>Voting Mechanisms<a class="headerlink" href="#voting-mechanisms" title="Permalink to this heading">#</a></h3>
+<p>In many decision-making situations, it is necessary to gather the group consensus. This happens when a group of friends decides which movie to watch, when a company decides which product design to manufacture, and when a democratic country elects its leaders.</p>
+<p>While the basic idea of voting is fairly universal, the method by which those votes are used to determine a winner can vary</p>
 <p>The following function returns the target id as an integer as well as an information object detailing which agent voted for themselves, voted for a dead player, had a viable vote, etc…</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_get_player_to_be_killed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">object</span><span class="p">]:</span>
 </pre></div>
