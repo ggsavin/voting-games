@@ -177,8 +177,7 @@ For both approval and plurality voting, if ties exist, a target is chosen by bre
 (game-rewards)=
 ### Rewards
 
-Reward designing to try to shape behavior and outcomes is very hard, and can usally lead to unintended behavior that still optimizes *cite* (look at inverse RL paper for these citations, use the upside-down helicopter picture)
-
+Reward shaping in RL (to bias towards certain desired behaviors) is very hard, and can usally lead to unintended results.
 The following object is the default reward structure for the game, and it was based on reward structures found in other Werewolf focused papers {cite}`Brandizzi2021RLupusCT, Velikov2021-vt`.
 
 
@@ -225,4 +224,4 @@ During the night-time, we still allow actions from villagers, however these are 
 
 We then check for winners and reward players accordingly, before appending the history and possibly incrementing the game round, phase and day. 
 
-Finally the remainder of rewards based on agent voting information is distributed
+Finally the remainder of rewards based on agent voting information is distributed to the agents that provided actions during this current environment step.
