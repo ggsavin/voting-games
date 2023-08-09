@@ -19,16 +19,19 @@ While there are many routes to take when creating a custom environment, using a 
 def __init__(self, num_agents=5, werewolves=1, num_accusations=1, rewards=REWARDS)
 ```
 
-We allow for a variable number of agents as well as number of accusation rounds before an execution vote. We also allow for custom reward values along with [default values](game-rewards)
+The initialization signature aboe highlights the $K$ amount of  accusation phases set to a default value of 1, along with 
+a custom reward object that [defaults to the following values](game-rewards). These values were partially based off of work done in RLupus {cite}`Brandizzi2021RLupusCT`
 
 ```{note}
 square root of the number of agents is the max allowed werewolf count given game theoretic advantages for werewolves {cite}`braverman2008mafia`
 ```
 
-A permutation of roles given the above choice is taken, and assigned to players.
+A permutation of roles (villager or werewolf) based on the initialization values is selected and assigned to the $N$ agents playing the game. 
+
 
 ### Roles and Phases
-There are only two roles, werewolves and villagers
+
+We currently implement only two roles, villager or werewolf to simplify the environment for analysis.
 
 ```python
 class Roles(enum.IntEnum):
@@ -36,7 +39,7 @@ class Roles(enum.IntEnum):
     WEREWOLF = 1
 ```
 
-Currently, the day consists of $n$ accusation phases and one voting phase, while the night is its own phase as wolf policies are static.
+Currently, the day consists of $K$ accusation phases and one voting phase, while the night is its own phase as wolf policies are static.
 
 ```python
 class Phase(enum.IntEnum):
@@ -48,27 +51,31 @@ class Phase(enum.IntEnum):
 During accusastion phases, agents vote as usual, but nobody dies. It is a way to "finger-point" and allow agents to broadcast their intent.
 
 (env-spaces)=
-### Action Space and Observation Space
-
-The action space is simply the vote of the agent. In the plurality version, it is the player ID the agent wishes to taget. In the approval setting, it is a multi-discrete array of length #-players, where each value is (-1 - dissaproval, 0 - neutral, 1 - like)
+### Action Space
+For both plurality and approval voting mechanisms, the action space is their vote.
 
 ```python
 # plurality
 self.action_spaces = { name: Discrete(num_agents)  for name in self.agents }
+```
 
+In the case of plurality voting, the action space is an integer between $[0,N]$ where a vote represented by the integer $N$ represents a null vote. This is because agent IDs start at $0$ and the vote is simply their ID represented as an integer.
+
+```python
 # approval
 self.action_spaces = { name: Box(low=-1, high=1, shape=(num_agents,), dtype=int) for name in self.agents }
 ```
 
-The observation space returned has quite a bit more information, and a seperate [utility function](convert-obs) is used to convert this observation in the training of agents.
+In approval voting, the action space is now represented as a multi-discrete integer array of length $N$, where elements can have one of three values:
+- $-1$ : dissaproval
+- $0$: neutral
+- $1$ : approval
 
-The longest possible run-time of the game is chosen as the upper-bound for days
+```{warning}
+For in-game logic and calculation, the $-1$ acts like a plurality vote, where the index of the $-1$ is the integer identifier of the taget. Other values are not used to determine voting outcomes.
+```
 
-A self-id is also provided, as the agent has to have a way to know which id is theirs.
-
-The votes are the previous phases votes, and for villagers after a night round, hides the information as an invalid target.
-
-Roles are also returned as all villagers for other villagers, except for instances were a wolf was killed, then their role is revealed as per the rules of the game.
+### Observation Space 
 
 ```python
         self.observation_spaces = {
@@ -90,6 +97,18 @@ Roles are also returned as all villagers for other villagers, except for instanc
             for name in self.agents
         }
 ```
+
+
+
+The observation space returned has quite a bit more information, and a seperate [utility function](convert-obs) is used to convert this observation in the training of agents.
+
+The longest possible run-time of the game is chosen as the upper-bound for days
+
+A self-id is also provided, as the agent has to have a way to know which id is theirs.
+
+The votes are the previous phases votes, and for villagers after a night round, hides the information as an invalid target.
+
+Roles are also returned as all villagers for other villagers, except for instances were a wolf was killed, then their role is revealed as per the rules of the game.
 
 ### Game state
 

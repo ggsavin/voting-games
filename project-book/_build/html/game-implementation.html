@@ -368,7 +368,8 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#game-flow-overview">Game flow overview</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-of-the-game">Start of the game</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#roles-and-phases">Roles and Phases</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#action-space-and-observation-space">Action Space and Observation Space</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#action-space">Action Space</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-space">Observation Space</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#game-state">Game state</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#voting-mechanisms">Voting Mechanisms</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rewards">Rewards</a></li>
@@ -404,22 +405,23 @@ document.write(`
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_agents</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">werewolves</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_accusations</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rewards</span><span class="o">=</span><span class="n">REWARDS</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We allow for a variable number of agents as well as number of accusation rounds before an execution vote. We also allow for custom reward values along with <a class="reference internal" href="#game-rewards"><span class="std std-ref">default values</span></a></p>
+<p>The initialization signature aboe highlights the <span class="math notranslate nohighlight">\(K\)</span> amount of  accusation phases set to a default value of 1, along with
+a custom reward object that <a class="reference internal" href="#game-rewards"><span class="std std-ref">defaults to the following values</span></a>. These values were partially based off of work done in RLupus <span id="id3">[<a class="reference internal" href="bibliography.html#id6" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>]</span></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>square root of the number of agents is the max allowed werewolf count given game theoretic advantages for werewolves <span id="id3">[<a class="reference internal" href="bibliography.html#id38" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span></p>
+<p>square root of the number of agents is the max allowed werewolf count given game theoretic advantages for werewolves <span id="id4">[<a class="reference internal" href="bibliography.html#id38" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span></p>
 </div>
-<p>A permutation of roles given the above choice is taken, and assigned to players.</p>
+<p>A permutation of roles (villager or werewolf) based on the initialization values is selected and assigned to the <span class="math notranslate nohighlight">\(N\)</span> agents playing the game.</p>
 </section>
 <section id="roles-and-phases">
 <h3>Roles and Phases<a class="headerlink" href="#roles-and-phases" title="Permalink to this heading">#</a></h3>
-<p>There are only two roles, werewolves and villagers</p>
+<p>We currently implement only two roles, villager or werewolf to simplify the environment for analysis.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Roles</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">IntEnum</span><span class="p">):</span>
     <span class="n">VILLAGER</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">WEREWOLF</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 </div>
-<p>Currently, the day consists of <span class="math notranslate nohighlight">\(n\)</span> accusation phases and one voting phase, while the night is its own phase as wolf policies are static.</p>
+<p>Currently, the day consists of <span class="math notranslate nohighlight">\(K\)</span> accusation phases and one voting phase, while the night is its own phase as wolf policies are static.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Phase</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">IntEnum</span><span class="p">):</span>
     <span class="n">ACCUSATION</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">VOTING</span> <span class="o">=</span> <span class="mi">1</span>
@@ -428,21 +430,31 @@ document.write(`
 </div>
 <p>During accusastion phases, agents vote as usual, but nobody dies. It is a way to “finger-point” and allow agents to broadcast their intent.</p>
 </section>
-<section id="action-space-and-observation-space">
-<span id="env-spaces"></span><h3>Action Space and Observation Space<a class="headerlink" href="#action-space-and-observation-space" title="Permalink to this heading">#</a></h3>
-<p>The action space is simply the vote of the agent. In the plurality version, it is the player ID the agent wishes to taget. In the approval setting, it is a multi-discrete array of length #-players, where each value is (-1 - dissaproval, 0 - neutral, 1 - like)</p>
+<section id="action-space">
+<span id="env-spaces"></span><h3>Action Space<a class="headerlink" href="#action-space" title="Permalink to this heading">#</a></h3>
+<p>For both plurality and approval voting mechanisms, the action space is their vote.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plurality</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">action_spaces</span> <span class="o">=</span> <span class="p">{</span> <span class="n">name</span><span class="p">:</span> <span class="n">Discrete</span><span class="p">(</span><span class="n">num_agents</span><span class="p">)</span>  <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="p">}</span>
-
-<span class="c1"># approval</span>
+</pre></div>
+</div>
+<p>In the case of plurality voting, the action space is an integer between <span class="math notranslate nohighlight">\([0,N]\)</span> where a vote represented by the integer <span class="math notranslate nohighlight">\(N\)</span> represents a null vote. This is because agent IDs start at <span class="math notranslate nohighlight">\(0\)</span> and the vote is simply their ID represented as an integer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># approval</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">action_spaces</span> <span class="o">=</span> <span class="p">{</span> <span class="n">name</span><span class="p">:</span> <span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num_agents</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p>The observation space returned has quite a bit more information, and a seperate <span class="xref myst">utility function</span> is used to convert this observation in the training of agents.</p>
-<p>The longest possible run-time of the game is chosen as the upper-bound for days</p>
-<p>A self-id is also provided, as the agent has to have a way to know which id is theirs.</p>
-<p>The votes are the previous phases votes, and for villagers after a night round, hides the information as an invalid target.</p>
-<p>Roles are also returned as all villagers for other villagers, except for instances were a wolf was killed, then their role is revealed as per the rules of the game.</p>
+<p>In approval voting, the action space is now represented as a multi-discrete integer array of length <span class="math notranslate nohighlight">\(N\)</span>, where elements can have one of three values:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(-1\)</span> : dissaproval</p></li>
+<li><p><span class="math notranslate nohighlight">\(0\)</span>: neutral</p></li>
+<li><p><span class="math notranslate nohighlight">\(1\)</span> : approval</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For in-game logic and calculation, the <span class="math notranslate nohighlight">\(-1\)</span> acts like a plurality vote, where the index of the <span class="math notranslate nohighlight">\(-1\)</span> is the integer identifier of the taget. Other values are not used to determine voting outcomes.</p>
+</div>
+</section>
+<section id="observation-space">
+<h3>Observation Space<a class="headerlink" href="#observation-space" title="Permalink to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="bp">self</span><span class="o">.</span><span class="n">observation_spaces</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">name</span><span class="p">:</span> <span class="n">Dict</span><span class="p">(</span>
                 <span class="p">{</span>
@@ -463,6 +475,11 @@ document.write(`
         <span class="p">}</span>
 </pre></div>
 </div>
+<p>The observation space returned has quite a bit more information, and a seperate <span class="xref myst">utility function</span> is used to convert this observation in the training of agents.</p>
+<p>The longest possible run-time of the game is chosen as the upper-bound for days</p>
+<p>A self-id is also provided, as the agent has to have a way to know which id is theirs.</p>
+<p>The votes are the previous phases votes, and for villagers after a night round, hides the information as an invalid target.</p>
+<p>Roles are also returned as all villagers for other villagers, except for instances were a wolf was killed, then their role is revealed as per the rules of the game.</p>
 </section>
 <section id="game-state">
 <h3>Game state<a class="headerlink" href="#game-state" title="Permalink to this heading">#</a></h3>
@@ -493,7 +510,7 @@ document.write(`
 <section id="rewards">
 <span id="game-rewards"></span><h3>Rewards<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h3>
 <p>Reward designing to try to shape behavior and outcomes is very hard, and can usally lead to unintended behavior that still optimizes <em>cite</em> (look at inverse RL paper for these citations, use the upside-down helicopter picture)</p>
-<p>The following object is the default reward structure for the game, and it was based on reward structures found in other Werewolf focused papers <span id="id4">[<a class="reference internal" href="bibliography.html#id6" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id18" title="Georgi Ventsislavov Velikov. RLereWolf–Reinforcement Learning Agent Development Framework For The Social Deduction Game Werewolf. PhD thesis, University of Aberdeen, 2021.">Vel21</a>]</span>.</p>
+<p>The following object is the default reward structure for the game, and it was based on reward structures found in other Werewolf focused papers <span id="id5">[<a class="reference internal" href="bibliography.html#id6" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id18" title="Georgi Ventsislavov Velikov. RLereWolf–Reinforcement Learning Agent Development Framework For The Social Deduction Game Werewolf. PhD thesis, University of Aberdeen, 2021.">Vel21</a>]</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">REWARDS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;player_death&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
@@ -595,7 +612,8 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#game-flow-overview">Game flow overview</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-of-the-game">Start of the game</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#roles-and-phases">Roles and Phases</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#action-space-and-observation-space">Action Space and Observation Space</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#action-space">Action Space</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-space">Observation Space</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#game-state">Game state</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#voting-mechanisms">Voting Mechanisms</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rewards">Rewards</a></li>
