@@ -133,6 +133,7 @@ def play_static_game(env, wolf_policy, villager_policy, num_times=100):
         observations, rewards, terminations, truncations, infos = env.reset()
         
         wolf_action = None
+        villager_action = None
         while env.agents:
             actions = {}
 
@@ -141,8 +142,8 @@ def play_static_game(env, wolf_policy, villager_policy, num_times=100):
 
             # villager steps
             for villager in villagers:
-                actions[villager] = villager_policy(env, villager)
-
+                villager_action = villager_policy(env, villager, action=villager_action)
+                actions[villager] = villager_action
 
             # wolf steps
             phase = env.world_state['phase']
@@ -152,12 +153,14 @@ def play_static_game(env, wolf_policy, villager_policy, num_times=100):
         
             observations, rewards, terminations, truncations, infos = env.step(actions)
 
-
             if env.world_state['phase'] == Phase.NIGHT:
                 wolf_action = None
             
             if env.world_state['phase'] == Phase.ACCUSATION and phase == Phase.NIGHT:
                 wolf_action = None
+
+            # resetting villager action as well
+            villager_action = None
 
         winner = env.world_state['winners']
         if winner == Roles.VILLAGER:
