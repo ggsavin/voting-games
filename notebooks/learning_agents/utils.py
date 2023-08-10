@@ -124,3 +124,45 @@ def play_recurrent_game(env, wolf_policy, villager_agent, num_times=10, hidden_s
         game_replays.append(copy.deepcopy(env.history))
     
     return wins, game_replays
+
+def play_static_game(env, wolf_policy, villager_policy, num_times=100):
+
+    villager_wins = 0
+    game_replays = []
+    for _ in range(num_times):
+        observations, rewards, terminations, truncations, infos = env.reset()
+        
+        wolf_action = None
+        while env.agents:
+            actions = {}
+
+            villagers = set(env.agents) & set(env.world_state["villagers"])
+            wolves = set(env.agents) & set(env.world_state["werewolves"])
+
+            # villager steps
+            for villager in villagers:
+                actions[villager] = villager_policy(env, villager)
+
+
+            # wolf steps
+            phase = env.world_state['phase']
+            for wolf in wolves:
+                wolf_action = wolf_policy(env, wolf, action=wolf_action)
+                actions[wolf] = wolf_action
+        
+            observations, rewards, terminations, truncations, infos = env.step(actions)
+
+
+            if env.world_state['phase'] == Phase.NIGHT:
+                wolf_action = None
+            
+            if env.world_state['phase'] == Phase.ACCUSATION and phase == Phase.NIGHT:
+                wolf_action = None
+
+        winner = env.world_state['winners']
+        if winner == Roles.VILLAGER:
+            villager_wins += 1
+
+        game_replays.append(copy.deepcopy(env.history))
+
+    return villager_wins, game_replays
