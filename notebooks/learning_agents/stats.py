@@ -346,7 +346,7 @@ def _approval_target_indicators(game, verbose=False):
 
     return target_record
 
-
+# TODO: Rework this function to handle the updated plurality and approval indicators
 def aggregate_stats_from_replays(game_replays, voting_type=None):
 
     # AVG DAYS IT TOOK TO WIN A GAME ##

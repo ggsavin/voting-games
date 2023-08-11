@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'plurality-analysis';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -363,7 +365,13 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#win-rates">Win Rates</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indicators">Indicators</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indicators">Indicators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-elapsed-before-a-villager-win">Days elapsed before a villager win</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-executions">Days between wolf executions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ties">Ties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#targetting-indicators">Targetting Indicators</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -396,16 +404,12 @@ from notebooks.learning_agents.static_agents import (
     random_plurality_wolf,
     revenge_plurality_wolf,
     coordinated_revenge_plurality_wolf)
+import notebooks.learning_agents.stats as indicators
 import random
 import copy
+from matplotlib import pyplot as plt
 from tqdm import tqdm
 from tabulate import tabulate
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/root/.local/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
-  from .autonotebook import tqdm as notebook_tqdm
 </pre></div>
 </div>
 </div>
@@ -420,7 +424,43 @@ from tabulate import tabulate
 <p>We want to see how our hand-crafted agents play against eachother, with special interest given to coordinated random villagers and wolves.</p>
 <p>As expected, the coordinated random villagers and wolves performed the best out of the static policies <span id="id1">[<a class="reference internal" href="bibliography.html#id39" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span>.
 Our agent, trained against coordinated random wolves, performed better than all of our hand-crafted villager policies. They also generalized well against our other wolf policies, and actually had the highest win rates across the board.</p>
-<p>Below is a generated table of 1000 runs between each villager policy and each werewolf policy.</p>
+<p>Below is code to generate the following table of 1000 runs between each villager policy and each werewolf policy. We base our discussion around this markdown table.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Villager Strategy vs.</p></th>
+<th class="head"><p>Totally Random Wolves</p></th>
+<th class="head"><p>Coordinated Random Wolves</p></th>
+<th class="head"><p>Revenge Wolves</p></th>
+<th class="head"><p>Coordinated Revenge Wolves</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Totally Random</p></td>
+<td><p>0.597</p></td>
+<td><p>0.042</p></td>
+<td><p>0.076</p></td>
+<td><p>0.074</p></td>
+</tr>
+<tr class="row-odd"><td><p>Random Targetting of living villagers</p></td>
+<td><p>0.705</p></td>
+<td><p>0.125</p></td>
+<td><p>0.192</p></td>
+<td><p>0.244</p></td>
+</tr>
+<tr class="row-even"><td><p>Coorindated random targetting</p></td>
+<td><p>0.653</p></td>
+<td><p>0.314</p></td>
+<td><p>0.304</p></td>
+<td><p>0.281</p></td>
+</tr>
+<tr class="row-odd"><td><p>Trained villagers</p></td>
+<td><p>0.83</p></td>
+<td><p>0.473</p></td>
+<td><p>0.45</p></td>
+<td><p>0.503</p></td>
+</tr>
+</tbody>
+</table>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -504,6 +544,173 @@ Trained villagers                                        0.83                   
 </section>
 <section id="indicators">
 <h2>Indicators<a class="headerlink" href="#indicators" title="Permalink to this heading">#</a></h2>
+<p>We base our analysis overview</p>
+<section id="days-elapsed-before-a-villager-win">
+<h3>Days elapsed before a villager win<a class="headerlink" href="#days-elapsed-before-a-villager-win" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tpv_win_replays = [r for r in tpv_replays[1] if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+rv_win_replays = [r for r in rv_replays[1] if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+rpv_win_replays = [r for r in rpv_replays[1] if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+cpv_win_replays = [r for r in cpv_replays[1] if r[-1][&quot;winners&quot;] == Roles.VILLAGER]
+
+print(&quot;Average amount of days until a win is achieved by villagers in plurality games&quot;)
+print(f&#39;\t Trained villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in tpv_win_replays]):.2f}&#39;)
+print(f&#39;\t Random Coordinated Villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in cpv_win_replays]):.2f}&#39;)
+print(f&#39;\t Random Living Villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in rpv_win_replays]):.2f}&#39;)
+print(f&#39;\t Totally Random Villagers : {np.mean([villager_win[-1][&quot;day&quot;] for villager_win in rv_win_replays]):.2f}&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average amount of days until a win is achieved by villagers in plurality games
+	 Trained villagers : 2.88
+	 Random Coordinated Villagers : 3.49
+	 Random Living Villagers : 3.50
+	 Totally Random Villagers : 3.36
+</pre></div>
+</div>
+</div>
+</div>
+<p>We had mentioned that this days elapsed indicator is a quick litmus test for any learned improvements, and we can see that the trained agent is quicker on average.</p>
+</section>
+<section id="days-between-wolf-executions">
+<h3>Days between wolf executions<a class="headerlink" href="#days-between-wolf-executions" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Average amount of days until the next wolf was killed in plurality games for 2 wolf environments&quot;)
+wolf_execution_days = \
+    [indicators._when_did_wolves_get_killed(trained_villager_win) for trained_villager_win in tpv_win_replays]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for trained agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+wolf_execution_days = \
+    [indicators._when_did_wolves_get_killed(trained_villager_win) for trained_villager_win in cpv_win_replays]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for CPV agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+wolf_execution_days = \
+    [indicators._when_did_wolves_get_killed(trained_villager_win) for trained_villager_win in rpv_win_replays]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for RPV agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+wolf_execution_days = \
+    [indicators._when_did_wolves_get_killed(trained_villager_win) for trained_villager_win in rv_win_replays]
+wolf_execution_duration_between = [b-a for a,b in wolf_execution_days]
+print(f&#39;\tDays between wolf kills for random agents : {np.mean(wolf_execution_duration_between):.3f}&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average amount of days until the next wolf was killed in plurality games for 2 wolf environments
+	Days between wolf kills for trained agents : 1.529
+	Days between wolf kills for CPV agents : 1.640
+	Days between wolf kills for RPV agents : 1.696
+	Days between wolf kills for random agents : 1.857
+</pre></div>
+</div>
+</div>
+</div>
+<p>This number is one we also expected to be lower, but it won’t be as drastic in a 10 player game due to the shortness of games. At most we have <span class="math notranslate nohighlight">\(5\)</span> days. Regardless, a lower number means the agents are better at identifying duplicitous werewolf players.</p>
+</section>
+<section id="ties">
+<h3>Ties<a class="headerlink" href="#ties" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Plurality tie indicators&quot;)
+
+for names, win_replays in zip([&quot;trained&quot;, &quot;cpv&quot;, &quot;rpv&quot;, &quot;random&quot;], [tpv_win_replays, cpv_win_replays, rpv_win_replays, rv_win_replays]):
+    tgps = \
+        np.nanmean(np.stack([indicators._process_tie_info(indicators._game_tie_info(trained_villager_win, voting_type=&quot;plurality&quot;)) for trained_villager_win in win_replays]),axis= 0)
+    print(f&#39;{names} agent tie indicators&#39;)
+    print(f&#39;\tLikelihood of ties in accusation phases : {tgps[0]:.2f}&#39;)
+    print(f&#39;\tLikelihood of ties in voting phases : {tgps[1]:.2f}&#39;)
+    print(f&#39;\tLikelihood of a tie in a voting phase given a tie in the prior accusation phases {tgps[2]:.2f}&#39;)
+    print(f&#39;\tLikelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : {tgps[3]:.2f}&#39;)
+    print(&quot;\n&quot;)
+
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plurality tie indicators
+trained agent tie indicators
+	Likelihood of ties in accusation phases : 0.29
+	Likelihood of ties in voting phases : 0.19
+	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.18
+	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.70
+
+
+cpv agent tie indicators
+	Likelihood of ties in accusation phases : 0.00
+	Likelihood of ties in voting phases : 0.00
+	Likelihood of a tie in a voting phase given a tie in the prior accusation phases nan
+	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : nan
+
+
+rpv agent tie indicators
+	Likelihood of ties in accusation phases : 0.38
+	Likelihood of ties in voting phases : 0.44
+	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.48
+	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.57
+
+
+random agent tie indicators
+	Likelihood of ties in accusation phases : 0.41
+	Likelihood of ties in voting phases : 0.51
+	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.51
+	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.50
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_17947/2466167984.py:5: RuntimeWarning: Mean of empty slice
+  np.nanmean(np.stack([indicators._process_tie_info(indicators._game_tie_info(trained_villager_win, voting_type=&quot;plurality&quot;)) for trained_villager_win in win_replays]),axis= 0)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Having less ties in accusation phases can indicate more coordination, and a lower number of ties in the voting phase can indicate synthesis of information over the accusation rounds. Learning agents also have a much lower chance of having a tie in a voting round if there was a tie in the accusation round, further solidifying this notion of accusation information synthesis.</p>
+<p>For follow up targetting of wolves who survived tie rounds, the higher the number, the better. Again we can see learning agents doing this much more often than random agents.</p>
+</section>
+<section id="targetting-indicators">
+<h3>Targetting Indicators<a class="headerlink" href="#targetting-indicators" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tpv_avg_records = indicators._game_avg_records(tpv_replays[1], indicators._plurality_target_indicators)
+cpv_avg_records = indicators._game_avg_records(cpv_replays[1], indicators._plurality_target_indicators)
+rv_avg_records = indicators._game_avg_records(rv_replays[1], indicators._plurality_target_indicators)
+
+tpv_stacked = np.stack(list(tpv_avg_records.values()))
+cpv_stacked = np.stack(list(cpv_avg_records.values()))
+rv_stacked = np.stack(list(rv_avg_records.values()))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.style.use(&#39;ggplot&#39;)
+
+# make data
+x = [1,2,3]
+y = tpv_stacked[:,:,0][3]
+
+# plot
+fig, ax = plt.subplots()
+
+# ax.plot(x, y, linewidth=2.0)
+ax.plot(x, tpv_stacked[:,:,0][3], linewidth=2.0)
+ax.plot(x, cpv_stacked[:,:,0][3], linewidth=2.0)
+ax.plot(x, rv_stacked[:,:,0][3], linewidth=2.0)
+
+# ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
+#        ylim=(0, 8), yticks=np.arange(1, 8))
+
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/fdcbeea74e52cc819dbe0126ff9c24d44b30cd4c3c7708d4be108f2291220515.png" src="_images/fdcbeea74e52cc819dbe0126ff9c24d44b30cd4c3c7708d4be108f2291220515.png" />
+</div>
+</div>
+</section>
 </section>
 </section>
 
@@ -575,7 +782,13 @@ Trained villagers                                        0.83                   
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#win-rates">Win Rates</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indicators">Indicators</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indicators">Indicators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-elapsed-before-a-villager-win">Days elapsed before a villager win</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-executions">Days between wolf executions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ties">Ties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#targetting-indicators">Targetting Indicators</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
