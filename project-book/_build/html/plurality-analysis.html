@@ -421,7 +421,12 @@ from tabulate import tabulate
 <p>As expected, the coordinated random villagers and wolves performed the best out of the static policies <span id="id1">[<a class="reference internal" href="bibliography.html#id39" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span>.
 Our agent, trained against coordinated random wolves, performed better than all of our hand-crafted villager policies. They also generalized well against our other wolf policies, and actually had the highest win rates across the board.</p>
 <p>Below is a generated table of 1000 runs between each villager policy and each werewolf policy.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
 observations, _, _, _, _ = env.reset()
@@ -482,6 +487,7 @@ print(tabulate([[&#39;Totally Random&#39;, *rv_wins],
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10 players, with 2 wolves - number of games played : 1000 
 
