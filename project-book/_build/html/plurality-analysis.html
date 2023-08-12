@@ -670,6 +670,15 @@ random agent tie indicators
 </section>
 <section id="targetting-indicators">
 <h3>Targetting Indicators<a class="headerlink" href="#targetting-indicators" title="Permalink to this heading">#</a></h3>
+<p>As a reminder, our indicators are averaged and stacked, with the following indicators in order:</p>
+<ul class="simple">
+<li><p><em>unique targets</em></p></li>
+<li><p><em>self vote</em></p></li>
+<li><p><em>percentage of targets towards wolves</em></p></li>
+<li><p><em>percentage of targets towards dead players</em></p></li>
+<li><p><em>percentage of targets torwards dead wolves</em></p></li>
+</ul>
+<p>There are trends across phases in a day, and trends across days we look at. Our stacked records have a shape of <code class="docutils literal notranslate"><span class="pre">(day,</span> <span class="pre">phase,</span> <span class="pre">indicators)</span></code>, which we can slice in many directions</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tpv_avg_records = indicators._game_avg_records(tpv_replays[1], indicators._plurality_target_indicators)
@@ -681,6 +690,80 @@ cpv_stacked = np.stack(list(cpv_avg_records.values()))
 rv_stacked = np.stack(list(rv_avg_records.values()))
 </pre></div>
 </div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tpv_stacked[:,:,0] # unique votes across days and phases
+tpv_stacked[:,:,1] # self votes across days and phases
+tpv_stacked[:,:,2] # percent of targets towards wolves
+tpv_stacked[:,:,3] # percent of targets towards dead players
+tpv_stacked[:,:,4] # percent of targets towards dead wolves
+print(tpv_stacked.shape)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4, 3, 5)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(tpv_stacked[:,:,4])
+
+t = [0,1,2,3]
+x = [0,1,2]
+
+xx, yy = np.meshgrid(x,t)
+plt.style.use(&#39;ggplot&#39;)
+
+fig = plt.figure()
+ax = fig.add_subplot(projection=&#39;3d&#39;)
+surf = ax.plot_surface(xx,yy,tpv_stacked[:,:,4])
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[0.         0.         0.        ]
+ [0.05428571 0.01771429 0.01028571]
+ [0.04512195 0.02243902 0.01487805]
+ [0.08797654 0.05083089 0.02248289]]
+</pre></div>
+</div>
+<img alt="_images/cb299c543eebc75ef879ce2ba6fb4989af4e8fb1aeedd1c3a4a7f9831ec1f5c9.png" src="_images/cb299c543eebc75ef879ce2ba6fb4989af4e8fb1aeedd1c3a4a7f9831ec1f5c9.png" />
+</div>
+</div>
+<p>The above figure shows us the percentage of targets towards dead wolves for trained agents across phases and days. We expect this number to grow as the days go on, but as we can see, it stays below <span class="math notranslate nohighlight">\(0.1\)</span>, and decreases as we get towards the voting phase for each day. The trained agent almost never targets a dead wolf, and even less so when it comes time to execute a player.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(cpv_stacked[:,:,4])
+
+t = [0,1,2,3]
+x = [0,1,2]
+
+xx, yy = np.meshgrid(x,t)
+plt.style.use(&#39;ggplot&#39;)
+
+fig = plt.figure()
+ax = fig.add_subplot(projection=&#39;3d&#39;)
+surf = ax.plot_surface(xx,yy,cpv_stacked[:,:,4])
+surf = ax.plot_surface(xx,yy,rv_stacked[:,:,4])
+surf = ax.plot_surface(xx,yy,tpv_stacked[:,:,4])
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[0. 0. 0.]
+ [0. 0. 0.]
+ [0. 0. 0.]
+ [0. 0. 0.]]
+</pre></div>
+</div>
+<img alt="_images/9d31a838a90d408a5d9c9cbcb27b0370e8217e0a39f334823f1c43a3ac12dbf3.png" src="_images/9d31a838a90d408a5d9c9cbcb27b0370e8217e0a39f334823f1c43a3ac12dbf3.png" />
 </div>
 </div>
 <div class="cell docutils container">
