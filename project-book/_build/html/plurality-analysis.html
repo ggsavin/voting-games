@@ -749,9 +749,10 @@ plt.style.use(&#39;ggplot&#39;)
 
 fig = plt.figure()
 ax = fig.add_subplot(projection=&#39;3d&#39;)
-surf = ax.plot_surface(xx,yy,cpv_stacked[:,:,4])
-surf = ax.plot_surface(xx,yy,rv_stacked[:,:,4])
-surf = ax.plot_surface(xx,yy,tpv_stacked[:,:,4])
+surf = ax.plot_surface(xx,yy,cpv_stacked[:,:,4], alpha=0.4)
+surf = ax.plot_surface(xx,yy,rv_stacked[:,:,4], alpha=0.4)
+surf = ax.plot_surface(xx,yy,tpv_stacked[:,:,4], alpha=0.8, antialiased=False)
+# ax.view_init(30, 20)
 plt.show()
 </pre></div>
 </div>
@@ -763,7 +764,7 @@ plt.show()
  [0. 0. 0.]]
 </pre></div>
 </div>
-<img alt="_images/9d31a838a90d408a5d9c9cbcb27b0370e8217e0a39f334823f1c43a3ac12dbf3.png" src="_images/9d31a838a90d408a5d9c9cbcb27b0370e8217e0a39f334823f1c43a3ac12dbf3.png" />
+<img alt="_images/5f8a5eeefc2fa69d015130b063f5b88ac6baf322e9a8b65c0e2aa24f3d42dfb4.png" src="_images/5f8a5eeefc2fa69d015130b063f5b88ac6baf322e9a8b65c0e2aa24f3d42dfb4.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -777,7 +778,7 @@ plt.show()
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/c40bf1fdb50e74628361542d7f4526a5e5ab0abe7e9d2e866497ad21fd60126d.png" src="_images/c40bf1fdb50e74628361542d7f4526a5e5ab0abe7e9d2e866497ad21fd60126d.png" />
+<img alt="_images/009a7f4c70ca6e152c86659a1c262f5d28cf71ee956cd40f05eb5f8c85a726b6.png" src="_images/009a7f4c70ca6e152c86659a1c262f5d28cf71ee956cd40f05eb5f8c85a726b6.png" />
 </div>
 </div>
 <div class="cell docutils container">
