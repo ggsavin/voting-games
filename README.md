@@ -8,6 +8,16 @@ Run `jupyter-book build --all project-book/` in the docker container at the proj
 
 `apt-get install graphviz`
 
+### Run training on a remote server
+
+Do not forget to change trainer.py `tqdm.__init__ = partialmethod(tqdm.__init__, disable=False)` to True to disable the tqdm output
+
+`nohup python /my/folder/abc.py >> abc.log &`
+
+To view the mlflow instance running on our remote server, run this command with the appropriate information and then 
+`ssh -L 9999:localhost:5000 A.B.C.D`
+
+
 ## What is this project trying to achieve?
 
 Provide an SGD environment where voting is a core mechanism so we can study how agents learn given different parameters and hopefully make inferences based on the voting mechanisms in play.

@@ -408,16 +408,18 @@ def aggregate_stats_from_replays(game_replays, voting_type=None):
                     f'day_{day}_accusation_{i}_avg_targets': accusations[0],
                     f'day_{day}_accusation_{i}_avg_likes': accusations[1],
                     f'day_{day}_accusation_{i}_avg_neutrals': accusations[2],
+                    f'day_{day}_accusation_{i}_avg_self_tgt': accusations[3],
+                    f'day_{day}_accusation_{i}_avg_self_like': accusations[4],
 
-                    f'day_{day}_accusation_{i}_p_targetting_dead_players': accusations[9],
-                    f'day_{day}_accusation_{i}_p_targetting_wolves': accusations[10],
-                    f'day_{day}_accusation_{i}_p_targetting_live_wolves': accusations[12],
+                    f'day_{day}_accusation_{i}_p_targetting_dead_players': accusations[7],
+                    f'day_{day}_accusation_{i}_p_targetting_wolves': accusations[8],
+                    f'day_{day}_accusation_{i}_p_targetting_live_wolves': accusations[9],
 
 
-                    f'day_{day}_accusation_{i}_p_liking_live_villagers': accusations[13],
-                    f'day_{day}_accusation_{i}_p_liking_dead_villagers': accusations[14],
-                    f'day_{day}_accusation_{i}_p_liking_dead_wolves': accusations[15],
-                    f'day_{day}_accusation_{i}_p_liking_live_wolves': accusations[16]
+                    f'day_{day}_accusation_{i}_p_liking_live_villagers': accusations[10],
+                    f'day_{day}_accusation_{i}_p_liking_dead_villagers': accusations[11],
+                    f'day_{day}_accusation_{i}_p_liking_dead_wolves': accusations[12],
+                    f'day_{day}_accusation_{i}_p_liking_live_wolves': accusations[13]
                 }
             
             # voting r ound
@@ -426,35 +428,19 @@ def aggregate_stats_from_replays(game_replays, voting_type=None):
                 f'day_{day}_voting_{i}_avg_targets': voting_info[-1][0],
                 f'day_{day}_voting_{i}_avg_likes': voting_info[-1][1],
                 f'day_{day}_voting_{i}_avg_neutrals': voting_info[-1][2],
+                f'day_{day}_voting_{i}_avg_self_tgt': voting_info[-1][3],
+                f'day_{day}_voting_{i}_avg_self_like': voting_info[-1][4],
 
-                f'day_{day}_voting_{i}_p_targetting_dead_players': voting_info[-1][9],
-                f'day_{day}_voting_{i}_p_targetting_wolves': voting_info[-1][10],
-                f'day_{day}_voting_{i}_p_targetting_live_wolves': voting_info[-1][12],
+                f'day_{day}_voting_{i}_p_targetting_dead_players': voting_info[-1][7],
+                f'day_{day}_voting_{i}_p_targetting_wolves': voting_info[-1][8],
+                f'day_{day}_voting_{i}_p_targetting_live_wolves': voting_info[-1][9],
 
 
-                f'day_{day}_voting_{i}_p_liking_live_villagers': voting_info[-1][13],
-                f'day_{day}_voting_{i}_p_liking_dead_villagers': voting_info[-1][14],
-                f'day_{day}_voting_{i}_p_liking_dead_wolves': voting_info[-1][15],
-                f'day_{day}_voting_{i}_p_liking_live_wolves': voting_info[-1][16]
+                f'day_{day}_voting_{i}_p_liking_live_villagers': voting_info[-1][10],
+                f'day_{day}_voting_{i}_p_liking_dead_villagers': voting_info[-1][11],
+                f'day_{day}_voting_{i}_p_liking_dead_wolves': voting_info[-1][12],
+                f'day_{day}_voting_{i}_p_liking_live_wolves': voting_info[-1][13]
             }
-        # indicator_stats = {
-        #     "avg_targets": avg_records[0],
-        #     "avg_likes": avg_records[1],
-        #     "avg_neutrals": avg_records[2],
-        #     "avg_self_target": avg_records[3],
-        #     "avg_self_like": avg_records[4],
-        #     "common_target_count": avg_records[5],
-        #     "wolves_in_common_targets": avg_records[6],
-        #     "common_like_count": avg_records[7],
-        #     "wolves_in_common_likes": avg_records[8],
-        #     "p_targetting_dead_players": avg_records[9],
-        #     "p_targetting_wolves": avg_records[10],
-        #     "p_targetting_dead_wolves": avg_records[11],
-        #     "p_targetting_live_wolves": avg_records[12],
-        #     "p_liking_live_villagers": avg_records[13],
-        #     "p_liking_dead_villagers": avg_records[14],
-        #     "p_liking_dead_wolves": avg_records[15],
-        #     "p_liking_live_wolves": avg_records[16]
         # }
 
     return {

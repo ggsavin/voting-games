@@ -71,10 +71,10 @@ config_training = {
         "batch_size": 256, # 32-64-128-256-512-1024 (6)
         "epochs": 5, # 4,5,6,7,8,9,10 (7)
         "updates": 501, # 1000 (1)
-        "buffer_games_per_update": 500, # 50-100-200 (3)
-        "clip_range": 0.1, # 0.1,0.2,0.3 (3)
+        "buffer_games_per_update": 200, # 50-100-200 (3)
+        "clip_range": 0.075, # 0.1,0.2,0.3 (3)
         "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)
-        "max_grad_norm": 0.5, 
+        "max_grad_norm": 0.5,  # 0.5
         "beta": 0.01, # entropy loss multiplier # 0.1, 0.05, 0.01, 0.005, 0.001
         "learning_rate": 0.0001, # 0.001, 0.0005, 0.0001, 0.00005, 0.00001
         "adam_eps": 1e-5, # 1e-8, 1e-7. 1e-6, 1e-5
@@ -98,7 +98,7 @@ config_game = {
         "no_sleep": -1,
     },
     "gameplay": {
-        "accusation_phases": 3, # 2,3
+        "accusation_phases": 2, # 2,3
         "num_agents": 10,
         "num_werewolves": 2,
     }
@@ -142,9 +142,10 @@ for accusation_phase_num in accusation_phases:
                                 voting_type="approval")
             
             with mlflow.start_run(run_name=f'{accusation_phase_num}_accusations',
+                                  experiment_id=experiment_id,
                                   ):
                 
-                trainer.train(voting_type="approval", save_threshold=25)
+                trainer.train(voting_type="approval", save_threshold=25.0)
                 completed_training += 1
         except ValueError as e:
             if ("nan" in str(e)):
