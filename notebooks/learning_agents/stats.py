@@ -319,8 +319,8 @@ def _approval_target_indicators(game, verbose=False):
                                            v_avg_neutral_count,
                                            avg_vself_target,
                                            avg_vself_like,
-                                           len(wolves_in_most_common_targets)/most_common_n_targets,
-                                           len(wolves_in_most_common_likes)/most_common_n_likes,
+                                           len(wolves_in_most_common_targets)/max(1.0, most_common_n_targets),
+                                           len(wolves_in_most_common_likes)/max(1.0, most_common_n_likes),
                                            percent_of_vtargets_toward_dead_players,
                                            percent_of_vtargets_toward_dead_wolves,
                                            percent_of_vtargets_toward_alive_wolves,
@@ -359,10 +359,10 @@ def aggregate_stats_from_replays(game_replays, voting_type=None):
     duration_between_kills = np.mean([b-a for a,b in wolf_execution_days])
 
     ## TIE GAME INFO ##
-    tie_game_info = [_game_tie_info(replay, voting_type=voting_type) for replay in game_replays]
-    tie_games =  len([tie_game for tie_game in tie_game_info if len(tie_game[0]) >= 1])/len(game_replays)
-    wolf_ties = len([tie_game for tie_game in tie_game_info if len(tie_game[2]) >= 1])/len(game_replays)
-    lucky_wolf = len([tie_game for tie_game in tie_game_info if len(tie_game[1]) >= 1])/len(game_replays)
+    # tie_game_info = [_game_tie_info(replay, voting_type=voting_type) for replay in game_replays]
+    # tie_games =  len([tie_game for tie_game in tie_game_info if len(tie_game[0]) >= 1])/len(game_replays)
+    # wolf_ties = len([tie_game for tie_game in tie_game_info if len(tie_game[2]) >= 1])/len(game_replays)
+    # lucky_wolf = len([tie_game for tie_game in tie_game_info if len(tie_game[1]) >= 1])/len(game_replays)
 
     # Object returned so we can easily log it in mlflow
 
@@ -446,9 +446,9 @@ def aggregate_stats_from_replays(game_replays, voting_type=None):
     return {
         "avg_days_until_win": days_until_win,
         "avg_duration_between_kills": duration_between_kills,
-        "tie_games": tie_games,
-        "wolf_ties": wolf_ties,
-        "lucky_wolf_tie": lucky_wolf,
+        # "tie_games": tie_games,
+        # "wolf_ties": wolf_ties,
+        # "lucky_wolf_tie": lucky_wolf,
         **indicator_stats,
     }
 
