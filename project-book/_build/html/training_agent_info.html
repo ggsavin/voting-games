@@ -368,8 +368,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advantage-estimation">Advantage estimation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loss-calculation">Loss calculation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">MLflow</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-data">Training Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -740,11 +742,10 @@ The steps we follow are very closely related to our <a class="reference internal
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>TODO: Show the difference between reward sharing vs not for training.</p>
+<section id="training-results">
+<h3>Training Results<a class="headerlink" href="#training-results" title="Permalink to this heading">#</a></h3>
 <p>We found more consistent results when the clip range was lower.</p>
-<p>Talk about the reward shaping for players in more detail here and share the equation.</p>
-</section>
-<section id="training-data">
-<h2>Training Data<a class="headerlink" href="#training-data" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># in a docker container
@@ -892,6 +893,7 @@ ax.legend()
 </aside>
 </section>
 </section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -964,8 +966,10 @@ ax.legend()
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advantage-estimation">Advantage estimation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loss-calculation">Loss calculation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">MLflow</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-data">Training Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
