@@ -363,7 +363,13 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#win-rates">Win Rates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#win-rates">Win Rates</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-elapsed-before-a-villager-win">Days elapsed before a villager win</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-executions">Days between wolf executions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ties">Ties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#targetting-indicators">Targetting Indicators</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -403,8 +409,88 @@ document.write(`
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="approval-voting">
 <h1>Approval Voting<a class="headerlink" href="#approval-voting" title="Permalink to this heading">#</a></h1>
+<p>Approval voting is a mechanism in which voters can select as many candidates from a list of all possible candidates to approve of.</p>
 <section id="win-rates">
 <h2>Win Rates<a class="headerlink" href="#win-rates" title="Permalink to this heading">#</a></h2>
+<p>We assume that some of the findings in the plurality werewolf game <span id="id1">[<a class="reference internal" href="bibliography.html#id39" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span> will still hold for approval voting, due to the nature of calculating the consensus amongst all the targetting done. (Target with the most dislikes gets voted out)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">pare</span><span class="p">(</span><span class="n">num_agents</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">werewolves</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_accusations</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">observations</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">obs_size</span><span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">convert_obs</span><span class="p">(</span><span class="n">observations</span><span class="p">[</span><span class="s1">&#39;player_0&#39;</span><span class="p">][</span><span class="s1">&#39;observation&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">trained_approval_agent</span> <span class="o">=</span> <span class="n">ActorCriticAgent</span><span class="p">({</span><span class="s2">&quot;rec_hidden_size&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+                                        <span class="s2">&quot;rec_layers&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> 
+                                        <span class="s2">&quot;joint_mlp_size&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
+                                        <span class="s2">&quot;split_mlp_size&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
+                                        <span class="s2">&quot;num_votes&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+                                        <span class="s2">&quot;approval_states&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+                                        <span class="n">num_players</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                        <span class="n">obs_size</span><span class="o">=</span><span class="n">obs_size</span><span class="p">)</span>
+<span class="n">trained_approval_agent</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;stored_agents/lstm_first_no_one_hot_256_128/approval_agent_10_score_49&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">num_games</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;10 players, with 2 wolves - number of games played : </span><span class="si">{</span><span class="n">num_games</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">rv_wins</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">rv_replays</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">wolf_policy</span> <span class="ow">in</span> <span class="p">[</span><span class="n">random_agent</span><span class="p">,</span> <span class="n">random_plurality_wolf</span><span class="p">,</span> <span class="n">revenge_plurality_wolf</span><span class="p">,</span> <span class="n">coordinated_revenge_plurality_wolf</span><span class="p">]:</span>
+    <span class="n">wins</span><span class="p">,</span> <span class="n">replays</span> <span class="o">=</span> <span class="n">play_static_game</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">wolf_policy</span><span class="p">,</span> <span class="n">random_agent</span><span class="p">,</span> <span class="n">num_times</span><span class="o">=</span><span class="n">num_games</span><span class="p">)</span>
+    <span class="n">rv_wins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wins</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">num_games</span><span class="p">))</span>
+    <span class="n">rv_replays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">replays</span><span class="p">)</span>
+
+<span class="n">rpv_wins</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">rpv_replays</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">wolf_policy</span> <span class="ow">in</span> <span class="p">[</span><span class="n">random_agent</span><span class="p">,</span> <span class="n">random_plurality_wolf</span><span class="p">,</span> <span class="n">revenge_plurality_wolf</span><span class="p">,</span> <span class="n">coordinated_revenge_plurality_wolf</span><span class="p">]:</span>
+    <span class="n">wins</span><span class="p">,</span> <span class="n">replays</span> <span class="o">=</span> <span class="n">play_static_game</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">wolf_policy</span><span class="p">,</span> <span class="n">random_plurality_villager</span><span class="p">,</span> <span class="n">num_times</span><span class="o">=</span><span class="n">num_games</span><span class="p">)</span>
+    <span class="n">rpv_wins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wins</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">num_games</span><span class="p">))</span>
+    <span class="n">rpv_replays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">replays</span><span class="p">)</span>
+
+<span class="n">cpv_wins</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">cpv_replays</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">wolf_policy</span> <span class="ow">in</span> <span class="p">[</span><span class="n">random_agent</span><span class="p">,</span> <span class="n">random_plurality_wolf</span><span class="p">,</span> <span class="n">revenge_plurality_wolf</span><span class="p">,</span> <span class="n">coordinated_revenge_plurality_wolf</span><span class="p">]:</span>
+    <span class="n">wins</span><span class="p">,</span> <span class="n">replays</span> <span class="o">=</span> <span class="n">play_static_game</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">wolf_policy</span><span class="p">,</span> <span class="n">random_coordinated_plurality_villager</span><span class="p">,</span> <span class="n">num_times</span><span class="o">=</span><span class="n">num_games</span><span class="p">)</span>
+    <span class="n">cpv_wins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wins</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">num_games</span><span class="p">))</span>
+    <span class="n">cpv_replays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">replays</span><span class="p">)</span>
+
+<span class="n">tpv_wins</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">tpv_replays</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">wolf_policy</span> <span class="ow">in</span> <span class="p">[</span><span class="n">random_agent</span><span class="p">,</span> <span class="n">random_plurality_wolf</span><span class="p">,</span> <span class="n">revenge_plurality_wolf</span><span class="p">,</span> <span class="n">coordinated_revenge_plurality_wolf</span><span class="p">]:</span>
+    <span class="c1"># wins, replays = play_static_game(env, wolf_policy, random_agent, num_times=num_games)[0]/float(num_games)</span>
+    <span class="n">wins</span><span class="p">,</span> <span class="n">replays</span> <span class="o">=</span> <span class="n">play_recurrent_game</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">wolf_policy</span><span class="p">,</span> <span class="n">trained_plurality_agent</span><span class="p">,</span> <span class="n">num_times</span><span class="o">=</span><span class="n">num_games</span><span class="p">,</span> <span class="n">hidden_state_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">voting_type</span><span class="o">=</span><span class="s2">&quot;plurality&quot;</span><span class="p">)</span>
+    <span class="n">tpv_wins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wins</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">num_games</span><span class="p">))</span>
+    <span class="n">tpv_replays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">replays</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">([[</span><span class="s1">&#39;Totally Random&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">rv_wins</span><span class="p">],</span> 
+                <span class="p">[</span><span class="s1">&#39;Random Targetting of living villagers&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">rpv_wins</span><span class="p">],</span> 
+                <span class="p">[</span><span class="s1">&#39;Coorindated random targetting&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">cpv_wins</span><span class="p">],</span> 
+                <span class="p">[</span><span class="s1">&#39;Trained villagers&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">tpv_wins</span><span class="p">]],</span> 
+               <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Villager Strategy&quot;</span><span class="p">,</span> 
+                        <span class="s2">&quot;Totally Random Wolves&quot;</span><span class="p">,</span> 
+                        <span class="s2">&quot;Coordinated Random Wolves&quot;</span><span class="p">,</span> 
+                        <span class="s2">&quot;Revenge Wolves&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;Coordinated Revenge Wolves&quot;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="days-elapsed-before-a-villager-win">
+<h3>Days elapsed before a villager win<a class="headerlink" href="#days-elapsed-before-a-villager-win" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="days-between-wolf-executions">
+<h3>Days between wolf executions<a class="headerlink" href="#days-between-wolf-executions" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="ties">
+<h3>Ties<a class="headerlink" href="#ties" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="targetting-indicators">
+<h3>Targetting Indicators<a class="headerlink" href="#targetting-indicators" title="Permalink to this heading">#</a></h3>
+</section>
 </section>
 </section>
 
@@ -475,7 +561,13 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#win-rates">Win Rates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#win-rates">Win Rates</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-elapsed-before-a-villager-win">Days elapsed before a villager win</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-executions">Days between wolf executions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ties">Ties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#targetting-indicators">Targetting Indicators</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
