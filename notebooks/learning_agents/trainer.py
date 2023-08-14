@@ -306,8 +306,6 @@ def fill_recurrent_buffer_scaled_rewards(buffer, env, config:dict, wolf_policy, 
         for agent in magent_obs:
             buffer.add_replay(magent_obs[agent])
 
-        
-    
     return buffer
 
 
