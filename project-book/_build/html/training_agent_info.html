@@ -630,6 +630,91 @@ plurality_runs = mlflow_client.search_runs([plurality_experiment.experiment_id])
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>four_accusations = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;4_accusations&#39;&quot;)
+three_accusations = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;3_accusations&#39;&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>four_accusation_votes = \
+    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in four_accusations]
+three_accusation_votes = \
+    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in three_accusations]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def tolerant_mean(arrs):
+    lens = [len(i) for i in arrs]
+    arr = np.ma.empty((np.max(lens),len(arrs)))
+    arr.mask = True
+    for idx, l in enumerate(arrs):
+        arr[:len(l),idx] = l
+    return arr.mean(axis = -1), arr.std(axis=-1)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
+y_3, error_3 = tolerant_mean(three_accusation_votes)
+y_4, error_4 = tolerant_mean(four_accusation_votes)
+
+ax.plot(np.arange(len(y_3))+1, y_3, color=&#39;green&#39;)
+ax.fill_between(np.arange(len(y_3))+1, y_3-error_3, y_3+error_3, color=&#39;green&#39;, alpha=0.3)
+
+ax.plot(np.arange(len(y_4))+1, y_4, color=&#39;blue&#39;)
+ax.fill_between(np.arange(len(y_4))+1, y_4-error_4, y_4+error_4, color=&#39;blue&#39;, alpha=0.3)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7f33c8a5f220&gt;
+</pre></div>
+</div>
+<img alt="_images/46942a7242469be478f81b0df3de84ab60b02b224faa957236e9e978c47e518e.png" src="_images/46942a7242469be478f81b0df3de84ab60b02b224faa957236e9e978c47e518e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
+y_3, error_3 = tolerant_mean(three_accusation_votes)
+y_4, error_4 = tolerant_mean(four_accusation_votes)
+
+ax.plot(np.arange(len(y_3))+1, y_3, color=&#39;green&#39;)
+#ax.fill_between(np.arange(len(y_3))+1, y_3-error_3, y_3+error_3, color=&#39;green&#39;, alpha=0.3)
+
+ax.plot(np.arange(len(y_4))+1, y_4, color=&#39;blue&#39;)
+#ax.fill_between(np.arange(len(y_4))+1, y_4-error_4, y_4+error_4, color=&#39;blue&#39;, alpha=0.3)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f33c8acb040&gt;]
+</pre></div>
+</div>
+<img alt="_images/048355c5963fdfa7046f9107ed4d4d189b7c7fcf636406efc26d2f4d2e2d2665.png" src="_images/048355c5963fdfa7046f9107ed4d4d189b7c7fcf636406efc26d2f4d2e2d2665.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>[plurality_run.info.run_name.split(&quot;_&quot;)[0] for plurality_run in plurality_runs]
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;4&#39;, &#39;4&#39;, &#39;4&#39;, &#39;4&#39;, &#39;4&#39;, &#39;4&#39;, &#39;4&#39;, &#39;4&#39;, &#39;4&#39;, &#39;4&#39;, &#39;3&#39;, &#39;3&#39;, &#39;3&#39;, &#39;3&#39;, &#39;3&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># plurality_runs[1]
 </pre></div>
 </div>
@@ -719,7 +804,7 @@ ax.fill_between(np.arange(len(y))+1, y-error, y+error, color=&#39;green&#39;, al
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(42,)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7f33c8ed9300&gt;
 </pre></div>
 </div>
 <img alt="_images/9f2ebec75e3aa2ff1541894fb886366b9c0c42792c9c0cd06ffb23ec19bbcc0c.png" src="_images/9f2ebec75e3aa2ff1541894fb886366b9c0c42792c9c0cd06ffb23ec19bbcc0c.png" />
