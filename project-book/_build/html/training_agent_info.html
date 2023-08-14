@@ -364,6 +364,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">MLflow</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-data">Training Data</a></li>
 </ul>
             </nav>
         </div>
@@ -395,11 +396,13 @@ import matplotlib.pyplot as plt
 from notebooks.learning_agents.models import ActorCriticAgent
 from notebooks.learning_agents.utils import play_recurrent_game, convert_obs
 from notebooks.learning_agents.static_agents import random_approval_wolf, random_plurality_wolf
+import mlflow
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;png&#39;
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/root/.local/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
 </pre></div>
 </div>
 </div>
@@ -605,6 +608,123 @@ The steps we follow are very closely related to our <a class="reference internal
 <span class="p">}</span>
 </pre></div>
 </div>
+</section>
+<section id="training-data">
+<h2>Training Data<a class="headerlink" href="#training-data" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># in a docker container
+mlflow_client = mlflow.tracking.MlflowClient(tracking_uri=&quot;http://mlflow:5000&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># We have organized the runs in such a way
+plurality_experiment = mlflow_client.get_experiment_by_name(&quot;Plurality Training&quot;)
+plurality_runs = mlflow_client.search_runs([plurality_experiment.experiment_id])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># plurality_runs[1]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(plurality_runs[1].info.run_id)
+mlflow_client.get_metric_history(run_id=plurality_runs[1].info.run_id, key=&quot;avg_wins/100&quot;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>d875a208fa6942ce971ab9605bbcca93
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;Metric: key=&#39;avg_wins/100&#39;, step=0, timestamp=1690269392317, value=3.7&gt;,
+ &lt;Metric: key=&#39;avg_wins/100&#39;, step=0, timestamp=1690269637595, value=4.4&gt;,
+ &lt;Metric: key=&#39;avg_wins/100&#39;, step=0, timestamp=1690269883335, value=4.1&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mlflow_client.get_metric_history(run_id=plurality_runs[0].info.run_id, key=&quot;avg_wins/100&quot;)
+
+x = []
+y = []
+for metric in mlflow_client.get_metric_history(run_id=plurality_runs[0].info.run_id, key=&quot;avg_wins/100&quot;):
+    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;Metric: key=&#39;avg_wins/100&#39;, step=0, timestamp=1690270097738, value=4.1&gt;,
+ &lt;Metric: key=&#39;avg_wins/100&#39;, step=0, timestamp=1690270347765, value=5.2&gt;,
+ &lt;Metric: key=&#39;avg_wins/100&#39;, step=0, timestamp=1690270596778, value=4.3&gt;,
+ &lt;Metric: key=&#39;avg_wins/100&#39;, step=0, timestamp=1690270849331, value=4.9&gt;,
+ &lt;Metric: key=&#39;avg_wins/100&#39;, step=0, timestamp=1690271106673, value=5.5&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>[item.value for item in mlflow_client.get_metric_history(run_id=plurality_runs[0].info.run_id, key=&quot;avg_wins/100&quot;)]
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[4.1, 5.2, 4.3, 4.9, 5.5]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
+
+for plurality_run in plurality_runs:
+    y = [[item.value for item in mlflow_client.get_metric_history(run_id=plurality_run.info.run_id, key=&quot;avg_wins/100&quot;)] for plurality_run in plurality_runs]
+    x = list(range(len(y)))
+    ax.plot(x, y, linewidth=2.0)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/df82fc00b514375114022bbfb0695e377786c84355196a23434b626a8ee17fe4.png" src="_images/df82fc00b514375114022bbfb0695e377786c84355196a23434b626a8ee17fe4.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def tolerant_mean(arrs):
+    lens = [len(i) for i in arrs]
+    arr = np.ma.empty((np.max(lens),len(arrs)))
+    arr.mask = True
+    for idx, l in enumerate(arrs):
+        arr[:len(l),idx] = l
+    return arr.mean(axis = -1), arr.std(axis=-1)
+
+fig, ax = plt.subplots()
+y, error = tolerant_mean([np.array([item.value for item in mlflow_client.get_metric_history(run_id=plurality_run.info.run_id, key=&quot;avg_wins/100&quot;)]) for plurality_run in plurality_runs])
+ax.plot(np.arange(len(y))+1, y, color=&#39;green&#39;)
+ax.fill_between(np.arange(len(y))+1, y-error, y+error, color=&#39;green&#39;, alpha=0.3)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(42,)
+</pre></div>
+</div>
+<img alt="_images/9f2ebec75e3aa2ff1541894fb886366b9c0c42792c9c0cd06ffb23ec19bbcc0c.png" src="_images/9f2ebec75e3aa2ff1541894fb886366b9c0c42792c9c0cd06ffb23ec19bbcc0c.png" />
+</div>
+</div>
 <hr class="footnotes docutils" />
 <aside class="footnote brackets" id="mlflow-tooling" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
@@ -682,6 +802,7 @@ The steps we follow are very closely related to our <a class="reference internal
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">MLflow</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-data">Training Data</a></li>
 </ul>
   </nav></div>
 
