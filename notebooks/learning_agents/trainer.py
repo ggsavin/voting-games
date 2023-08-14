@@ -264,7 +264,10 @@ def fill_recurrent_buffer_scaled_rewards(buffer, env, config:dict, wolf_policy, 
 
                 # TODO : Update these somehow
                 magent_obs[villager]["obs"].append(torch.unsqueeze(v_obs[i],0))
-                magent_obs[villager]["actions"].append([v_actions[i]])
+                if voting_type == "plurality":
+                    magent_obs[villager]["actions"].append([v_actions[i]])
+                elif voting_type == "approval":
+                    magent_obs[villager]["actions"].append(v_actions[i])
 
                 # how do we get these
                 magent_obs[villager]["logprobs"].append(torch.stack([policy.log_prob(action) for policy, action in zip(policies, v_actions[i])], dim=1)[i])

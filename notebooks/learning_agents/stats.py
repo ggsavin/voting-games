@@ -297,7 +297,7 @@ def _approval_target_indicators(game, verbose=False):
         
         # do the most liked individuals also get the least amount of votes?
         total_target_votes = sum(v_target_counter.values())
-        total_like_votes = sum(v_like_counter.values())
+        total_like_votes = max(1.0,sum(v_like_counter.values()))
 
         # target percentages
         percent_of_vtargets_toward_dead_players = sum([v_target_counter[int(dead_player.split("_")[-1])] for dead_player in dead_players]) / float(total_target_votes)
