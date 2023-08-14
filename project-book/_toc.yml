@@ -13,5 +13,6 @@ chapters:
 - file: indicators
 - file: game_visualization
 - file: plurality-analysis
+- file: approval-analysis
 - file: future
 - file: bibliography
