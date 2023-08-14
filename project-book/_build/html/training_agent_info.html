@@ -491,7 +491,7 @@ The steps we follow are very closely related to our <a class="reference internal
         <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;entropy loss&quot;</span><span class="p">,</span> <span class="n">train_stats</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>We calculate the loss per mini-batch, which is also a hypeparameter choice. This works for both approval and plurality models due to the policy outputs being in an array. We return and average out the policy, value, entropy and total losses.</p>
+<p id="minibatch-loss">We calculate the loss per mini-batch, which is also a hypeparameter choice. This works for both approval and plurality models due to the policy outputs being in an array. We return and average out the policy, value, entropy and total losses.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_minibatch_loss</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">samples</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">clip_range</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">v_loss_coef</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">grad_norm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
     <span class="n">policies</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">agent</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="s1">&#39;observations&#39;</span><span class="p">],</span> <span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="s1">&#39;hxs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">samples</span><span class="p">[</span><span class="s1">&#39;cxs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()))</span>
     
@@ -608,6 +608,8 @@ The steps we follow are very closely related to our <a class="reference internal
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>We found more consistent results when the clip range was lower.</p>
+<p>Talk about the reward shaping for players in more detail here and share the equation.</p>
 </section>
 <section id="training-data">
 <h2>Training Data<a class="headerlink" href="#training-data" title="Permalink to this heading">#</a></h2>
