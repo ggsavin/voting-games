@@ -55,61 +55,36 @@ We implemented our own following some works using a truncated BPTT {cite}`pleine
 :label: ppo-alg
 
 **Inputs** Initial policy parameters $\theta_0$, clipping threshold $\epsilon$
-1. for $k=0,1,2,...$ do
-    1. Collect set of trajectories $\tau$ on policy $\pi_k = \pi(\theta_k)$
-    2. Estimate advatanges $A^{\pi_k}$ using GAE {cite}`schulman2015high`
-    3. Compute policy update {cite}`schulman2017proximal`
+1. for $i=0,1,2,3,...$ do
+    1. for $agent=1,2,...,N$ do
+        1. Collect set of full game trajectories $\tau$ on policy $\pi(\theta_i)$. 
+        **We store the hidden state of the recurrent layer $h$ at each step of each trajectory**
 
-    $$
-    \theta_{k+1} = argmax \mathcal{L}^{CVH} 
-    $$
-
-    by taking $K$ steps of minibatch SGD (via Adam), where
-
-    $$
-        \mathcal{L}^C(\theta) & = E [\sum_{t=0}^{\tau}[min(q_t(\theta)\hat{A}_t, clip(q_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]] \\
-        q_t(\theta) & = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
-    $$
-    
-    $$
-    \mathcal{L}^V_t(\theta) = (V_{\theta}(o_t,h_t) - V^{target}_t)^2
-    $$
-
-    Coefficients $c_1, c_2$ weigh the value fucntion loss and the entropy bonus
-    $$
-    L^{CVH}_t(\theta) = E [\mathcal{L}^C(\theta) - c_1\cdot \mathcal{L}^V_t(\theta) + c_2 \mathcal{H}[\pi_{\theta}](o_t, h_t)]
-    $$
-
-```
-
-```{prf:algorithm} Proximal Policy Optimization w/ Clipped Surrogate
-:label: ppo-alg-2
-
-**Inputs** Initial policy parameters $\theta_0$, clipping threshold $\epsilon$
-1. for $i=1,2,3,..$ do
-    1. for $agent=1,2,...,N$
-        1. Collect set of full game trajectories $\tau$ on policy $\pi_i = \pi(\theta_i)$. 
-        ```{note}
-        We store the hidden state of the recurrent layer $h$ at each step of each trajectory
-        ```
     2. Estimate advatanges $\hat{A}^{\pi_i}_t$ using GAE {cite}`schulman2015high`
     3. [Compute Policy Update](minibatch-loss) using clipped surrogate {cite}`schulman2017proximal`
         1. $\mathcal{L}^C(\theta)$ is our clipped surrogate objective function
+
             $$
-            \mathcal{L}^C(\theta) & = E [\sum_{t=0}^{\tau}[min(r_t(\theta)\hat{A}_t, clip(r_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]] \\
-            r_t(\theta) & = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
+                \mathcal{L}^C(\theta) & = E [\sum_{t=0}^{\tau}[min(r_t(\theta)\hat{A}_t, clip(r_t(\theta), 1-\epsilon, 1+ \epsilon)A_t)]] \\
+                r_t(\theta) & = \frac{\pi_{\theta}(a_t | o_t, h_t)}{\pi_{\theta-old}(a_t | o_t, h_t)}
             $$
+
         2. Squared error loss optimization for the value function
+
             $$
-            \mathcal{L}^V_t(\theta) = (V_{\theta}(o_t,h_t) - V^{target}_t)^2
+                \mathcal{L}^V_t(\theta) = (V_{\theta}(o_t,h_t) - V^{target}_t)^2
             $$
+
         3. Entropy bonus to promote exploitation
+
             $$
-            \mathcal{H}[\pi_{\theta}](o_t, h_t)
+                \mathcal{H}[\pi_{\theta}](o_t, h_t)
             $$
+
         4. Putting it all together with scaling coefficients $c_1, c_2$ for the value loss and entropy bonus respectively
+
             $$
-            L^{CVH}_t(\theta) = E [\mathcal{L}^C(\theta) - c_1\cdot \mathcal{L}^V_t(\theta) + c_2 \mathcal{H}[\pi_{\theta}](o_t, h_t)]
+                L^{CVH}_t(\theta) = E [\mathcal{L}^C(\theta) - c_1\cdot \mathcal{L}^V_t(\theta) + c_2 \mathcal{H}[\pi_{\theta}](o_t, h_t)]
             $$
 ```
 
