@@ -417,7 +417,7 @@ The steps we follow are very closely related to our <a class="reference internal
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span><span class="nb">dict</span><span class="p">,</span> <span class="n">wolf_policy</span><span class="p">,</span> <span class="n">run_id</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">),</span> <span class="n">voting_type</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </pre></div>
 </div>
-<p>We then call our train function which sets up the main loop consisting of gatheric metrics periodically, filling up our buffer, calculating our loss and updating our neural network.</p>
+<p id="fill-buffer">We then call our train function which sets up the main loop consisting of gatheric metrics periodically, filling up our buffer, calculating our loss and updating our neural network.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voting_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_threshold</span><span class="o">=</span><span class="mf">50.0</span><span class="p">):</span>
 
     <span class="c1"># TODO: put mlflow logging into a callback</span>
@@ -541,6 +541,7 @@ The steps we follow are very closely related to our <a class="reference internal
             <span class="n">entropy_loss</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()]</span>    <span class="c1"># entropy loss</span>
 </pre></div>
 </div>
+<p id="estimate-adv">We estimate our advantages doing the following</p>
 <section id="mlflow">
 <span id="mlflow-info"></span><h2>MLflow<a class="headerlink" href="#mlflow" title="Permalink to this heading">#</a></h2>
 <p>MLflow<a class="footnote-reference brackets" href="#mlflow-tooling" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a powerful and popular MLOps open source tool for end-to-end machine learning lifecycle management. We compared this platform with others and simpler alternatives that just forcused on parameter and metric tracking, however due to the adoption of MLflow in industry, we felt it would be a good addition to the project as a sort of tutorial for any other researchers extending this work.</p>

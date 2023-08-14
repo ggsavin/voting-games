@@ -57,11 +57,12 @@ We implemented our own following some works using a truncated BPTT {cite}`pleine
 **Inputs** Initial policy parameters $\theta_0$, clipping threshold $\epsilon$
 1. for $i=0,1,2,3,...$ do
     1. for $agent=1,2,...,N$ do
-        1. Collect set of full game trajectories $\tau$ on policy $\pi(\theta_i)$. 
+        1. [Collect set of full game trajectories](fill-buffer) $\tau$ on policy $\pi(\theta_i)$. 
         **We store the hidden state of the recurrent layer $h$ at each step of each trajectory**
 
-    2. Estimate advatanges $\hat{A}^{\pi_i}_t$ using GAE {cite}`schulman2015high`
-    3. [Compute Policy Update](minibatch-loss) using clipped surrogate {cite}`schulman2017proximal`
+        2. [Estimate advatanges](estimate-adv) $\hat{A}^{\pi_i}_t$ using GAE {cite}`schulman2015high`
+
+    2. [Compute Policy Update](minibatch-loss) using clipped surrogate {cite}`schulman2017proximal`
         1. $\mathcal{L}^C(\theta)$ is our clipped surrogate objective function
 
             $$

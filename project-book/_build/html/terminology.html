@@ -434,11 +434,11 @@ document.write(`
 <ol class="arabic">
 <li><p>for <span class="math notranslate nohighlight">\(agent=1,2,...,N\)</span> do</p>
 <ol class="arabic simple">
-<li><p>Collect set of full game trajectories <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi(\theta_i)\)</span>.
+<li><p><a class="reference internal" href="training_agent_info.html#fill-buffer"><span class="std std-ref">Collect set of full game trajectories</span></a> <span class="math notranslate nohighlight">\(\tau\)</span> on policy <span class="math notranslate nohighlight">\(\pi(\theta_i)\)</span>.
 <strong>We store the hidden state of the recurrent layer <span class="math notranslate nohighlight">\(h\)</span> at each step of each trajectory</strong></p></li>
+<li><p><a class="reference internal" href="training_agent_info.html#estimate-adv"><span class="std std-ref">Estimate advatanges</span></a> <span class="math notranslate nohighlight">\(\hat{A}^{\pi_i}_t\)</span> using GAE <span id="id8">[<a class="reference internal" href="bibliography.html#id36" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
 </ol>
 </li>
-<li><p>Estimate advatanges <span class="math notranslate nohighlight">\(\hat{A}^{\pi_i}_t\)</span> using GAE <span id="id8">[<a class="reference internal" href="bibliography.html#id36" title="John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter Abbeel. High-dimensional continuous control using generalized advantage estimation. arXiv preprint arXiv:1506.02438, 2015.">SML+15</a>]</span></p></li>
 <li><p><a class="reference internal" href="training_agent_info.html#minibatch-loss"><span class="std std-ref">Compute Policy Update</span></a> using clipped surrogate <span id="id9">[<a class="reference internal" href="bibliography.html#id35" title="John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov. Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347, 2017.">SWD+17</a>]</span></p>
 <ol class="arabic">
 <li><p><span class="math notranslate nohighlight">\(\mathcal{L}^C(\theta)\)</span> is our clipped surrogate objective function</p>
