@@ -295,8 +295,8 @@ def _approval_target_indicators(game, verbose=False):
             dead_wolves = list(set(wolves) & set(dead_players))
             dead_villagers = list(set(villagers) & set(dead_players))
         
-        # do the most liked individuals also get the least amount of votes?
-        total_target_votes = sum(v_target_counter.values())
+        # it could happen that villagers target nobody, or like nobody, so we want to avoid divisions by 0
+        total_target_votes = max(1.0, sum(v_target_counter.values()))
         total_like_votes = max(1.0,sum(v_like_counter.values()))
 
         # target percentages
