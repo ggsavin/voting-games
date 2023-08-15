@@ -369,10 +369,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advantage-estimation">Advantage estimation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loss-calculation">Loss calculation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">MLflow</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-vectorization">Observation Vectorization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-time">Training Time</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a></li>
 </ul>
             </nav>
         </div>
@@ -743,13 +743,65 @@ The steps we follow are very closely related to our <a class="reference internal
 <span class="p">}</span>
 </pre></div>
 </div>
+</section>
+<section id="observation-vectorization">
+<h2>Observation Vectorization<a class="headerlink" href="#observation-vectorization" title="Permalink to this heading">#</a></h2>
+<p>While not a hyperparameter, the way we choose to vectorize our observations before inputting them into our neural network can have a big impact on overall training. We have a util function <code class="docutils literal notranslate"><span class="pre">convert_obs</span></code> which flattens the observation object into one flat vector, or can also one-hot encode everything that is not already represented by <span class="math notranslate nohighlight">\(1\)</span> or <span class="math notranslate nohighlight">\(0\)</span>. For our training purposes, we found the not one-hot encoded flattening to work better, but experimenting with this vectorization and representation could be a fruitful avenue for future work.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">convert_obs</span><span class="p">(</span><span class="n">observation</span><span class="p">,</span> <span class="n">voting_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">one_hot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    observation will have the following information</span>
+<span class="sd">        day (int)</span>
+<span class="sd">        phase (int) </span>
+<span class="sd">        self_id (int)</span>
+<span class="sd">        player_status (list) - 0/1 for alive or dead</span>
+<span class="sd">        roles (list) - 0/1 for villager or werewolf</span>
+<span class="sd">        votes (dict) - dict with player and associated vote</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s2">&quot;votes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s2">&quot;player_status&quot;</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
+    
+    <span class="c1"># phase length</span>
+    <span class="n">day</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]])</span>
+
+    <span class="c1"># we can make the phase a one hot, hardcoded 3 phases</span>
+    <span class="k">if</span> <span class="n">one_hot</span><span class="p">:</span>
+        <span class="n">phase</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]),</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">self_id</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;self_id&#39;</span><span class="p">]),</span> <span class="n">num_classes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;roles&#39;</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="n">voting_type</span> <span class="o">==</span> <span class="s2">&quot;approval&quot;</span><span class="p">:</span>
+            <span class="n">votes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;votes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">voting_type</span> <span class="o">==</span> <span class="s2">&quot;plurality&quot;</span><span class="p">:</span>
+            <span class="n">votes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;votes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())),</span> <span class="n">num_classes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;roles&#39;</span><span class="p">])</span><span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">voting_type</span> <span class="o">==</span> <span class="s2">&quot;approval&quot;</span><span class="p">:</span>
+            <span class="n">votes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;votes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">voting_type</span> <span class="o">==</span> <span class="s2">&quot;plurality&quot;</span><span class="p">:</span>
+            <span class="n">votes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;votes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+        <span class="n">phase</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]])</span>
+        <span class="n">self_id</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;self_id&#39;</span><span class="p">]])</span>
+
+
+    <span class="c1"># PLAYER STATUS (ALIVE OR DEAD)</span>
+    <span class="n">player_status</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;player_status&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+    <span class="n">player_roles</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">observation</span><span class="p">[</span><span class="s1">&#39;roles&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">day</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">self_id</span><span class="p">,</span> <span class="n">player_status</span><span class="p">,</span> <span class="n">player_roles</span><span class="p">,</span> <span class="n">votes</span><span class="p">))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="training-time">
+<h2>Training Time<a class="headerlink" href="#training-time" title="Permalink to this heading">#</a></h2>
 <p>TODO: Mention run-times with different buffer sizes</p>
 <p>Maybe mention this in conclusions, future work
 Training for 1 agent took roughly 2-3 hours, but completing runs was not as sucessful. For approval, it was longer.
 Would take a 2-3 days at a time to collect stats, and there were bugs/mistakes.</p>
 <p>TODO: Show the difference between reward sharing vs not for training.</p>
+</section>
 <section id="training-results">
-<h3>Training Results<a class="headerlink" href="#training-results" title="Permalink to this heading">#</a></h3>
+<h2>Training Results<a class="headerlink" href="#training-results" title="Permalink to this heading">#</a></h2>
 <p>We found more consistent results when the clip range was lower.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -898,7 +950,6 @@ ax.legend()
 </aside>
 </section>
 </section>
-</section>
 
     <script type="text/x-thebe-config">
     {
@@ -971,10 +1022,10 @@ ax.legend()
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advantage-estimation">Advantage estimation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loss-calculation">Loss calculation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">MLflow</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-vectorization">Observation Vectorization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-time">Training Time</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a></li>
 </ul>
   </nav></div>
 
