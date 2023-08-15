@@ -25,6 +25,49 @@ def random_approval_wolf(env, agent, action=None):
 
     return action
 
+def revenge_approval_wolf(env, agent, action=None):
+    villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])
+    wolves_remaining = set(env.world_state["werewolves"]) & set(env.world_state['alive'])
+
+    prev_votes = env.history[-1]['votes']
+    agent_id = int(agent.split("_")[-1])
+    villagers_targetting_you = [player for player in list(prev_votes.keys()) if prev_votes[player][agent_id] == -1]
+
+    if len(villagers_targetting_you) > 0:
+        revenge_target_id = int(random.choice(list(villagers_targetting_you)).split("_")[-1])
+    else:
+        revenge_target_id = int(random.choice(list(villagers_remaining)).split("_")[-1])
+
+    action = [0] * len(env.possible_agents)
+    action[revenge_target_id] = -1
+    for curr_wolf in wolves_remaining:
+        action[int(curr_wolf.split("_")[-1])] = 1
+
+    return action
+
+def coordinated_revenge_approval_wolf(env, agent, action=None):
+    if action != None:
+        return action
+    return revenge_approval_wolf(env, agent)
+
+def random_likes_approval_wolf(env, agent, action=None):
+    if action != None:
+        # just randomly assign a like or a neutral
+        for i in range(len(action)):
+            if action[i] != -1:
+                action[i] = random.randint(0,1)
+        return action
+
+    villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])
+    wolves_remaining = set(env.world_state["werewolves"]) & set(env.world_state['alive'])
+
+    # pick a living target
+    target = random.choice(list(villagers_remaining))
+
+    action = [random.randint(0,1) for _ in range(len(env.possible_agents))]
+    action[int(target.split("_")[-1])] = -1
+
+    return action
 
 def revenge_plurality_wolf(env, agent, action=None):
     villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])
@@ -56,7 +99,10 @@ def coordinated_revenge_plurality_wolf(env, agent, action=None):
 
 
 ### VILLAGERS ###
+def random_agent(env, agent, action=None):
+   return env.action_space(agent).sample()
 
+##### APPROVAL #####
 def random_approval_villager(env, agent, action=None):
     targets = set(env.world_state["alive"]) - set([agent])
     action = [0] * len(env.possible_agents)
@@ -68,6 +114,7 @@ def random_coordinated_approval_villager(env, agent, action=None):
     return action if action != None else \
         random_approval_villager(env, agent)
 
+##### PLURALITY #####
 def random_plurality_villager(env, agent, action=None):
     targets = set(env.world_state["alive"]) - set([agent])
     return int(random.choice(list(targets)).split("_")[-1])
@@ -76,8 +123,6 @@ def random_coordinated_plurality_villager(env, agent, action=None):
     return action if action != None else \
         random_plurality_villager(env, agent)
 
-def random_agent(env, agent, action=None):
-   return env.action_space(agent).sample()
 
     
 class RandomRecurrentPluralityAgent(torch.nn.Module):
