@@ -376,7 +376,25 @@ document.write(`
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolves">Werewolves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolves">Werewolves</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plurality">Plurality</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rwolves">RWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crwolves">CRWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#revwolves">RevWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crevwolves">CRevWolves</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approval">Approval</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rawolves">RWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crawolves">CRWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#revawolves">RevWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crevawolves">CRevWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crlwolves">CRLWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aggrowolves">AggroWolves</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -425,7 +443,7 @@ import notebooks.learning_agents.stats as indicators
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="agent-implementation">
 <h1>Agent Implementation<a class="headerlink" href="#agent-implementation" title="Permalink to this heading">#</a></h1>
-<p>We have implemented hand-crafted agents for both villager and werewolf roles, along with actor-critic models for villagers that were trained against hand-crafted werewolves. We based our static policies on the work done in past games implementing werewolf <span id="id1">[<a class="reference internal" href="bibliography.html#id7" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id8">LSCN22</a>]</span>. This was to have good baselines to compare our trained villagers with, and a reliable wolf strategy to train our villagers against.</p>
+<p>We have implemented hand-crafted agents for both villager and werewolf roles, along with actor-critic models for villagers that were trained against hand-crafted werewolves. We based our static policies on the work done in past games implementing werewolf <span id="id1">[<a class="reference internal" href="bibliography.html#id7" title="Nicolo' Brandizzi, Davide Grossi, and Luca Iocchi. Rlupus: cooperation through emergent communication in the werewolf social deduction game. ArXiv, 2021.">BGI21</a>, <a class="reference internal" href="bibliography.html#id8">LSCN22</a>]</span>. This was to have good baselines to compare our trained villagers with, and a reliable wolf strategy to train our villagers against. Below are the strategies and their associated names we use to reference in analaysis.</p>
 <section id="villagers">
 <h2>Villagers<a class="headerlink" href="#villagers" title="Permalink to this heading">#</a></h2>
 <section id="hand-crafted-policies">
@@ -460,11 +478,7 @@ import notebooks.learning_agents.stats as indicators
     <span class="k">return</span> <span class="n">action</span>
 </pre></div>
 </div>
-<!-- #### Behavioral Villagers
-
-TODO if time allows.
-
-These agents --></section>
+</section>
 </section>
 <section id="learning-agents">
 <h3>Learning Agents<a class="headerlink" href="#learning-agents" title="Permalink to this heading">#</a></h3>
@@ -537,6 +551,43 @@ model_graph.visual_graph
     <span class="k">return</span> <span class="n">action</span>
 </pre></div>
 </div>
+<section id="plurality">
+<h3>Plurality<a class="headerlink" href="#plurality" title="Permalink to this heading">#</a></h3>
+<section id="rwolves">
+<span id="rpwolves"></span><h4>RWolves<a class="headerlink" href="#rwolves" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="crwolves">
+<span id="crpwolves"></span><h4>CRWolves<a class="headerlink" href="#crwolves" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="revwolves">
+<span id="revpwolves"></span><h4>RevWolves<a class="headerlink" href="#revwolves" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="crevwolves">
+<span id="crevpwolves"></span><h4>CRevWolves<a class="headerlink" href="#crevwolves" title="Permalink to this heading">#</a></h4>
+</section>
+</section>
+<section id="approval">
+<h3>Approval<a class="headerlink" href="#approval" title="Permalink to this heading">#</a></h3>
+<section id="rawolves">
+<span id="id6"></span><h4>RWolves<a class="headerlink" href="#rawolves" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="crawolves">
+<span id="id7"></span><h4>CRWolves<a class="headerlink" href="#crawolves" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="revawolves">
+<span id="id8"></span><h4>RevWolves<a class="headerlink" href="#revawolves" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="crevawolves">
+<span id="id9"></span><h4>CRevWolves<a class="headerlink" href="#crevawolves" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="crlwolves">
+<span id="crlawolves"></span><h4>CRLWolves<a class="headerlink" href="#crlwolves" title="Permalink to this heading">#</a></h4>
+<p>This strategy extends the Coordinated Random Wolves (which agents were trained against), with the additional caveat that for non-targets, each wolf randomizes their neutrals and likes to hopefully confuse trained agents that have learned to synthesize the like and neutral choices of other agents.</p>
+</section>
+<section id="aggrowolves">
+<span id="id10"></span><h4>AggroWolves<a class="headerlink" href="#aggrowolves" title="Permalink to this heading">#</a></h4>
+</section>
+</section>
 </section>
 </section>
 
@@ -618,7 +669,25 @@ model_graph.visual_graph
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolves">Werewolves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#werewolves">Werewolves</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plurality">Plurality</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rwolves">RWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crwolves">CRWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#revwolves">RevWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crevwolves">CRevWolves</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approval">Approval</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rawolves">RWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crawolves">CRWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#revawolves">RevWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crevawolves">CRevWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crlwolves">CRLWolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#aggrowolves">AggroWolves</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

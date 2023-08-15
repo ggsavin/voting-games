@@ -25,6 +25,14 @@ def random_approval_wolf(env, agent, action=None):
 
     return action
 
+def aggressive_approval_wolf(env, agent, action=None):
+    wolves_remaining = set(env.world_state["werewolves"]) & set(env.world_state['alive'])
+    action = [-1] * len(env.possible_agents)
+    for curr_wolf in wolves_remaining:
+        action[int(curr_wolf.split("_")[-1])] = 1
+
+    return action
+
 def revenge_approval_wolf(env, agent, action=None):
     villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])
     wolves_remaining = set(env.world_state["werewolves"]) & set(env.world_state['alive'])

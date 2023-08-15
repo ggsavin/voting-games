@@ -130,7 +130,8 @@ else:
 accusation_phases = [1,2,3,4]
 
 for accusation_phase_num in accusation_phases:
-
+    config['config_game']['gameplay']['accusation_phases'] = accusation_phase_num
+    
     completed_training = 0
     for _ in range(10):
         try:
