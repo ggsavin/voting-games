@@ -428,14 +428,18 @@ from tabulate import tabulate
 <section id="win-rates">
 <h2>Win Rates<a class="headerlink" href="#win-rates" title="Permalink to this heading">#</a></h2>
 <p>We assume that some of the findings in the plurality werewolf game <span id="id1">[<a class="reference internal" href="bibliography.html#id39" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span> will still hold for approval voting, due to the nature of calculating the consensus amongst all the targetting done. (Target with the most dislikes gets voted out).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Below is code to generate the following table of 1000 runs between each villager policy and each werewolf policy. We base our discussion around this markdown table.</p>
+</div>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Villager Strategy vs.</p></th>
-<th class="head"><p><a class="reference internal" href="agent-implementation.html#rawolves"><span class="std std-ref">RWolves</span></a></p></th>
-<th class="head"><p><a class="reference internal" href="agent-implementation.html#crawolves"><span class="std std-ref">CRWolves</span></a></p></th>
-<th class="head"><p><a class="reference internal" href="agent-implementation.html#revawolves"><span class="std std-ref">RevWolves</span></a></p></th>
-<th class="head"><p><a class="reference internal" href="agent-implementation.html#crevawolves"><span class="std std-ref">CRevWolves</span></a></p></th>
-<th class="head"><p><a class="reference internal" href="agent-implementation.html#crlawolves"><span class="std std-ref">CRLWolves</span></a></p></th>
+<th class="head"><p><span class="xref myst">RWolves</span></p></th>
+<th class="head"><p><span class="xref myst">CRWolves</span></p></th>
+<th class="head"><p><span class="xref myst">RevWolves</span></p></th>
+<th class="head"><p><span class="xref myst">CRevWolves</span></p></th>
+<th class="head"><p><span class="xref myst">CRLWolves</span></p></th>
 <th class="head"><p><a class="reference internal" href="agent-implementation.html#aggrowolves"><span class="std std-ref">AggroWolves</span></a></p></th>
 </tr>
 </thead>
@@ -474,7 +478,12 @@ from tabulate import tabulate
 </tr>
 </tbody>
 </table>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = pare(num_agents=10, werewolves=2, num_accusations=2)
 observations, _, _, _, _ = env.reset()
@@ -535,15 +544,9 @@ print(tabulate([[&#39;Random&#39;, *rv_wins],
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10 players, with 2 wolves - number of games played : 1000 
-
-Villager Strategy      TRWolves    CRWolves    RevWolves    CRevWolves    CRLWolves    AgroWolves
--------------------  ----------  ----------  -----------  ------------  -----------  ------------
-Random                    0.609       0.075        0.137         0.145        0.084         0.005
-L-Targets                 0.672       0.119        0.213         0.184        0.116         0.018
-CL-Targets                0.625       0.294        0.314         0.299        0.301         0.304
-Trained-CRWolves          0.578       0.48         0.583         0.595        0.168
 </pre></div>
 </div>
 </div>

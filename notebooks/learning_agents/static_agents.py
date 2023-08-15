@@ -56,7 +56,27 @@ def revenge_approval_wolf(env, agent, action=None):
 def coordinated_revenge_approval_wolf(env, agent, action=None):
     if action != None:
         return action
-    return revenge_approval_wolf(env, agent)
+    
+    villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])
+    wolves_remaining = set(env.world_state["werewolves"]) & set(env.world_state['alive'])
+
+    prev_votes = env.history[-1]['votes']
+    wolf_ids = [int(agent.split("_")[-1]) for agent in wolves_remaining]
+    villagers_targetting_wolves = [player for player in list(prev_votes.keys()) if 
+                                   sum([1 for w in wolf_ids if prev_votes[player][w] == -1])]
+
+    if len(villagers_targetting_wolves) > 0:
+        revenge_target_id = int(random.choice(list(villagers_targetting_wolves)).split("_")[-1])
+    else:
+        revenge_target_id = int(random.choice(list(villagers_remaining)).split("_")[-1])
+
+    action = [0] * len(env.possible_agents)
+    action[revenge_target_id] = -1
+    for curr_wolf in wolves_remaining:
+        action[int(curr_wolf.split("_")[-1])] = 1
+
+    return action
+
 
 def random_likes_approval_wolf(env, agent, action=None):
     if action != None:
