@@ -478,7 +478,7 @@ a custom reward object that <a class="reference internal" href="#game-rewards"><
 </pre></div>
 </div>
 <p>Each player is returned an observation object and an action mask representing dead or alive players. The player status and action masks are identical, however we have chosen to seperate them like this for more clarity and to conform to more training APIs.</p>
-<p>As we have implemented our own PPO loop, we have a seperate <span class="xref myst">utility function</span> that we use to convert the observations into an input vector for our neural networks.</p>
+<p>As we have implemented our own PPO loop, we have a seperate <a class="reference internal" href="training_agent_info.html#convert-obs"><span class="std std-ref">utility function</span></a> that we use to convert the observations into an input vector for our neural networks.</p>
 <p>In the observation object we return:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">day</span></code>: an integer representing the current day, starting at <span class="math notranslate nohighlight">\(1\)</span></p></li>

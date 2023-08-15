@@ -745,7 +745,7 @@ The steps we follow are very closely related to our <a class="reference internal
 </div>
 </section>
 <section id="observation-vectorization">
-<h2>Observation Vectorization<a class="headerlink" href="#observation-vectorization" title="Permalink to this heading">#</a></h2>
+<span id="convert-obs"></span><h2>Observation Vectorization<a class="headerlink" href="#observation-vectorization" title="Permalink to this heading">#</a></h2>
 <p>While not a hyperparameter, the way we choose to vectorize our observations before inputting them into our neural network can have a big impact on overall training. We have a util function <code class="docutils literal notranslate"><span class="pre">convert_obs</span></code> which flattens the observation object into one flat vector, or can also one-hot encode everything that is not already represented by <span class="math notranslate nohighlight">\(1\)</span> or <span class="math notranslate nohighlight">\(0\)</span>. For our training purposes, we found the not one-hot encoded flattening to work better, but experimenting with this vectorization and representation could be a fruitful avenue for future work.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">convert_obs</span><span class="p">(</span><span class="n">observation</span><span class="p">,</span> <span class="n">voting_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">one_hot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
