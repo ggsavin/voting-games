@@ -432,6 +432,8 @@ from tabulate import tabulate
 <p class="admonition-title">Note</p>
 <p>Below is code to generate the following table of 1000 runs between each villager policy and each werewolf policy. We base our discussion around this markdown table.</p>
 </div>
+<p>It is clear given the table below that trained villagers learned how to maneuver using an approval mechanism to their advantage. Even against aggressive wolves, and no game breaking coordination mechanic as in CL-Targets, they were able to score the highest.</p>
+<p>CRLWolves were specifically tailored to stump our agents, and seeing that this is the wolf policy they did the poorest does confirm that trained villager agents relied on “likes” and “neutral” feelings of other agents across candidates.</p>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Villager Strategy vs.</p></th>
@@ -444,37 +446,37 @@ from tabulate import tabulate
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Totally Random</p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p>[Random]</p></td>
+<td><p>0.599</p></td>
+<td><p>0.065</p></td>
+<td><p>0.118</p></td>
+<td><p>0.137</p></td>
+<td><p>0.085</p></td>
+<td><p>0.002</p></td>
 </tr>
-<tr class="row-odd"><td><p>Random Targetting of living villagers</p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p>[L-Targets]</p></td>
+<td><p>0.676</p></td>
+<td><p>0.12</p></td>
+<td><p>0.243</p></td>
+<td><p>0.209</p></td>
+<td><p>0.122</p></td>
+<td><p>0.023</p></td>
 </tr>
-<tr class="row-even"><td><p>Coorindated random targetting</p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p>[CL-Targets]</p></td>
+<td><p>0.682</p></td>
+<td><p>0.288</p></td>
+<td><p>0.302</p></td>
+<td><p>0.294</p></td>
+<td><p>0.291</p></td>
+<td><p>0.311</p></td>
 </tr>
-<tr class="row-odd"><td><p>Trained villagers</p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p>[Trained-CRWolves]</p></td>
+<td><p>0.567</p></td>
+<td><p>0.532</p></td>
+<td><p>0.577</p></td>
+<td><p>0.582</p></td>
+<td><p>0.193</p></td>
+<td><p>0.385</p></td>
 </tr>
 </tbody>
 </table>
@@ -497,7 +499,7 @@ trained_approval_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 256,
                                         &quot;approval_states&quot;: 3},
                                         num_players=10,
                                         obs_size=obs_size)
-trained_approval_agent.load_state_dict(torch.load(&quot;../notebooks/stored_agents/lstm_first_no_one_hot_256_128/approval_agent_10_score_49&quot;))
+trained_approval_agent.load_state_dict(torch.load(&quot;../notebooks/stored_agents/lstm_first_no_one_hot_256_128/approval_agent_10_score_53.pth&quot;))
 
 num_games = 1000
 print(f&#39;10 players, with 2 wolves - number of games played : {num_games} \n&#39;)
@@ -535,7 +537,7 @@ print(tabulate([[&#39;Random&#39;, *rv_wins],
                 [&#39;CL-Targets&#39;, *cav_wins], 
                 [&#39;Trained-CRWolves&#39;, *tav_wins]], 
                headers=[&quot;Villager Strategy&quot;, 
-                        &quot;TRWolves&quot;, 
+                        &quot;RWolves&quot;, 
                         &quot;CRWolves&quot;, 
                         &quot;RevWolves&quot;,
                         &quot;CRevWolves&quot;,
@@ -547,18 +549,169 @@ print(tabulate([[&#39;Random&#39;, *rv_wins],
 </details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10 players, with 2 wolves - number of games played : 1000 
+
+Villager Strategy      RWolves    CRWolves    RevWolves    CRevWolves    CRLWolves    AggroWolves
+-------------------  ---------  ----------  -----------  ------------  -----------  -------------
+Random                   0.603       0.062        0.088         0.07         0.086          0.011
+L-Targets                0.681       0.119        0.175         0.116        0.116          0.026
+CL-Targets               0.674       0.303        0.295         0.283        0.299          0.302
+Trained-CRWolves         0.595       0.508        0.578         0.515        0.151          0.381
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tav_win_replays = [[r for r in replay if r[-1][&quot;winners&quot;] == Roles.VILLAGER] for replay in tav_replays]
+rv_win_replays = [[r for r in replay if r[-1][&quot;winners&quot;] == Roles.VILLAGER] for replay in rv_replays]
+rav_win_replays = [[r for r in replay if r[-1][&quot;winners&quot;] == Roles.VILLAGER] for replay in rav_replays]
+cav_win_replays = [[r for r in replay if r[-1][&quot;winners&quot;] == Roles.VILLAGER] for replay in cav_replays]
 </pre></div>
 </div>
 </div>
 </div>
 <section id="days-elapsed-before-a-villager-win">
 <h3>Days elapsed before a villager win<a class="headerlink" href="#days-elapsed-before-a-villager-win" title="Permalink to this heading">#</a></h3>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rv_days = [np.mean([villager_win[-1][&quot;day&quot;] for villager_win in replays]) for replays in rv_win_replays]
+rav_days = [np.mean([villager_win[-1][&quot;day&quot;] for villager_win in replays]) for replays in rav_win_replays]
+cav_days = [np.mean([villager_win[-1][&quot;day&quot;] for villager_win in replays]) for replays in cav_win_replays]
+tav_days = [np.mean([villager_win[-1][&quot;day&quot;] for villager_win in replays]) for replays in tav_win_replays]
+
+print(tabulate([[&#39;Random&#39;, *rv_days], 
+                [&#39;L-Targets&#39;, *rav_days], 
+                [&#39;CL-Targets&#39;, *cav_days], 
+                [&#39;Trained-CRWolves&#39;, *tav_days]], 
+               headers=[&quot;Villager Strategy&quot;, 
+                        &quot;RWolves&quot;, 
+                        &quot;CRWolves&quot;, 
+                        &quot;RevWolves&quot;,
+                        &quot;CRevWolves&quot;,
+                        &quot;CRLWolves&quot;,
+                        &quot;AggroWolves&quot;]))
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Villager Strategy      RWolves    CRWolves    RevWolves    CRevWolves    CRLWolves    AggroWolves
+-------------------  ---------  ----------  -----------  ------------  -----------  -------------
+Random                 3.13856     3.52308      3.39831       3.43066      3.37647        2
+L-Targets              3.17012     3.53333      3.53086       3.58373      3.46721        3.73913
+CL-Targets             3.08504     3.46181      3.49338       3.4898       3.5189         3.47588
+Trained-CRWolves       3.16931     3.21805      3.24783       3.26117      3.37306        3.26494
+</pre></div>
+</div>
+</div>
+</div>
+<p>Days elapsed is a good litmus of whether or not a learning agent has learned to coordinate and finish games quicker. We can see that our  trained villagers were faster against CRWolves (which they were trained against), as well as against RevWolves, CRevWolves, CRLWolves, and AggroWolves.</p>
 </section>
 <section id="days-between-wolf-executions">
 <h3>Days between wolf executions<a class="headerlink" href="#days-between-wolf-executions" title="Permalink to this heading">#</a></h3>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># skipping random wolves because they may kill eachother during the night
+tav_exec = [np.mean([b-a for a,b in [indicators._when_did_wolves_get_killed(vwin) for vwin in replays]]) for replays in tav_win_replays[1:]]
+rv_exec = [np.mean([b-a for a,b in [indicators._when_did_wolves_get_killed(vwin) for vwin in replays]]) for replays in rv_win_replays[1:]]
+rav_exec = [np.mean([b-a for a,b in [indicators._when_did_wolves_get_killed(vwin) for vwin in replays]]) for replays in rav_win_replays[1:]]
+cav_exec = [np.mean([b-a for a,b in [indicators._when_did_wolves_get_killed(vwin) for vwin in replays]]) for replays in cav_win_replays[1:]]
+
+print(tabulate([[&#39;Random&#39;, *rv_exec], 
+                [&#39;L-Targets&#39;, *rav_exec], 
+                [&#39;CL-Targets&#39;, *cav_exec], 
+                [&#39;Trained-CRWolves&#39;, *tav_exec]], 
+               headers=[&quot;Villager Strategy&quot;, 
+                        &quot;CRWolves&quot;, 
+                        &quot;RevWolves&quot;,
+                        &quot;CRevWolves&quot;,
+                        &quot;CRLWolves&quot;,
+                        &quot;AggroWolves&quot;]))
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Villager Strategy      CRWolves    RevWolves    CRevWolves    CRLWolves    AggroWolves
+-------------------  ----------  -----------  ------------  -----------  -------------
+Random                  1.64516      1.69318       1.65714      1.61628        1.81818
+L-Targets               1.59664      1.66857       1.77586      1.67241        1.73077
+CL-Targets              1.69307      1.72881       1.66784      1.60535        1.61921
+Trained-CRWolves        1.51378      1.48097       1.4932       1.60265        1.41995
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>RWolves were skipped simply because they would kill themselves sometimes at night, and this indicator relies on wolves being explicitly executed by villager consensus</p>
+</div>
+<p>This is yet another litmus test for coordination and learning, as we expect this number to be lower the more coordinated the trained agents are, and indeed it is. Interestingly, we also see that against AggroWolves, our trained villagers had the lowest values, indicating that the aggressive wolves were executed one after another the most often. This makes sense as aggressive wolves were targetting everyone, and would be the easiest to spot, however our trained agents were not trained against AggroWolves, so this finding promotes the idea that our trained agents generalized to somewhat consistent patterns.</p>
 </section>
 <section id="ties">
 <h3>Ties<a class="headerlink" href="#ties" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Approval tie indicators&quot;)
+
+for names, win_replays in zip([&quot;trained&quot;, &quot;cpv&quot;, &quot;rpv&quot;, &quot;random&quot;], [tav_win_replays, cav_win_replays, rav_win_replays, rv_win_replays]):
+    tgps = \
+        np.nanmean(np.stack([indicators._process_tie_info(indicators._game_tie_info(trained_villager_win, voting_type=&quot;approval&quot;)) for trained_villager_win in win_replays]),axis= 0)
+    print(f&#39;{names} agent tie indicators&#39;)
+    print(f&#39;\tLikelihood of ties in accusation phases : {tgps[0]:.2f}&#39;)
+    print(f&#39;\tLikelihood of ties in voting phases : {tgps[1]:.2f}&#39;)
+    print(f&#39;\tLikelihood of a tie in a voting phase given a tie in the prior accusation phases {tgps[2]:.2f}&#39;)
+    print(f&#39;\tLikelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : {tgps[3]:.2f}&#39;)
+    print(&quot;\n&quot;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Approval tie indicators
+trained agent tie indicators
+	Likelihood of ties in accusation phases : 0.36
+	Likelihood of ties in voting phases : 0.33
+	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.34
+	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.67
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_18599/1873259071.py:5: RuntimeWarning: Mean of empty slice
+  np.nanmean(np.stack([indicators._process_tie_info(indicators._game_tie_info(trained_villager_win, voting_type=&quot;approval&quot;)) for trained_villager_win in win_replays]),axis= 0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>cpv agent tie indicators
+	Likelihood of ties in accusation phases : 0.00
+	Likelihood of ties in voting phases : 0.00
+	Likelihood of a tie in a voting phase given a tie in the prior accusation phases nan
+	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : nan
+
+
+rpv agent tie indicators
+	Likelihood of ties in accusation phases : 0.36
+	Likelihood of ties in voting phases : 0.45
+	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.46
+	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.36
+
+
+random agent tie indicators
+	Likelihood of ties in accusation phases : 0.36
+	Likelihood of ties in voting phases : 0.45
+	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.38
+	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.86
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="targetting-indicators">
 <h3>Targetting Indicators<a class="headerlink" href="#targetting-indicators" title="Permalink to this heading">#</a></h3>

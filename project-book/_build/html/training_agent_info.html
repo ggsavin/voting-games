@@ -691,6 +691,24 @@ The steps we follow are very closely related to our <a class="reference internal
 <h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h2>
 <p>There are just under 20 hyperparameters, and can be split between gameplay parameters, neural network model parameters and PPO training parameters. Each value in this configuration object below can be changed, and is passed throughout training functions.</p>
 <p>Initializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id4">[<a class="reference internal" href="bibliography.html#id34" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>]</span> and <span id="id5">[<a class="reference internal" href="bibliography.html#id37" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
+<ul class="simple">
+<li><p>Model</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">recurrent_hidden_size</span></code>: ww</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">joint_mlp_size</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">split_mlp_size</span></code>:</p></li>
+</ul>
+</li>
+<li><p>Training</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">epochs</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">updates</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">buffer_games_per_update</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">learning_rate</span></code>:</p></li>
+</ul>
+</li>
+</ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config_training</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;recurrent_layers&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -746,7 +764,7 @@ The steps we follow are very closely related to our <a class="reference internal
 </section>
 <section id="observation-vectorization">
 <span id="convert-obs"></span><h2>Observation Vectorization<a class="headerlink" href="#observation-vectorization" title="Permalink to this heading">#</a></h2>
-<p>While not a hyperparameter, the way we choose to vectorize our observations before inputting them into our neural network can have a big impact on overall training. We have a util function <code class="docutils literal notranslate"><span class="pre">convert_obs</span></code> which flattens the observation object into one flat vector, or can also one-hot encode everything that is not already represented by <span class="math notranslate nohighlight">\(1\)</span> or <span class="math notranslate nohighlight">\(0\)</span>. For our training purposes, we found the not one-hot encoded flattening to work better, but experimenting with this vectorization and representation could be a fruitful avenue for future work.</p>
+<p>While not a hyperparameter, the way we choose to vectorize our observations before inputting them into our neural network can have a big impact on overall training. We have a util function <code class="docutils literal notranslate"><span class="pre">convert_obs</span></code> which flattens the observation object into one 1D vector, or can also one-hot encode everything that is not already represented by <span class="math notranslate nohighlight">\(1\)</span> or <span class="math notranslate nohighlight">\(0\)</span>. For our training purposes, we found the not one-hot encoded flattening to work better, but experimenting with this vectorization and representation could be a fruitful avenue for future work.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">convert_obs</span><span class="p">(</span><span class="n">observation</span><span class="p">,</span> <span class="n">voting_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">one_hot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    observation will have the following information</span>

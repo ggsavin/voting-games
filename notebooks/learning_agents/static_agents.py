@@ -38,8 +38,13 @@ def revenge_approval_wolf(env, agent, action=None):
     wolves_remaining = set(env.world_state["werewolves"]) & set(env.world_state['alive'])
 
     prev_votes = env.history[-1]['votes']
+
+    # if these two are not the same, just pick a random 
+    prev_day = env.history[-1]['day']
+    curr_day = env.world_state['day']
+
     agent_id = int(agent.split("_")[-1])
-    villagers_targetting_you = [player for player in list(prev_votes.keys()) if prev_votes[player][agent_id] == -1]
+    villagers_targetting_you = [player for player in list(prev_votes.keys()) if prev_votes[player][agent_id] == -1 and player in villagers_remaining]
 
     if len(villagers_targetting_you) > 0:
         revenge_target_id = int(random.choice(list(villagers_targetting_you)).split("_")[-1])
@@ -63,7 +68,7 @@ def coordinated_revenge_approval_wolf(env, agent, action=None):
     prev_votes = env.history[-1]['votes']
     wolf_ids = [int(agent.split("_")[-1]) for agent in wolves_remaining]
     villagers_targetting_wolves = [player for player in list(prev_votes.keys()) if 
-                                   sum([1 for w in wolf_ids if prev_votes[player][w] == -1])]
+                                   sum([1 for w in wolf_ids if prev_votes[player][w] == -1]) and player in villagers_remaining]
 
     if len(villagers_targetting_wolves) > 0:
         revenge_target_id = int(random.choice(list(villagers_targetting_wolves)).split("_")[-1])
