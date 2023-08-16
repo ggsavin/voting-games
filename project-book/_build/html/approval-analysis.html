@@ -610,7 +610,7 @@ Trained-CRWolves       3.16931     3.21805      3.24783       3.26117      3.373
 </div>
 </div>
 </div>
-<p>Days elapsed is a good litmus of whether or not a learning agent has learned to coordinate and finish games quicker. We can see that our  trained villagers were faster against CRWolves (which they were trained against), as well as against RevWolves, CRevWolves, CRLWolves, and AggroWolves.</p>
+<p>Days elapsed is a good litmus of whether or not a learning agent has learned to coordinate and finish games quicker. We can see that our  trained villagers were faster against CRWolves (which they were trained against), as well as against RevWolves, CRevWolves, CRLWolves, and AggroWolves. Random villagers only won a single game or two aagainst the AggroWolves, making that data point very insignificant.</p>
 </section>
 <section id="days-between-wolf-executions">
 <h3>Days between wolf executions<a class="headerlink" href="#days-between-wolf-executions" title="Permalink to this heading">#</a></h3>
@@ -660,54 +660,38 @@ Trained-CRWolves        1.51378      1.48097       1.4932       1.60265        1
 </section>
 <section id="ties">
 <h3>Ties<a class="headerlink" href="#ties" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<p>When it comes to ties, We can see that against CRWolves, ties in voting phases are lower than in accusation phases. If there was a tie in a prior accusation round, we can see that our trained agents only tie in subsequent voting rounds roughly a third of the time for CRWolves, RevWolves and CRevWolves, while haaving a much higher chance to tie against CRLWolves that have successfully tricked them, and against AggroWolves where there are a lot more targetting votes altogether.</p>
+<p>Sometimes a wolf is one of the targets in a tie, and they may end up getting lucky. Our last column looks at the rates at which this wolf gets targetted in a subsequent voting round, and we can see that it is quite high, especially so for CLRWolves. Although they struggled against CLRWolves, when the trained villagers were sure of a target, they did not take any chances after a tie.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Approval tie indicators&quot;)
-
-for names, win_replays in zip([&quot;trained&quot;, &quot;cpv&quot;, &quot;rpv&quot;, &quot;random&quot;], [tav_win_replays, cav_win_replays, rav_win_replays, rv_win_replays]):
-    tgps = \
-        np.nanmean(np.stack([indicators._process_tie_info(indicators._game_tie_info(trained_villager_win, voting_type=&quot;approval&quot;)) for trained_villager_win in win_replays]),axis= 0)
-    print(f&#39;{names} agent tie indicators&#39;)
-    print(f&#39;\tLikelihood of ties in accusation phases : {tgps[0]:.2f}&#39;)
-    print(f&#39;\tLikelihood of ties in voting phases : {tgps[1]:.2f}&#39;)
-    print(f&#39;\tLikelihood of a tie in a voting phase given a tie in the prior accusation phases {tgps[2]:.2f}&#39;)
-    print(f&#39;\tLikelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : {tgps[3]:.2f}&#39;)
-    print(&quot;\n&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tie_info = [np.nanmean(np.stack([indicators._process_tie_info(indicators._game_tie_info(replay, voting_type=&quot;approval&quot;)) for replay in replays]), axis=0) for replays in tav_win_replays[1:]]
+print(tabulate([[&#39;vs. CRWolves&#39;, *tie_info[0]], 
+                [&#39;vs. RevWolves&#39;, *tie_info[1]], 
+                [&#39;vs. CRevWolves&#39;, *tie_info[2]], 
+                [&#39;vs. CRLWolves&#39;, *tie_info[3]],
+                [&#39;vs. AggroWolves&#39;, *tie_info[4]]], 
+               headers=[&quot;Trained-CRWolves&quot;, 
+                        &quot;Tie in Accusation&quot;, 
+                        &quot;Tie in Voting&quot;,
+                        &quot;Tie in Voting given a  tie in accusation&quot;,
+                        &quot;Likelihood of wolf targetted after a tie&quot;]))
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Approval tie indicators
-trained agent tie indicators
-	Likelihood of ties in accusation phases : 0.36
-	Likelihood of ties in voting phases : 0.33
-	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.34
-	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.67
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_18599/1873259071.py:5: RuntimeWarning: Mean of empty slice
-  np.nanmean(np.stack([indicators._process_tie_info(indicators._game_tie_info(trained_villager_win, voting_type=&quot;approval&quot;)) for trained_villager_win in win_replays]),axis= 0)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>cpv agent tie indicators
-	Likelihood of ties in accusation phases : 0.00
-	Likelihood of ties in voting phases : 0.00
-	Likelihood of a tie in a voting phase given a tie in the prior accusation phases nan
-	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : nan
-
-
-rpv agent tie indicators
-	Likelihood of ties in accusation phases : 0.36
-	Likelihood of ties in voting phases : 0.45
-	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.46
-	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.36
-
-
-random agent tie indicators
-	Likelihood of ties in accusation phases : 0.36
-	Likelihood of ties in voting phases : 0.45
-	Likelihood of a tie in a voting phase given a tie in the prior accusation phases 0.38
-	Likelihood of a wolf getting targetting in a subsequent voting round if they survived a tie : 0.86
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trained-CRWolves      Tie in Accusation    Tie in Voting    Tie in Voting given a  tie in accusation    Likelihood of wolf targetted after a tie
+------------------  -------------------  ---------------  ------------------------------------------  ------------------------------------------
+vs. CRWolves                   0.361959         0.330545                                    0.330735                                    0.649485
+vs. RevWolvess                 0.383506         0.308968                                    0.303485                                    0.615789
+vs. CRevWolves                 0.367476         0.315696                                    0.316737                                    0.52439
+vs. CRLWolves                  0.35734          0.41777                                     0.420775                                    0.764706
+vs. AggroWolves                0.394466         0.385389                                    0.406364                                    0.603175
 </pre></div>
 </div>
 </div>
