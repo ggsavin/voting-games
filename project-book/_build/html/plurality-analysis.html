@@ -638,7 +638,12 @@ Trained-CRWolves           1.56842      1.60748       1.49099
 </section>
 <section id="ties">
 <h3>Ties<a class="headerlink" href="#ties" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tie_info = [np.nanmean(np.stack([indicators._process_tie_info(indicators._game_tie_info(replay, voting_type=&quot;plurality&quot;)) for replay in replays]), axis=0) for replays in tpv_win_replays[1:]]
 
@@ -654,6 +659,7 @@ print(tabulate([[&#39;vs. CRWolves&#39;, *tie_info[0]],
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trained-CRWolves      Tie in Accusation    Tie in Voting    Tie in Voting given a tie in accusation    Likelihood of wolf targetted after a tie
 ------------------  -------------------  ---------------  -----------------------------------------  ------------------------------------------
