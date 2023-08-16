@@ -894,7 +894,7 @@ plt.show()
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/a9b3df3040451b749b0a592cc84dc3f7d2565c19694f793b348d1e65c5ecbdb8.png" src="_images/a9b3df3040451b749b0a592cc84dc3f7d2565c19694f793b348d1e65c5ecbdb8.png" />
+<img alt="_images/46b3f4e99afc67ba142b97206e478d94e4e7f3edbfb7985c53f7ba4b85c5f107.png" src="_images/46b3f4e99afc67ba142b97206e478d94e4e7f3edbfb7985c53f7ba4b85c5f107.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -938,6 +938,61 @@ plt.show()
 </div>
 <div class="cell_output docutils container">
 <img alt="_images/4378d828de902c830e9105541dc0c9e76eff61eda314eb9f376033271645b841.png" src="_images/4378d828de902c830e9105541dc0c9e76eff61eda314eb9f376033271645b841.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>len(tpv_stacked)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.style.use(&#39;ggplot&#39;)
+
+# make data
+x = [1,2,3]
+#y = tpv_stacked[:,:,0][3]
+
+# plot
+fig, axs = plt.subplots(4, 3, figsize=(8,8), sharex=True, sharey=True)
+
+for day in range(tpv_stacked[0].shape[0]):
+    for phase in range(tpv_stacked[0].shape[1]):
+        for name, stacked in zip([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;], tpv_stacked):
+            axs[day][phase].plot(list(range(stacked.shape[1])), stacked[:,:,2][day], linewidth=2.0, label=name)
+
+# set 
+x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
+for i in [0,1,2]:
+    axs[3][i].set_xticks([0,1,2], x_tick_labels, rotation=40)
+
+axs[0][1].legend(loc=&#39;upper center&#39;, bbox_to_anchor=(0.5, 1.40),
+          ncol=3, fancybox=True, shadow=True)
+
+fig.suptitle(&quot;Trained Villagers Targetting Wolves&quot;)
+
+fig.text(0.5, -0.02, &#39;Phases&#39;, ha=&#39;center&#39;)
+# fig.text(0.04, 0.5, &#39;Days&#39;, va=&#39;center&#39;, rotation=&#39;vertical&#39;)
+
+fig.text(-0.02, 0.80, &#39;Day 1&#39;)
+fig.text(-0.02, 0.60, &#39;Day 2&#39;)
+fig.text(-0.02, 0.40, &#39;Day 3&#39;)
+fig.text(-0.02, 0.20, &#39;Day 4&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(-0.02, 0.2, &#39;Day 4&#39;)
+</pre></div>
+</div>
+<img alt="_images/bd2b1e429ea15ebf5e0ed8dca6a29315aaa451992e698a0d365b2ebd2c294c1a.png" src="_images/bd2b1e429ea15ebf5e0ed8dca6a29315aaa451992e698a0d365b2ebd2c294c1a.png" />
 </div>
 </div>
 </section>
