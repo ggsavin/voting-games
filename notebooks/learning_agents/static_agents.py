@@ -106,7 +106,7 @@ def revenge_plurality_wolf(env, agent, action=None):
     villagers_remaining = set(env.world_state["villagers"]) & set(env.world_state['alive'])
 
     prev_votes = env.history[-1]['votes']
-    villagers_targetting_you = [player for player in prev_votes if f'player_{prev_votes[player]}' == agent]
+    villagers_targetting_you = [player for player in prev_votes if f'player_{prev_votes[player]}' == agent and player in villagers_remaining]
     if len(villagers_targetting_you) > 0:
         return int(random.choice(list(villagers_targetting_you)).split("_")[-1])
     
@@ -119,7 +119,7 @@ def coordinated_revenge_plurality_wolf(env, agent, action=None):
     # who tried to vote out a wolf last time?
     # TODO : just get this from the observations
     prev_votes = env.history[-1]['votes']
-    villagers_targetting_wolves = [player for player in prev_votes if f'player_{prev_votes[player]}' in wolves_remaining]
+    villagers_targetting_wolves = [player for player in prev_votes if f'player_{prev_votes[player]}' in wolves_remaining and player in villagers_remaining]
     # target = random.choice(list(villagers_remaining))
     # pick 
     if action != None:
