@@ -699,6 +699,196 @@ vs. AggroWolves                0.394466         0.385389                        
 </section>
 <section id="targetting-indicators">
 <h3>Targetting Indicators<a class="headerlink" href="#targetting-indicators" title="Permalink to this heading">#</a></h3>
+<p>Our indicators are averaged out and stacked across phases and days, and as a reminder, here they are</p>
+<ul class="simple">
+<li><p>average target count (0)</p></li>
+<li><p>average like count (1)</p></li>
+<li><p>average neutral count (2)</p></li>
+<li><p>average self target (3)</p></li>
+<li><p>average self like (4)</p></li>
+<li><p>percentage of wolves in top targets (5)</p></li>
+<li><p>percentage of wolves in top likes (6)</p></li>
+<li><p>percent of votes targetting dead players (7)</p></li>
+<li><p>percent of votes targetting wolves by tracking:</p>
+<ul>
+<li><p>percent of votes targetting dead wolves (8)</p></li>
+<li><p>percent of votes targetting wolves that are still alive (9)</p></li>
+</ul>
+</li>
+<li><p>percent of likes towards wolves by tracking:</p>
+<ul>
+<li><p>percent of likes for dead wolves (10)</p></li>
+<li><p>percent of likes for wolves that are still alive (11)</p></li>
+</ul>
+</li>
+<li><p>percent of likes towards villagers by tracking:</p>
+<ul>
+<li><p>percent of likes towards dead villagers (12)</p></li>
+<li><p>perceent of likes towards villagers that are still alive (13)</p></li>
+</ul>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tav_avg_records = [indicators._game_avg_records(replays, indicators._approval_target_indicators) for replays in tav_win_replays]
+tav_stacked = [np.stack(list(avg_records.values())) for avg_records in tav_avg_records]
+
+rv_avg_records = [indicators._game_avg_records(replays, indicators._approval_target_indicators) for replays in rv_win_replays]
+rv_stacked = [np.stack(list(avg_records.values())) for avg_records in rv_avg_records]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(tav_stacked[1].shape)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4, 3, 14)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(tav_stacked[0][:,:,8])
+
+t = [0,1,2,3]
+x = [0,1,2]
+
+xx, yy = np.meshgrid(x,t)
+plt.style.use(&#39;default&#39;)
+
+fig = plt.figure(figsize=(5,5))
+ax = fig.add_subplot(projection=&#39;3d&#39;)
+ax.set_ylabel(&quot;Game Days&quot;)
+ax.set_yticks([0,1,2,3], [&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;])
+ax.set_xlabel(&quot;Phases&quot;)
+x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
+ax.set_xticks([0,1,2], x_tick_labels)
+ax.set_zlabel(&quot;Targetting dead wolves&quot;)
+surf = ax.plot_surface(xx,yy,tav_stacked[0][:,:,8], color=&quot;orange&quot;, alpha=0.6, antialiased=False)
+plt.suptitle(&quot;Dead Werewolf targetting&quot;)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[0.         0.         0.        ]
+ [0.04624109 0.04645411 0.04286884]
+ [0.0816879  0.07923769 0.07022729]
+ [0.0957539  0.09839249 0.0852545 ]]
+</pre></div>
+</div>
+<img alt="_images/5bf330cea4242236882751c7c20ab43ccc784c6a021f61424686de408a0109da.png" src="_images/5bf330cea4242236882751c7c20ab43ccc784c6a021f61424686de408a0109da.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.style.use(&#39;ggplot&#39;)
+
+# make data
+x = [1,2,3]
+#y = tpv_stacked[:,:,0][3]
+
+# plot
+fig, axs = plt.subplots(4, 1, figsize=(4,8), sharex=True, sharey=True)
+
+for day in range(tav_stacked[0].shape[0]):
+    #for phase in range(tav_stacked[0].shape[1]):
+    axs[day].plot(list(range(tav_stacked[0].shape[1])), tav_stacked[0][:,:,4][day], linewidth=2.0, label=&quot;Trained&quot;)
+    axs[day].plot(list(range(rv_stacked[0].shape[1])), rv_stacked[0][:,:,4][day], linewidth=2.0, label=&quot;Random&quot;)
+
+# set 
+x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
+axs[3].set_xticks([0,1,2], x_tick_labels, rotation=40)
+
+axs[0].legend(loc=&#39;upper center&#39;, bbox_to_anchor=(0.5, 1.40),
+          ncol=3, fancybox=True, shadow=True)
+
+fig.suptitle(&quot;Trained Villagers Targetting Dead Wolves&quot;)
+
+fig.text(0.5, -0.02, &#39;Phases&#39;, ha=&#39;center&#39;)
+# fig.text(0.04, 0.5, &#39;Days&#39;, va=&#39;center&#39;, rotation=&#39;vertical&#39;)
+
+fig.text(-0.02, 0.80, &#39;Day 1&#39;)
+fig.text(-0.02, 0.60, &#39;Day 2&#39;)
+fig.text(-0.02, 0.40, &#39;Day 3&#39;)
+fig.text(-0.02, 0.20, &#39;Day 4&#39;)
+plt.show()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/39ad1292a6cafb54bdf2436e30e0a2ef5859ec1fb3e36e9c13036f1a09b7b5ef.png" src="_images/39ad1292a6cafb54bdf2436e30e0a2ef5859ec1fb3e36e9c13036f1a09b7b5ef.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.style.use(&#39;ggplot&#39;)
+
+# make data
+x = [1,2,3]
+#y = tpv_stacked[:,:,0][3]
+
+# plot
+fig, axs = plt.subplots(4, 1, figsize=(6,8), sharex=True, sharey=True)
+
+for day in range(tav_stacked[0].shape[0]):
+    for name, stacked in zip([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;, &quot;CRLWolves&quot;, &quot;AggroWolves&quot;], tav_stacked):
+        axs[day].plot(list(range(stacked.shape[1])), stacked[:,:,4][day], linewidth=2.0, label=name)
+
+# set 
+x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
+axs[3].set_xticks([0,1,2], x_tick_labels, rotation=40)
+
+axs[0].legend(loc=&#39;upper center&#39;, bbox_to_anchor=(0.5, 1.40),
+          ncol=3, fancybox=True, shadow=True)
+
+fig.suptitle(&quot;Trained Villagers Targetting Wolves&quot;)
+
+fig.text(0.5, -0.02, &#39;Phases&#39;, ha=&#39;center&#39;)
+# fig.text(0.04, 0.5, &#39;Days&#39;, va=&#39;center&#39;, rotation=&#39;vertical&#39;)
+
+fig.text(-0.02, 0.80, &#39;Day 1&#39;)
+fig.text(-0.02, 0.60, &#39;Day 2&#39;)
+fig.text(-0.02, 0.40, &#39;Day 3&#39;)
+fig.text(-0.02, 0.20, &#39;Day 4&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(-0.02, 0.2, &#39;Day 4&#39;)
+</pre></div>
+</div>
+<img alt="_images/d23759926d529da73e66bc5ff8b2e91e3597afef12d2daaab4534a9c156cc18c.png" src="_images/d23759926d529da73e66bc5ff8b2e91e3597afef12d2daaab4534a9c156cc18c.png" />
+</div>
+</div>
+<p>Harder to tell what is happening given these indicators, but we can assume given the win rates and tie rates that targets and likes are flying around, yet the main targets are still the wolves.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># TODO : Graph one stat across days on the same plot
+
+fig = plt.figure()
+
+for day in range(tav_stacked[0].shape[0]):
+    plt.plot(list(range(stacked.shape[1])), stacked[:,:,4][day], linewidth=2.0, label=day)
+
+plt.legend()
+
+# plt.plot([1,2,3], [1,2,3])
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f5357c45ea0&gt;
+</pre></div>
+</div>
+<img alt="_images/4f486d13c5d4dd0489c5ce36411e61210fb1ebdcc4f661f22af50fabf22d2bc7.png" src="_images/4f486d13c5d4dd0489c5ce36411e61210fb1ebdcc4f661f22af50fabf22d2bc7.png" />
+</div>
+</div>
 </section>
 </section>
 </section>
