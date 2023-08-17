@@ -99,7 +99,7 @@ self.observation_spaces = {
 }
 ```
 
-Each player is returned an observation object and an action mask representing dead or alive players. The player status and action masks are identical, however we have chosen to seperate them like this for more clarity and to conform to more training APIs.
+Every environment step, players are provided an observation object and an action mask representing dead or alive players. The player status and action masks are identical, however we have chosen to seperate them like this for more clarity and to conform to more training APIs.
 
 As we have implemented our own PPO loop, we have a seperate [utility function](convert-obs) that we use to convert the observations into an input vector for our neural networks.
 
