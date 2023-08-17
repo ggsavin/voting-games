@@ -728,6 +728,33 @@ vs. AggroWolves                0.394466         0.385389                        
 </ul>
 </li>
 </ul>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>indicator_titles = [&quot;Avg Target Count&quot;,
+                    &quot;Avg Like Count&quot;,
+                    &quot;Avg Neutral Count&quot;,
+                    &quot;Likelihood of Self Target&quot;,
+                    &quot;Likelihood of Self Like&quot;,
+                    &quot;Percent of Wolves in Top Targets&quot;, # I dont like this one.
+                    &quot;Percent of Wolves in Top Likes&quot;, # I dont like this one
+                    &quot;Percent of votes Targetting Dead Players&quot;,
+                    &quot;Percent of votes Targetting Dead Wolves&quot;,
+                    &quot;Percent of votes Targetting Living Wolves&quot;,
+                    &quot;Percent of Likes for Dead Wolves&quot;,
+                    &quot;Percent of Likes for Living Wolves&quot;,
+                    &quot;Percent of Likes for Dead Villagers&quot;,
+                    &quot;Percent of Likes for Living Villagers&quot;
+                    ]
+</pre></div>
+</div>
+</div>
+</details>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tav_avg_records = [indicators._game_avg_records(replays, indicators._approval_target_indicators) for replays in tav_win_replays]
@@ -897,32 +924,26 @@ for indicator in range(tav_stacked[0].shape[-1]):
     for day in range(tav_stacked[0].shape[0]):
         axs[indicator].plot(list(range(stacked.shape[1])), stacked[:,:,indicator][day], linewidth=2.0, label=f&#39;Day {day+1}&#39;)
         axs[indicator].legend()
+        axs[indicator].set_title(indicator_titles[indicator])
 
 x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
 axs[-1].set_xticks([0,1,2], x_tick_labels, rotation=40)
 
 # lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes[-1]]
 # lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-fig.suptitle(&quot;All Indicators Across Days and Phases&quot;)
+#fig.suptitle(&quot;All Indicators Across Days and Phases&quot;)
 # fig.legend([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;, &quot;CRLWolves&quot;, &quot;AggroWolves&quot;], loc=&quot;upper right&quot;)
-fig.tight_layout()
+# fig.tight_layout()
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">91</span><span class="p">],</span> <span class="n">line</span> <span class="mi">6</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tav_stacked</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>         <span class="n">axs</span><span class="p">[</span><span class="n">indicator</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">stacked</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="n">stacked</span><span class="p">[:,:,</span><span class="n">indicator</span><span class="p">][</span><span class="n">day</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Day </span><span class="si">{</span><span class="n">day</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">6</span>         <span class="n">axs</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="n">x_tick_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Accusation&quot;</span><span class="p">,</span> <span class="s2">&quot;Accusation&quot;</span><span class="p">,</span> <span class="s2">&quot;Voting&quot;</span><span class="p">]</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">x_tick_labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
-
-<span class="ne">AttributeError</span>: &#39;numpy.ndarray&#39; object has no attribute &#39;legend&#39;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.axis.XTick at 0x7f5349876fe0&gt;,
+ &lt;matplotlib.axis.XTick at 0x7f53498749a0&gt;,
+ &lt;matplotlib.axis.XTick at 0x7f5349b52920&gt;]
 </pre></div>
 </div>
-<img alt="_images/15ddb68792434ba78cb74e18e190832bba9a31a953bad106faa715d4d1c011ed.png" src="_images/15ddb68792434ba78cb74e18e190832bba9a31a953bad106faa715d4d1c011ed.png" />
+<img alt="_images/450cb2e5ffbf7f2ad8df9c9497a0e1d59ee6bd6da801755a10b9ce07d1b647eb.png" src="_images/450cb2e5ffbf7f2ad8df9c9497a0e1d59ee6bd6da801755a10b9ce07d1b647eb.png" />
 </div>
 </div>
 <div class="cell docutils container">
