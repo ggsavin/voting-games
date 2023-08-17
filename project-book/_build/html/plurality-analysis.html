@@ -995,6 +995,28 @@ fig.text(-0.02, 0.20, &#39;Day 4&#39;)
 <img alt="_images/bd2b1e429ea15ebf5e0ed8dca6a29315aaa451992e698a0d365b2ebd2c294c1a.png" src="_images/bd2b1e429ea15ebf5e0ed8dca6a29315aaa451992e698a0d365b2ebd2c294c1a.png" />
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tpv_stacked[0].shape[-1], 4, sharex=True, sharey=&#39;row&#39;, figsize=(17,15))
+
+for indicator in range(tpv_stacked[0].shape[-1]):
+    for day in range(tpv_stacked[0].shape[0]):
+        for name, stacked in zip([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;, &quot;CRLWolves&quot;, &quot;AggroWolves&quot;], tpv_stacked):
+            axs[indicator][day].plot(list(range(stacked.shape[1])), stacked[:,:,indicator][day], linewidth=2.0, label=name)
+
+x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
+for i in range(4):
+    axs[-1][i].set_xticks([0,1,2], x_tick_labels, rotation=40)
+
+# lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes[-1]]
+# lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
+fig.suptitle(&quot;All Indicators Across Days and Phases&quot;)
+fig.legend([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;], loc=&quot;upper right&quot;)
+fig.tight_layout()
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 </section>
