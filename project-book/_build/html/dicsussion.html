@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'dicsussion';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -364,6 +366,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inconsistent-training">Inconsistent Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-times">Training Times</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-vs-plurality">Approval vs Plurality</a></li>
 </ul>
             </nav>
@@ -407,8 +414,47 @@ document.write(`
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="discussion">
 <h1>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h1>
+<section id="training">
+<h2>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h2>
+<section id="inconsistent-training">
+<h3>Inconsistent Training<a class="headerlink" href="#inconsistent-training" title="Permalink to this heading">#</a></h3>
+<p>Reinforcement learning is a hard problem, and MARL even more so given its dynamic nature. To train our agents, we use a policy gradient method (PPO) that consistently improves our agents, but almost always has some type of divergence or weight collapse. In Sutton and Barto <strong>REF</strong>, they refer to a combination of issues -<strong>deadly triad</strong>- that when used together, lead to divergence more often than not. These issues are :</p>
+<ul class="simple">
+<li><p>Using non-linear function approximations. <em>Our neural network</em></p></li>
+<li><p>Bootstraping our estimated values. <em>Our policy is changing constantly, along with our value approximation</em></p></li>
+<li><p>Off-Policy Training. <em>The one thing we do not do in this case!</em></p></li>
+</ul>
+<p>Another thing to note is the difficulty to calcuate good estimates of the policy gradient (cite Kakade Langfor 2002) given the stochasticity of our MARL environment, and if we get a couple unfortunate episodes with bad estiamtes, our parameters may change in a poor direction leading to policy collapse and a long to possibly never recovery time. We do see in our training that there are multiple such events, with and without future recovery.</p>
+<p>Empirically, our agents can train for around 500 update steps around <span class="math notranslate nohighlight">\(10\%\)</span> of the time, meaning a collapse of our weights is almost always the termination factor of training. Despite this we do get decent results in the meantime, and would like to make training more consistent and reduce this collapse.</p>
+<p>Some ideas we believe may help and are worth trying:</p>
+<ul class="simple">
+<li><p>Using decaying rates for our learning rate</p></li>
+<li><p>Use running norms for observations and rewards</p></li>
+<li><p>futher explore gradient clipping</p></li>
+<li><p>any divisions should also add an <span class="math notranslate nohighlight">\(\epsilon\)</span> of <span class="math notranslate nohighlight">\(1e-5\)</span> to begin with</p></li>
+<li><p>clamp logarithmic values between <code class="docutils literal notranslate"><span class="pre">-np.log(1e-5)</span> <span class="pre">,</span> <span class="pre">np.log(1e-5))</span></code> to begin with</p></li>
+<li><p>split critic and actor networks</p>
+<ul>
+<li><p>have a higher learning rate for the critic</p></li>
+</ul>
+</li>
+<li><p>vary replay buffer sizes</p></li>
+<li><p>vary batch sizes</p></li>
+<li><p>change optimizer</p></li>
+<li><p>simplify model strcuture</p></li>
+</ul>
+<p>These have been collected from many blog posts, reddit posts, and work done in <span id="id1">[<a class="reference internal" href="bibliography.html#id34" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>]</span>. We leave this exploration to future work, as it is not the direct scope of the project, but would help with consistency.</p>
+</section>
+<section id="training-times">
+<h3>Training Times<a class="headerlink" href="#training-times" title="Permalink to this heading">#</a></h3>
+<p>One game of plurality takes :
+One game of approval takes :</p>
+<p>We</p>
+</section>
+</section>
 <section id="approval-vs-plurality">
 <h2>Approval vs Plurality<a class="headerlink" href="#approval-vs-plurality" title="Permalink to this heading">#</a></h2>
+<p>Approval Voting allowed for agents to express dislikes as well as likes against all other agents in the game. This increased expressibility led to harder to interpret behavior, although trends were clearly seen. Training approval agents was more consistent than plurality agents, and they achieved higher win-rates much quicker.</p>
 </section>
 </section>
 
@@ -479,6 +525,11 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inconsistent-training">Inconsistent Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-times">Training Times</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-vs-plurality">Approval vs Plurality</a></li>
 </ul>
   </nav></div>
