@@ -370,7 +370,14 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-elapsed-before-a-villager-win">Days elapsed before a villager win</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-executions">Days between wolf executions</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ties">Ties</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#targetting-indicators">Targetting Indicators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#targetting-indicators">Targetting Indicators</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#unique-targets">Unique Targets</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#likelihood-of-self-voting">Likelihood of self voting</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percetange-of-targets-towards-wolves">Percetange of targets towards wolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percentage-of-targets-towards-dead-players">Percentage of targets towards dead players</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percentage-of-targets-towards-dead-wolves">Percentage of targets towards dead wolves</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -427,6 +434,10 @@ from tabulate import tabulate
 <p>As expected, the coordinated random villagers and wolves performed the best out of the static policies <span id="id1">[<a class="reference internal" href="bibliography.html#id40" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span>.
 Our agent, trained against coordinated random wolves, performed better than all of our hand-crafted villager policies. They also generalized well against our other wolf policies, and actually had the highest win rates across the board.</p>
 <p>Below is code to generate the following table of 1000 runs between each villager policy and each werewolf policy. We base our discussion around this markdown table.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Our trained agent, Trained-CRWolves, is an outlier that got above a <span class="math notranslate nohighlight">\(0.40\)</span> win-rate. On average, trained plurality agents did not do as well.</p>
+</div>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Villager Strategy vs.</p></th>
@@ -692,6 +703,16 @@ vs. CRevWolves                 0.26539          0.158784                        
                     &quot;Percentage of targets toward wolves&quot;,
                     &quot;Percentage of targets towards dead players&quot;,
                     &quot;Percentage of targets towards dead wolves&quot;]
+
+# we do this against all wolf policies
+tpv_avg_records = [indicators._game_avg_records(replays, indicators._plurality_target_indicators) for replays in tpv_win_replays]
+tpv_stacked = [np.stack(list(avg_records.values())) for avg_records in tpv_avg_records]
+
+rv_avg_records = [indicators._game_avg_records(replays, indicators._plurality_target_indicators) for replays in rv_win_replays]
+rv_stacked = [np.stack(list(avg_records.values())) for avg_records in rv_avg_records]
+
+# https://www.heavy.ai/blog/12-color-palettes-for-telling-better-stories-with-your-data
+day_colors = [&quot;#115f9a&quot;, &quot;#22a7f0&quot;, &quot;#76c68f&quot;, &quot;#c9e52f&quot;]
 </pre></div>
 </div>
 </div>
@@ -699,177 +720,99 @@ vs. CRevWolves                 0.26539          0.158784                        
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># we do this against all wolf policies
-tpv_avg_records = [indicators._game_avg_records(replays, indicators._plurality_target_indicators) for replays in tpv_win_replays]
-tpv_stacked = [np.stack(list(avg_records.values())) for avg_records in tpv_avg_records]
-
-rv_avg_records = [indicators._game_avg_records(replays, indicators._plurality_target_indicators) for replays in rv_win_replays]
-rv_stacked = [np.stack(list(avg_records.values())) for avg_records in rv_avg_records]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
+    plt.figure(figsize=(9,4))
+    for day, color in zip(range(stacked_info.shape[0]), colors):
+        plt.plot(list(range(stacked_info.shape[1])), stacked_info[:,:,indicator_id][day], linewidth=2.0, color=color, label=f&#39;Day {day+1}&#39;)
+        plt.legend()
+        plt.suptitle(indicator_title)
+    plt.plot()
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># tpv_stacked[:,:,0] # unique votes across days and phases
-# tpv_stacked[:,:,1] # self votes across days and phases
-# tpv_stacked[:,:,2] # percent of targets towards wolves
-# tpv_stacked[:,:,3] # percent of targets towards dead players
-# tpv_stacked[:,:,4] # percent of targets towards dead wolves
-print(tpv_stacked[1].shape)
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4, 3, 5)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(tpv_stacked[0][:,:,4])
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tpv_stacked[0].shape[-1], 1, sharex=True, figsize=(10,50))
 
-t = [0,1,2,3]
-x = [0,1,2]
+for indicator in range(tpv_stacked[0].shape[-1]):
+    for day in range(tpv_stacked[0].shape[0]):
+        axs[indicator].plot(list(range(stacked.shape[1])), stacked[:,:,indicator][day], linewidth=2.0, label=f&#39;Day {day+1}&#39;)
+        axs[indicator].legend()
+        axs[indicator].set_title(indicator_titles[indicator])
 
-xx, yy = np.meshgrid(x,t)
-plt.style.use(&#39;default&#39;)
-
-fig = plt.figure(figsize=(5,5))
-ax = fig.add_subplot(projection=&#39;3d&#39;)
-ax.set_ylabel(&quot;Game Days&quot;)
-ax.set_yticks([0,1,2,3], [&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;])
-ax.set_xlabel(&quot;Phases&quot;)
 x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
-ax.set_xticks([0,1,2], x_tick_labels)
-ax.set_zlabel(&quot;Targetting dead wolves&quot;)
-surf = ax.plot_surface(xx,yy,tpv_stacked[0][:,:,4], color=&quot;orange&quot;, alpha=0.6, antialiased=False)
-plt.suptitle(&quot;Dead Werewolf targetting&quot;)
-plt.show()
+axs[-1].set_xticks([0,1,2], x_tick_labels, rotation=40)
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[0.         0.         0.        ]
- [0.07387911 0.02976947 0.01615538]
- [0.08142292 0.04940711 0.03083004]
- [0.09268293 0.06829268 0.04715447]]
-</pre></div>
 </div>
-<img alt="_images/4c7b1122e13ccfcd0b579e2373f63a0031889520644cb7a1f562ee7759e128b9.png" src="_images/4c7b1122e13ccfcd0b579e2373f63a0031889520644cb7a1f562ee7759e128b9.png" />
-</div>
-</div>
+<section id="unique-targets">
+<h4>Unique Targets<a class="headerlink" href="#unique-targets" title="Permalink to this heading">#</a></h4>
+<p>This is a more dynamic indicator, because total targets get smaller per day, so if roughly the same number of people are targetted, it will be higher each subsequent day day, which is something we do see. An interpretation that can be made though, is that as we progress throughout phases in the day, this number trends down, indicating more consensus between agents.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(tpv_stacked[0][:,:,2])
-
-t = [0,1,2,3]
-x = [0,1,2]
-
-xx, yy = np.meshgrid(x,t)
-plt.style.use(&#39;default&#39;)
-
-fig = plt.figure(figsize=(5,5))
-ax = fig.add_subplot(projection=&#39;3d&#39;)
-ax.set_ylabel(&quot;Game Days&quot;)
-ax.set_yticks([0,1,2,3], [&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;])
-ax.set_xlabel(&quot;Phases&quot;)
-x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
-ax.set_xticks([0,1,2], x_tick_labels)
-ax.set_zlabel(&quot;Targetting wolves&quot;)
-surf = ax.plot_surface(xx,yy,tpv_stacked[0][:,:,2], color=&quot;orange&quot;, alpha=0.6, antialiased=False)
-plt.suptitle(&quot;Werewolf targetting&quot;)
-ax.view_init(30, 150)
-plt.show()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tpv_stacked[1], indicator_titles[0], 0, day_colors)
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[0.22019573 0.33140569 0.41607355]
- [0.28719671 0.33145761 0.37033339]
- [0.25434783 0.32786561 0.35592885]
- [0.24065041 0.30243902 0.39186992]]
-</pre></div>
-</div>
-<img alt="_images/f51712ad7e91bb57e0b0a561f630e1517c1915fd785fd294ca136c3576d40045.png" src="_images/f51712ad7e91bb57e0b0a561f630e1517c1915fd785fd294ca136c3576d40045.png" />
+<img alt="_images/6d8f7de0664ff68f0aa3f93a5aff7ead167044d02f1f9ae722d0c1bdc76c8f62.png" src="_images/6d8f7de0664ff68f0aa3f93a5aff7ead167044d02f1f9ae722d0c1bdc76c8f62.png" />
 </div>
 </div>
+</section>
+<section id="likelihood-of-self-voting">
+<h4>Likelihood of self voting<a class="headerlink" href="#likelihood-of-self-voting" title="Permalink to this heading">#</a></h4>
+<p>While self-voting is penalized, agents may have learned to use it more in the accuastion rounds to indicate trust in themselves. It does go down and then back up</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(tpv_stacked[0][:,:,4])
-
-t = [0,1,2,3]
-x = [0,1,2]
-
-xx, yy = np.meshgrid(x,t)
-plt.style.use(&#39;default&#39;)
-
-fig = plt.figure(figsize=(5,5))
-ax = fig.add_subplot(projection=&#39;3d&#39;)
-ax.set_ylabel(&quot;Game Days&quot;)
-ax.set_yticks([0,1,2,3], [&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;])
-ax.set_xlabel(&quot;Phases&quot;)
-x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
-ax.set_xticks([0,1,2], x_tick_labels)
-ax.set_zlabel(&quot;Targetting dead players&quot;)
-surf = ax.plot_surface(xx,yy,tpv_stacked[0][:,:,3], color=&quot;orange&quot;, alpha=0.6, antialiased=False, label=&quot;Tgt : Dead Player&quot;)
-surf = ax.plot_surface(xx,yy,tpv_stacked[0][:,:,4], color=&quot;green&quot;, alpha=0.6, antialiased=False, label=&quot;Tgt : Dead Wolf&quot;)
-plt.suptitle(&quot;Dead Player targetting&quot;)
-ax.view_init(30, -30)
-plt.show()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tpv_stacked[1], indicator_titles[1], 1, day_colors)
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[0.         0.         0.        ]
- [0.07387911 0.02976947 0.01615538]
- [0.08142292 0.04940711 0.03083004]
- [0.09268293 0.06829268 0.04715447]]
-</pre></div>
-</div>
-<img alt="_images/4c38a6aa2d8f1b2e41b160e012666b90115b81a9102b91ad0d6e25390b56a013.png" src="_images/4c38a6aa2d8f1b2e41b160e012666b90115b81a9102b91ad0d6e25390b56a013.png" />
+<img alt="_images/0ee40a405e17a615f6397fe571c669f2861450a61c44a7bd722195ae8f9031a0.png" src="_images/0ee40a405e17a615f6397fe571c669f2861450a61c44a7bd722195ae8f9031a0.png" />
 </div>
 </div>
-<p>The above figure shows us the percentage of targets towards dead wolves for trained agents across phases and days. We expect this number to grow as the days go on, but as we can see, it stays below <span class="math notranslate nohighlight">\(0.1\)</span>, and decreases as we get towards the voting phase for each day. The trained agent almost never targets a dead wolf, and even less so when it comes time to execute a player.</p>
+</section>
+<section id="percetange-of-targets-towards-wolves">
+<h4>Percetange of targets towards wolves<a class="headerlink" href="#percetange-of-targets-towards-wolves" title="Permalink to this heading">#</a></h4>
+<p>A pretty straightforward indicator where the higher the number, the more consensus and better off the villagers are. Because this number increases across phases, we can again intuit some form of consensus between actual villagers. In the last day, we see that</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tpv_stacked[0][:,:,4]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tpv_stacked[1], indicator_titles[2], 2, day_colors)
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0.        , 0.        , 0.        ],
-       [0.07387911, 0.02976947, 0.01615538],
-       [0.08142292, 0.04940711, 0.03083004],
-       [0.09268293, 0.06829268, 0.04715447]])
-</pre></div>
+<img alt="_images/2d8f2fbe9f8a26ed4b5447074de5b4b47129cd4b49cda6ef4024efd92bdf0326.png" src="_images/2d8f2fbe9f8a26ed4b5447074de5b4b47129cd4b49cda6ef4024efd92bdf0326.png" />
 </div>
 </div>
-</div>
+</section>
+<section id="percentage-of-targets-towards-dead-players">
+<h4>Percentage of targets towards dead players<a class="headerlink" href="#percentage-of-targets-towards-dead-players" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># day 1, stats for phase 4
-tpv_stacked[0][:,:,4][1]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tpv_stacked[1], indicator_titles[3], 3, day_colors)
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.07387911, 0.02976947, 0.01615538])
-</pre></div>
+<img alt="_images/b130bfbf3e23eda6ddfd0038083adf8a189042ed944620cebc271f110a4a385f.png" src="_images/b130bfbf3e23eda6ddfd0038083adf8a189042ed944620cebc271f110a4a385f.png" />
 </div>
 </div>
-</div>
+</section>
+<section id="percentage-of-targets-towards-dead-wolves">
+<h4>Percentage of targets towards dead wolves<a class="headerlink" href="#percentage-of-targets-towards-dead-wolves" title="Permalink to this heading">#</a></h4>
+<p>Indicator closely related to the one tracking <em>percetange of targets towards wolves</em>, because wheras we want wolves taregtted more, we want dead wolves targetted less as the day goes on. This is indeed what occured, throughout the phases and days.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tpv_stacked[0].shape
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tpv_stacked[1], indicator_titles[4], 4, day_colors)
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4, 3, 5)
-</pre></div>
-</div>
+<img alt="_images/a500417a294fbbe059bad0fd68bb51c3fc68b2b9fbff88f8d11ae7153ed544e5.png" src="_images/a500417a294fbbe059bad0fd68bb51c3fc68b2b9fbff88f8d11ae7153ed544e5.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1015,22 +958,6 @@ fig.text(-0.02, 0.20, &#39;Day 4&#39;)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tpv_stacked[0].shape[-1], 1, sharex=True, figsize=(10,50))
-
-for indicator in range(tpv_stacked[0].shape[-1]):
-    for day in range(tpv_stacked[0].shape[0]):
-        axs[indicator].plot(list(range(stacked.shape[1])), stacked[:,:,indicator][day], linewidth=2.0, label=f&#39;Day {day+1}&#39;)
-        axs[indicator].legend()
-        axs[indicator].set_title(indicator_titles[indicator])
-
-x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
-axs[-1].set_xticks([0,1,2], x_tick_labels, rotation=40)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tpv_stacked[0].shape[-1], 4, sharex=True, sharey=&#39;row&#39;, figsize=(17,15))
 
 for indicator in range(tpv_stacked[0].shape[-1]):
@@ -1054,6 +981,7 @@ fig.tight_layout()
 <img alt="_images/bcde55f0673623643b2f7248d87f3bf865583454ff1f076e6af4fa356567d60f.png" src="_images/bcde55f0673623643b2f7248d87f3bf865583454ff1f076e6af4fa356567d60f.png" />
 </div>
 </div>
+</section>
 </section>
 </section>
 </section>
@@ -1129,7 +1057,14 @@ fig.tight_layout()
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-elapsed-before-a-villager-win">Days elapsed before a villager win</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-executions">Days between wolf executions</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ties">Ties</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#targetting-indicators">Targetting Indicators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#targetting-indicators">Targetting Indicators</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#unique-targets">Unique Targets</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#likelihood-of-self-voting">Likelihood of self voting</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percetange-of-targets-towards-wolves">Percetange of targets towards wolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percentage-of-targets-towards-dead-players">Percentage of targets towards dead players</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percentage-of-targets-towards-dead-wolves">Percentage of targets towards dead wolves</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

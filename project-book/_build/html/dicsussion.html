@@ -371,7 +371,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-times">Training Times</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-vs-plurality">Approval vs Plurality</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-vs-plurality">Approval vs Plurality</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reward-shaping">Reward shaping</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -455,6 +458,10 @@ One game of approval takes :</p>
 <section id="approval-vs-plurality">
 <h2>Approval vs Plurality<a class="headerlink" href="#approval-vs-plurality" title="Permalink to this heading">#</a></h2>
 <p>Approval Voting allowed for agents to express dislikes as well as likes against all other agents in the game. This increased expressibility led to harder to interpret behavior, although trends were clearly seen. Training approval agents was more consistent than plurality agents, and they achieved higher win-rates much quicker.</p>
+<section id="reward-shaping">
+<h3>Reward shaping<a class="headerlink" href="#reward-shaping" title="Permalink to this heading">#</a></h3>
+<p>Even though we are pnealizing villagers in reward functions, they are not mechanical penalities for voting for wolves, because selection masks out dead wolves. So its fine to vote based on reputation even if they are dead. THere is a risk, but it does not impact win rates as much. In plurality, having a single target was much more impactful, thus we say the targets towards dead wolves decrease through phases.</p>
+</section>
 </section>
 </section>
 
@@ -530,7 +537,10 @@ One game of approval takes :</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-times">Training Times</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-vs-plurality">Approval vs Plurality</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-vs-plurality">Approval vs Plurality</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reward-shaping">Reward shaping</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
