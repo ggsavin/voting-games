@@ -425,7 +425,14 @@ import notebooks.learning_agents.stats as indicators
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="gameplay-indicators">
 <span id="gameplay-indicators-list"></span><h1>Gameplay Indicators<a class="headerlink" href="#gameplay-indicators" title="Permalink to this heading">#</a></h1>
-<p>Now that we have trained agents, we want to see what kind of indicators possibly match up with learned voting behaviors, and how explainable they are. We do this for both plurality and approval voting mechanisms.</p>
+<p>Indicators gauge certain trends and facts, and can indicate the level of something such as learned behavior or skill. Basic indicators such as win-rates, total/average score and neural network loss are almost ubiquitous to RL papers due to their simplicity and interpretability. A reader knows immediately how the agent is doing just by looking at them. In Werewolf, we consider win-rate as our most basic indicator.</p>
+<p>To better undestand our learned agents behavior, we want more in-depth and descriptive indicators, that may or may not generalize well to other problems. We can categorize these as:</p>
+<ul class="simple">
+<li><p>Win-rate adjacent : time-to-win and time between wolf executions</p></li>
+<li><p>Tie Indicators : when and what did agents do when tie’s occured</p></li>
+<li><p>Targetting Indicators: Novel heuristics we designed to try and identify the reasoning behind how agents target others via their votes.</p></li>
+</ul>
+<p>Each indicator has a code snippet associated with it, so anyone extending or replicating this project can use them as examples.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The way the environment stores history is slightly different than observations. Whereas the latter stores the prior votes, env.history steps have the votes and the outcomes that occured at that particular day/phase/round.</p>
@@ -435,7 +442,12 @@ import notebooks.learning_agents.stats as indicators
 <p>We are going to use replays from our trained agents to investigate these various markers. 1000 games of each voting type will be used.</p>
 <section id="plurality-agent">
 <h3>Plurality Agent<a class="headerlink" href="#plurality-agent" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
 observations, _, _, _, _ = env.reset()
@@ -474,6 +486,7 @@ print(f&#39;Untrained villagers won {untrained_plurality_wins} games&#39;)
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trained villagers won 486 games
 Untrained villagers won 47 games
@@ -484,7 +497,12 @@ Untrained villagers won 47 games
 </section>
 <section id="approval-agent">
 <h3>Approval Agent<a class="headerlink" href="#approval-agent" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = pare(num_agents=10, werewolves=2, num_accusations=2)
 observations, _, _, _, _ = env.reset()
@@ -524,6 +542,7 @@ print(f&#39;Untrained villagers won {untrained_approval_wins} games&#39;)
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trained villagers won 507 games
 Untrained villagers won 62 games
