@@ -679,6 +679,23 @@ vs. CRevWolves                 0.26539          0.158784                        
 <li><p><em>percentage of targets torwards dead wolves</em></p></li>
 </ul>
 <p>There are trends across phases in a day, and trends across days we look at. Our stacked records have a shape of <code class="docutils literal notranslate"><span class="pre">(day,</span> <span class="pre">phase,</span> <span class="pre">indicators)</span></code>, which we can slice in many directions.</p>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>indicator_titles = [&quot;Unique Targets&quot;,
+                    &quot;Likelihood of self vote&quot;,
+                    &quot;Percentage of targets toward wolves&quot;,
+                    &quot;Percentage of targets towards dead players&quot;,
+                    &quot;Percentage of targets towards dead wolves&quot;]
+</pre></div>
+</div>
+</div>
+</details>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># we do this against all wolf policies
@@ -1013,6 +1030,25 @@ for i in range(4):
 fig.suptitle(&quot;All Indicators Across Days and Phases&quot;)
 fig.legend([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;], loc=&quot;upper right&quot;)
 fig.tight_layout()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bcde55f0673623643b2f7248d87f3bf865583454ff1f076e6af4fa356567d60f.png" src="_images/bcde55f0673623643b2f7248d87f3bf865583454ff1f076e6af4fa356567d60f.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tpv_stacked[0].shape[-1], 1, sharex=True, figsize=(10,50))
+
+for indicator in range(tpv_stacked[0].shape[-1]):
+    for day in range(tpv_stacked[0].shape[0]):
+        axs[indicator].plot(list(range(stacked.shape[1])), stacked[:,:,indicator][day], linewidth=2.0, label=f&#39;Day {day+1}&#39;)
+        axs[indicator].legend()
+        axs[indicator].set_title(indicator_titles[indicator])
+
+x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
+axs[-1].set_xticks([0,1,2], x_tick_labels, rotation=40)
 </pre></div>
 </div>
 </div>
