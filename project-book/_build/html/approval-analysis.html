@@ -428,7 +428,7 @@ from tabulate import tabulate
 <p>Approval voting is a mechanism in which voters can select as many candidates from a list of all possible candidates to approve of.</p>
 <section id="win-rates">
 <h2>Win Rates<a class="headerlink" href="#win-rates" title="Permalink to this heading">#</a></h2>
-<p>We assume that some of the findings in the plurality werewolf game <span id="id1">[<a class="reference internal" href="bibliography.html#id39" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span> will still hold for approval voting, due to the nature of calculating the consensus amongst all the targetting done. (Target with the most dislikes gets voted out).</p>
+<p>We assume that some of the findings in the plurality werewolf game <span id="id1">[<a class="reference internal" href="bibliography.html#id40" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span> will still hold for approval voting, due to the nature of calculating the consensus amongst all the targetting done. (Target with the most dislikes gets voted out).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Below is code to generate the following table of 1000 runs between each villager policy and each werewolf policy. We base our discussion around this markdown table.</p>
@@ -947,6 +947,9 @@ axs[-1].set_xticks([0,1,2], x_tick_labels, rotation=40)
 <img alt="_images/450cb2e5ffbf7f2ad8df9c9497a0e1d59ee6bd6da801755a10b9ce07d1b647eb.png" src="_images/450cb2e5ffbf7f2ad8df9c9497a0e1d59ee6bd6da801755a10b9ce07d1b647eb.png" />
 </div>
 </div>
+<p>We can see that percentage of votes targetting wolves goes up through the phases, and moreso across days. This does indicate uncertain consensus forming amongst villagers.</p>
+<p>Maybe self liking indicates own assurance with votes? These go up along with wolf targetting throughout phases in a day.</p>
+<p>Self targetting goes down.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tav_stacked[0].shape[-1]

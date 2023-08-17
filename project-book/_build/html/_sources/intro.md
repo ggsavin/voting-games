@@ -34,7 +34,7 @@ Approval voting has more implicit and explicit information, and allows for more 
 
 ## Contribution
 
-- Creation of a custom environment using PettingZoo[^petting-zoo] for the purpose of voting mechanism research within the Werewolf SDG. 
+- Creation of a custom environment using PettingZoo[^petting-zoo] for the purpose of voting mechanism research within the Werewolf SDG.
 - Sucessfully implemented approval voting as the voting mechanism in our environment
 - Successfully trained plurality and approval RL agents in our environment
 - Designed a wide range of indicators to explore behavior and voting patterns of agents
