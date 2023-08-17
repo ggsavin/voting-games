@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Replay visualization &#8212; Voting in Hidden Role Games</title>
+    <title>Discussion &#8212; Voting in Hidden Role Games</title>
   
   
   
@@ -62,11 +62,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'game_visualization';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'dicsussion';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Plurality Voting" href="plurality-analysis.html" />
-    <link rel="prev" title="Gameplay Indicators" href="indicators.html" />
+    <link rel="next" title="Future Directions" href="future.html" />
+    <link rel="prev" title="Approval Voting" href="approval-analysis.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -165,10 +165,10 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="agent-implementation.html">Agent Implementation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="training_agent_info.html">Training Agents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indicators.html">Gameplay Indicators</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Replay visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="game_visualization.html">Replay visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plurality-analysis.html">Plurality Voting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="approval-analysis.html">Approval Voting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dicsussion.html">Discussion</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Discussion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future Directions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 </ul>
@@ -242,7 +242,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Fgame_visualization.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/ggsavin/voting-games/issues/new?title=Issue%20on%20page%20%2Fdicsussion.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -272,7 +272,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/game_visualization.ipynb" target="_blank"
+      <li><a href="_sources/dicsussion.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -341,7 +341,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -352,11 +354,19 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Replay visualization</h1>
+    <h1>Discussion</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-vs-plurality">Approval vs Plurality</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -373,213 +383,33 @@ document.write(`
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-import torch
-import sys
-sys.path.append(&#39;../&#39;)
-from voting_games.werewolf_env_v0 import plurality_env, pare, Phase, Roles
-import random
-import copy
-from tqdm import tqdm
-from collections import Counter
-import matplotlib.pyplot as plt
-from notebooks.learning_agents.models import ActorCriticAgent
-from notebooks.learning_agents.utils import play_recurrent_game
-from notebooks.learning_agents.static_agents import random_approval_wolf, random_plurality_wolf
-import notebooks.learning_agents.stats as indicators 
-import networkx as nx 
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/root/.local/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
-  from .autonotebook import tqdm as notebook_tqdm
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">voting_games.werewolf_env_v0</span> <span class="kn">import</span> <span class="n">pare</span><span class="p">,</span> <span class="n">plurality_env</span><span class="p">,</span> <span class="n">Roles</span><span class="p">,</span> <span class="n">Phase</span>
+<span class="kn">from</span> <span class="nn">notebooks.learning_agents.models</span> <span class="kn">import</span> <span class="n">ActorCriticAgent</span>
+<span class="kn">from</span> <span class="nn">notebooks.learning_agents.utils</span> <span class="kn">import</span> <span class="n">play_static_game</span><span class="p">,</span> <span class="n">play_recurrent_game</span>
+<span class="kn">from</span> <span class="nn">notebooks.learning_agents.static_agents</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">random_plurality_wolf</span><span class="p">,</span> 
+    <span class="n">random_approval_wolf</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="kn">import</span> <span class="nn">notebooks.learning_agents.stats</span> <span class="k">as</span> <span class="nn">indicators</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
 </pre></div>
 </div>
 </div>
 </details>
 </div>
-<section class="tex2jax_ignore mathjax_ignore" id="replay-visualization">
-<h1>Replay visualization<a class="headerlink" href="#replay-visualization" title="Permalink to this heading">#</a></h1>
-<p>We have ways to print out game replays, but humans tend to identify patterns quicker when they can visualize the data.
-By plotting the game in a graph format, we give the reader yet another way to consume game replays</p>
-<p>First we play a couple of games</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
-observations, _, _, _, _ = env.reset()
-
-obs_size= env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
-
-untrained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128, 
-                                        &quot;rec_layers&quot;: 1,
-                                        &quot;joint_mlp_size&quot;: 128,
-                                        &quot;split_mlp_size&quot;: 128,
-                                        &quot;num_votes&quot;: 1,
-                                        &quot;approval_states&quot;: 10},
-                                        num_players=10,
-                                        obs_size=obs_size)
-
-trained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128,
-                                        &quot;rec_layers&quot;: 1, 
-                                        &quot;joint_mlp_size&quot;: 128,
-                                        &quot;split_mlp_size&quot;: 128,
-                                        &quot;num_votes&quot;: 1,
-                                        &quot;approval_states&quot;: 10},
-                                        num_players=10,
-                                        obs_size=obs_size)
-trained_plurality_agent.load_state_dict(torch.load(&quot;stored_agents/lstm_first_no_one_hot_128_128/plurality_agent_10_score_46&quot;))
-
-# random_agent = None
-
-trained_plurality_wins, trained_plurality_replays = play_recurrent_game(env, random_plurality_wolf, trained_plurality_agent, num_times=10, hidden_state_size=128, voting_type=&quot;plurality&quot;)
-</pre></div>
-</div>
-</div>
-</div>
-<p>Then we use this very unoptimized function to pull out graphs for each phase in each day, and color nodes and edges accordingly. Purple is a wolf, Green is a villager. Red means you died this phase, Black means the agent was already dead during the phase.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def viz_replay(replay):
-    #[wolf for wolf in stage[&quot;werewolves&quot;]]
-    wolves = replay[0][&#39;werewolves&#39;]
-    villagers = replay[0][&#39;villagers&#39;]
-    winners = None
-
-    day_info = {}
-    color_map = {}
-    pos = None
-
-    vote_rounds = []
-    night_rounds = []
-    for i, phase in enumerate(replay):
-        if phase[&quot;phase&quot;] == Phase.VOTING:
-            vote_rounds.append(phase)
-        if phase[&quot;phase&quot;] == Phase.NIGHT:
-            night_rounds.append(phase)
-        if i == 0:
-
-            # setup the first graph for the position and color map
-            G = nx.DiGraph()
-            wolf_nodes = [(id, {&#39;color&#39;: &#39;purple&#39;}) for id in wolves]
-            villager_nodes = [(id, {&#39;color&#39;: &#39;green&#39;}) for id in villagers]
-            G.add_nodes_from(wolf_nodes)
-            G.add_nodes_from(villager_nodes)
-
-            if pos == None:
-                pos = nx.spring_layout(G)
-            continue
-    
-        if phase[&#39;day&#39;] not in day_info.keys():
-            day_info[phase[&#39;day&#39;]] = []
-            color_map[phase[&#39;day&#39;]] = []
-
-            # 
-        if phase[&quot;phase&quot;] == Phase.VOTING:
-            if len(vote_rounds) == 1:
-                dead_players = []
-                # dead_wolves = []
-                executed_this_round = phase[&#39;executed&#39;][0]
-                killed_this_round = []
-            else:
-                dead_players = list((set(phase[&#39;executed&#39;]) &amp; set(vote_rounds[-2][&#39;executed&#39;])) | set(phase[&#39;killed&#39;]))
-                # dead_wolves = list(set(wolves) &amp; set(dead_players))
-                executed_this_round = list(set(phase[&#39;executed&#39;]) - set(vote_rounds[-2][&#39;executed&#39;]))[0]
-                killed_this_round = []
-
-        elif phase[&quot;phase&quot;] == Phase.NIGHT:
-            if len(night_rounds) == 1:
-                dead_players = phase[&#39;executed&#39;]
-                executed_this_round = []
-                killed_this_round = phase[&#39;killed&#39;]
-            else:
-                dead_players = list((set(phase[&#39;killed&#39;]) &amp; set(night_rounds[-2][&#39;killed&#39;])) | set(phase[&#39;executed&#39;]))
-                executed_this_round = []
-                killed_this_round = list(set(phase[&#39;killed&#39;]) - set(night_rounds[-2][&#39;killed&#39;]))[0]
-        else:
-            dead_players = list(set(phase[&#39;executed&#39;]) | set(phase[&#39;killed&#39;]))
-            executed_this_round = []
-            killed_this_round = []
-
-        G = nx.DiGraph()
-        wolf_nodes = [(id, {&#39;color&#39;: &#39;purple&#39;}) for id in wolves]
-        villager_nodes = [(id, {&#39;color&#39;: &#39;green&#39;}) for id in villagers]
-        G.add_nodes_from(wolf_nodes)
-        G.add_nodes_from(villager_nodes)
-
-        graph_color_map = []
-        for node in G:
-            if &#39;color&#39; in G.nodes[node]:
-                if node in dead_players:
-                    graph_color_map.append(&#39;black&#39;)
-                elif node in executed_this_round or node in killed_this_round:
-                    graph_color_map.append(&#39;red&#39;)
-                else:
-                    graph_color_map.append(G.nodes[node][&#39;color&#39;])
-            else:
-                graph_color_map.append(&#39;blue&#39;)
-
-        # edges for plurality
-        if phase[&quot;phase&quot;] == Phase.NIGHT:
-            # hide villager votes
-            edges = [(voter, f&#39;player_{target}&#39;) for voter, target in phase[&#39;votes&#39;].items() if target != len(wolves) + len(villagers) and voter not in villagers]
-        else:
-            edges = [(voter, f&#39;player_{target}&#39;) for voter, target in phase[&#39;votes&#39;].items() if target != len(wolves) + len(villagers)]
-        G.add_edges_from(edges)
-
-        day_info[phase[&#39;day&#39;]].append(G)
-        color_map[phase[&#39;day&#39;]].append(graph_color_map)
-
-    return day_info, pos, color_map
-
-viz_info, pos, cmap = viz_replay(trained_plurality_replays[0])
-</pre></div>
-</div>
-</div>
-</div>
-<p>This loose piece of code takes in the output of our function and actually draws out the game in a matplotlib subplot graph with rows representing incrementing days, and columns representing incrementing phases.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># TODO: clean this up, maybe use newer matplotlib 3.4 subplots and put it in the viz_info function
-
-day_num = len(viz_info.keys())
-phases_per_day = max([len(val) for val in viz_info.values()])
-
-phase_map = list(range(phases_per_day))
-phase_range_accusation = phase_map[0:-2]
-
-fig, axs = plt.subplots(day_num,phases_per_day, figsize=(15,13), sharey=True, sharex=True)
-
-for day in range(1,day_num+1):
-    # axs[day-1][0].annotate(&quot;Hello&quot;, (0.1,0.5) )
-    for j, graph in enumerate(viz_info[day]):
-        if day == 1:
-            if j in phase_range_accusation:
-                title = f&#39;Accusation Phase&#39;
-            elif j == phase_map[-2]:
-                title = f&#39;Voting Phase&#39;
-            elif j == phase_map[-1]:
-                title = f&#39;Night Phase&#39;
-            axs[day-1][j].set_title(title)
-        nx.draw(viz_info[day][j], pos, ax=axs[day-1][j], node_color=cmap[day][j])
-    axs[day-1][0].set_ylabel(f&#39;Day {day}&#39;)
-
-day_phase_lengths = [len(val) for val in viz_info.values()]
-if day_phase_lengths[-1] &lt; day_phase_lengths[-2]:
-    axs[-1][-1].axis(&#39;off&#39;)
-    plt.suptitle(&quot;Villagers win!&quot;)
-else:
-    plt.suptitle(&quot;Wolves win!&quot;)
-
-fig.tight_layout()
-plt.show()
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/8a73b4212e68142e168d41689bf636caad4e145f31678c4cad4fdfdc26c67358.png" src="_images/8a73b4212e68142e168d41689bf636caad4e145f31678c4cad4fdfdc26c67358.png" />
-</div>
-</div>
+<section class="tex2jax_ignore mathjax_ignore" id="discussion">
+<h1>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h1>
+<section id="approval-vs-plurality">
+<h2>Approval vs Plurality<a class="headerlink" href="#approval-vs-plurality" title="Permalink to this heading">#</a></h2>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -614,20 +444,20 @@ plt.show()
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="indicators.html"
+       href="approval-analysis.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Gameplay Indicators</p>
+        <p class="prev-next-title">Approval Voting</p>
       </div>
     </a>
     <a class="right-next"
-       href="plurality-analysis.html"
+       href="future.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Plurality Voting</p>
+        <p class="prev-next-title">Future Directions</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -640,6 +470,20 @@ plt.show()
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-vs-plurality">Approval vs Plurality</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
