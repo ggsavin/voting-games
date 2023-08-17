@@ -1015,6 +1015,22 @@ fig.text(-0.02, 0.20, &#39;Day 4&#39;)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tpv_stacked[0].shape[-1], 1, sharex=True, figsize=(10,50))
+
+for indicator in range(tpv_stacked[0].shape[-1]):
+    for day in range(tpv_stacked[0].shape[0]):
+        axs[indicator].plot(list(range(stacked.shape[1])), stacked[:,:,indicator][day], linewidth=2.0, label=f&#39;Day {day+1}&#39;)
+        axs[indicator].legend()
+        axs[indicator].set_title(indicator_titles[indicator])
+
+x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
+axs[-1].set_xticks([0,1,2], x_tick_labels, rotation=40)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tpv_stacked[0].shape[-1], 4, sharex=True, sharey=&#39;row&#39;, figsize=(17,15))
 
 for indicator in range(tpv_stacked[0].shape[-1]):
@@ -1036,30 +1052,6 @@ fig.tight_layout()
 </div>
 <div class="cell_output docutils container">
 <img alt="_images/bcde55f0673623643b2f7248d87f3bf865583454ff1f076e6af4fa356567d60f.png" src="_images/bcde55f0673623643b2f7248d87f3bf865583454ff1f076e6af4fa356567d60f.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tpv_stacked[0].shape[-1], 1, sharex=True, figsize=(10,50))
-
-for indicator in range(tpv_stacked[0].shape[-1]):
-    for day in range(tpv_stacked[0].shape[0]):
-        axs[indicator].plot(list(range(stacked.shape[1])), stacked[:,:,indicator][day], linewidth=2.0, label=f&#39;Day {day+1}&#39;)
-        axs[indicator].legend()
-        axs[indicator].set_title(indicator_titles[indicator])
-
-x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
-axs[-1].set_xticks([0,1,2], x_tick_labels, rotation=40)
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.axis.XTick at 0x7f92aa591450&gt;,
- &lt;matplotlib.axis.XTick at 0x7f92aa592140&gt;,
- &lt;matplotlib.axis.XTick at 0x7f92a95c7ca0&gt;]
-</pre></div>
-</div>
-<img alt="_images/1f7a84639d36df6f086b0f82bb7721dcbbd1c4224e86511b4d552247f9d30b63.png" src="_images/1f7a84639d36df6f086b0f82bb7721dcbbd1c4224e86511b4d552247f9d30b63.png" />
 </div>
 </div>
 </section>
