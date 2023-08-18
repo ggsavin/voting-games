@@ -366,6 +366,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-takeaway">Quick Takeaway</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#win-rates">Win Rates</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-elapsed-before-a-villager-win">Days elapsed before a villager win</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-executions">Days between wolf executions</a></li>
@@ -428,6 +429,10 @@ from tabulate import tabulate
 <h1>Plurality Voting<a class="headerlink" href="#plurality-voting" title="Permalink to this heading">#</a></h1>
 <p>Plurality is a voting method where each voter picks a single candidate, and the candidate with the most votes is selected. It’s simplicity has lead to wide adoption, however there are quite a few drawbacks, one of which being the limited expressibility of a voter.</p>
 <p>In our Werewolf plurality implementation, an agent can only select a single target, and cannot express their beliefs towards the remaining agents. This is also the voting mechanism used in every paper involving the Werewolf game up to now, so we want to see how our trained agents compare.</p>
+<section id="quick-takeaway">
+<h2>Quick Takeaway<a class="headerlink" href="#quick-takeaway" title="Permalink to this heading">#</a></h2>
+<p>Trained villager agents performed better than CL-Targets villagers, even when pitted against werewolf policies they were not trained against. Using the below indicators, we have a theory that these agents use accusation phases to implicitly signal intent by targetting dead villagers to then workout who they believe are actually werewolves and who are truly villagers.</p>
+</section>
 <section id="win-rates">
 <h2>Win Rates<a class="headerlink" href="#win-rates" title="Permalink to this heading">#</a></h2>
 <p>We want to see how our hand-crafted agents play against eachother, with special interest given to coordinated random villagers and wolves.</p>
@@ -796,7 +801,12 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="percetange-of-targets-towards-wolves">
 <h4>Percetange of targets towards wolves<a class="headerlink" href="#percetange-of-targets-towards-wolves" title="Permalink to this heading">#</a></h4>
-<p>A pretty straightforward indicator where the higher the number, the more consensus and better off the villagers are. Because this number increases across phases, we can again intuit some form of consensus between actual villagers. In the last day, we see that</p>
+<p>This indicator is straightforward and easy to interpret. The higher the number, the more a wolf is targetted. There are three takeaways here:</p>
+<ol class="arabic simple">
+<li><p>As agents advance through the phases, votes increasingly target wolves, highlighting some consensus amongst villagers.</p></li>
+<li><p>In the last day, almost every villager targets wolves during voting.</p></li>
+<li><p>When taken in tandem with unique target ratios (our first indicator), we can say that each day, during the first phase, villagers seem to spread out their votes to gather more information, and then sythesize what they see from others and focus their targets on suspected wolves.</p></li>
+</ol>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tpv_stacked[1], indicator_titles[2], 2, day_colors)
@@ -807,6 +817,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <img alt="_images/48536d13310e87d8c58d33ad62f85b5f6bfa4cd9bc6a1ffeade77f2125333c33.png" src="_images/48536d13310e87d8c58d33ad62f85b5f6bfa4cd9bc6a1ffeade77f2125333c33.png" />
 </div>
 </div>
+<p>We can see similar behavior against other werewolf policies, with the random wolf causing the most trouble. By the last day, when agents have the most information, they are nowhere near as confident against random wolves as opposed to all other policies.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tpv_stacked, indicator_titles[2], 2)
@@ -820,6 +831,8 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="percentage-of-targets-towards-dead-players">
 <h4>Percentage of targets towards dead players<a class="headerlink" href="#percentage-of-targets-towards-dead-players" title="Permalink to this heading">#</a></h4>
+<p>This indicator also has a negative reward associated with it. Every time an agent targets a dead player, they get a negative reward, and their vote is masked by the environment. Given that agents can only select a single candidate in plurality voting, a wasted vote has more of a negative impact towards villagers chances to win.</p>
+<p>We can see that throughout the phases in a day, agents target dead players less, with the voting round having the smallest percentage consistently. Voting on accusation days are simply for information, so agents seem to be using these phases to broadcast possible intent, and making sure their target is a viable vote does not seem as important. With <span class="math notranslate nohighlight">\(2\)</span> agents dying per day, by the last day, a majority are dead, so it is likely agents have learned to target dead players as a way to signal during accusation rounds.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tpv_stacked[1], indicator_titles[3], 3, day_colors)
@@ -830,6 +843,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <img alt="_images/2eda9a962e715a196fc0a7f04bcd976a0ae087825a96d16e5a7ae0a9a1a77c17.png" src="_images/2eda9a962e715a196fc0a7f04bcd976a0ae087825a96d16e5a7ae0a9a1a77c17.png" />
 </div>
 </div>
+<p>Again, we show the indicator between trained agents against different werewolf policies, and the same trend as above is seen in all games. This strengthens our belief that dead players are used as implicit signaling during accusastion phases.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tpv_stacked, indicator_titles[3], 3)
@@ -843,7 +857,9 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="percentage-of-targets-towards-dead-wolves">
 <h4>Percentage of targets towards dead wolves<a class="headerlink" href="#percentage-of-targets-towards-dead-wolves" title="Permalink to this heading">#</a></h4>
-<p>Indicator closely related to the one tracking <em>percetange of targets towards wolves</em>, because wheras we want wolves taregtted more, we want dead wolves targetted less as the day goes on. This is indeed what occured, throughout the phases and days.</p>
+<p>WHen taken in consideriation with targets towards dead players, we can see that most of the dead targetting are towards different villagers, not wolves. There may be more complicated indicators that can shed some more light on this connection, but we believe that this further strengthens the idea of implicit communication of roles by targetting dead villagers more than dead wolves.</p>
+<p>When taken in conjunction with <em>percetange of targets towards wolves</em>, the majority of the targetting is towards suspected wolves that are still alive.</p>
+<p>When looking at it upfront, this number is low to begin with, and trends down throughout phases, indicating more signaling, and less desire for trained agents to target dead players in voting rounds, as this will have more disasterous consequences than targetting during accusation phases.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tpv_stacked[1], indicator_titles[4], 4, day_colors)
@@ -854,6 +870,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <img alt="_images/81ac88ee2fa992682f3d725490df2a8e9fc4de6ec538257bb326ebdce3d2820d.png" src="_images/81ac88ee2fa992682f3d725490df2a8e9fc4de6ec538257bb326ebdce3d2820d.png" />
 </div>
 </div>
+<p>These ideas hold throughout games played against different werewolf policies, with no real standouts.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tpv_stacked, indicator_titles[4], 4)
@@ -936,6 +953,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-takeaway">Quick Takeaway</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#win-rates">Win Rates</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-elapsed-before-a-villager-win">Days elapsed before a villager win</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#days-between-wolf-executions">Days between wolf executions</a></li>
