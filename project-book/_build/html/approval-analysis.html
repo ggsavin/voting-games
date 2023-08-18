@@ -448,19 +448,7 @@ from tabulate import tabulate
 <p>Cite approval voting, and more of a blurb on it.</p>
 <section id="quick-takeaways">
 <h2>Quick Takeaways<a class="headerlink" href="#quick-takeaways" title="Permalink to this heading">#</a></h2>
-<p>Approval voting is a novel twist to the voting mechanics of werewolf, and our trained agents were able to learn.</p>
-<p>They seem to rely quite a bit using likes and neutrals, so werewolf policies that set these randomly were able to impact these trained agents.</p>
-<p>We believe that because targetting and liking are at the start and the end of our classification outputs, agents actually learned this ordinal representation.</p>
-<p>They like themselves more than they target themselves</p>
-<p>Targetting themselves during accusation rounds does not result in negative rewards, only if they do it during voting rounds. In addition</p>
-<p>This indicator solidifies our belief that likes have been learned to represent trust regardless of whether a player is alive or dead</p>
-<p>Whereas in plurality agents, there seemed to be some targetting of players during accusation phases for signaling and conveying some more information, it seems as though agents were more honest with their beliefs when proposing and updating their approval votes.</p>
-<p>– Old stuff below –</p>
-<p>Even though we are pnealizing villagers in reward functions, they are not mechanical penalities for voting for wolves, because selection masks out dead wolves. So its fine to vote based on reputation even if they are dead.</p>
-<p>Harder to tell what is happening given these indicators, but we can assume given the win rates and tie rates that targets and likes are flying around, yet the main targets are still the wolves.</p>
-<p>We can see that percentage of votes targetting wolves goes up through the phases, and moreso across days. This does indicate uncertain consensus forming amongst villagers.</p>
-<p>Maybe self liking indicates own assurance with votes? These go up along with wolf targetting throughout phases in a day.</p>
-<p>Self targetting goes down.</p>
+<p>Trained villager agents were able to successfully play against coordinated werewolf policies better than the other heuristic villager policies, but were stumped by werewolf policies that randomized which players received likes and neutral votes. This indicates that trained agents learned to rely on likes and neutrals, despite them not providing any direct rewards or having any impact on the executed target consensus. Furthermore, agents seemed to have learned the ordinal representation of these three voting options (dislike/target, neutral, like), with liking being a form of trust signaling: either trust in others, or trust in themselves and their votes. Given that each trained villager roughly trusted 3-4 other agents, likes could have also acted as a form of opinion vetting for villagers to trust other villagers if they shared a like in common.</p>
 </section>
 <section id="win-rates">
 <h2>Win Rates<a class="headerlink" href="#win-rates" title="Permalink to this heading">#</a></h2>
