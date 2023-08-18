@@ -780,11 +780,28 @@ day_colors = [&quot;#115f9a&quot;, &quot;#22a7f0&quot;, &quot;#76c68f&quot;, &qu
 
 def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
     plt.figure(figsize=(9,4))
+    x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
     for day, color in zip(range(stacked_info.shape[0]), colors):
         plt.plot(list(range(stacked_info.shape[1])), stacked_info[:,:,indicator_id][day], linewidth=2.0, color=color, label=f&#39;Day {day+1}&#39;)
+        plt.xticks([0,1,2], x_tick_labels, rotation=40)
         plt.legend()
         plt.suptitle(indicator_title)
     plt.plot()
+
+
+def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_id):
+    x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
+    fig, axs = plt.subplots(1, 4, sharey=&#39;row&#39;, figsize=(15,6))
+
+    for day in range(stacked_info[0].shape[0]):
+        for name, stacked in zip([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;, &quot;CRLWolves&quot;, &quot;AggroWolves&quot;], stacked_info):
+            axs[day].plot(list(range(stacked.shape[1])), stacked[:,:,indicator_id][day], linewidth=2.0, label=name)
+            axs[day].set_xticks([0,1,2], x_tick_labels, rotation=40)
+            axs[day].set_xlabel(f&#39;Day {day + 1}&#39;)
+
+    fig.suptitle(f&#39;{indicator_title}&#39;)
+    fig.legend([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;, &quot;CRLWolves&quot;, &quot;AggroWolves&quot;], loc=&quot;upper right&quot;)
+    fig.tight_layout()
 </pre></div>
 </div>
 </div>
@@ -799,7 +816,17 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/9ad4e50871ae90e0ac64054db159905347c66500807da4950d85b29bdd9b397c.png" src="_images/9ad4e50871ae90e0ac64054db159905347c66500807da4950d85b29bdd9b397c.png" />
+<img alt="_images/b5a27e890d753d4c64f965e5d01bd1356e4787defb7f4e01a6ec4896e1b5bd46.png" src="_images/b5a27e890d753d4c64f965e5d01bd1356e4787defb7f4e01a6ec4896e1b5bd46.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[0], 0)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/9ff5099a1797f58d9686a5f4dce892a4eda60893f66a747915b891c71dc8d0a6.png" src="_images/9ff5099a1797f58d9686a5f4dce892a4eda60893f66a747915b891c71dc8d0a6.png" />
 </div>
 </div>
 </section>
@@ -812,7 +839,17 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/53e90c4fe6477d24479282840b5cf3ad919efe6b3bdec78499f859ad8a03b7af.png" src="_images/53e90c4fe6477d24479282840b5cf3ad919efe6b3bdec78499f859ad8a03b7af.png" />
+<img alt="_images/abf3d5ff671f6f406142125e2d542ef0549a504335137201eb2d43015de5507f.png" src="_images/abf3d5ff671f6f406142125e2d542ef0549a504335137201eb2d43015de5507f.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[1], 1)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/904cb2144a1649213545b5d710561293fc840f09bfc07e5e63ccd405327d5c53.png" src="_images/904cb2144a1649213545b5d710561293fc840f09bfc07e5e63ccd405327d5c53.png" />
 </div>
 </div>
 </section>
@@ -828,6 +865,16 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 <img alt="_images/f479d198ca403281d16be4e72c0964d99488842e56663670d28f53b7d27ecaa4.png" src="_images/f479d198ca403281d16be4e72c0964d99488842e56663670d28f53b7d27ecaa4.png" />
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[2], 2)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a46cf7de043ed39b6a9f03faccba076a40dcaa2035fe9ccb52f644ebfbc3ae98.png" src="_images/a46cf7de043ed39b6a9f03faccba076a40dcaa2035fe9ccb52f644ebfbc3ae98.png" />
+</div>
+</div>
 </section>
 <section id="likelihood-of-self-targetting">
 <h4>Likelihood of Self Targetting<a class="headerlink" href="#likelihood-of-self-targetting" title="Permalink to this heading">#</a></h4>
@@ -841,6 +888,16 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 <img alt="_images/f8de7f56f81a523fcf0a4f0e77a77570ca920786e9d5ed0acc57f2e273d93620.png" src="_images/f8de7f56f81a523fcf0a4f0e77a77570ca920786e9d5ed0acc57f2e273d93620.png" />
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[3], 3)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/2cd735b6efc04000a21e26650354e61a81ca6de3195d5e06da5acf64cecc5a87.png" src="_images/2cd735b6efc04000a21e26650354e61a81ca6de3195d5e06da5acf64cecc5a87.png" />
+</div>
+</div>
 </section>
 <section id="likelihood-of-self-liking">
 <h4>Likelihood of Self Liking<a class="headerlink" href="#likelihood-of-self-liking" title="Permalink to this heading">#</a></h4>
@@ -852,6 +909,16 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 </div>
 <div class="cell_output docutils container">
 <img alt="_images/74f37769592a032640a8cd55cd4e297b79fbce3ed913b603d445712a3439623a.png" src="_images/74f37769592a032640a8cd55cd4e297b79fbce3ed913b603d445712a3439623a.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[4], 4)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/fcaf7d08001ed54f9a191022b5d5d578bfeabf5d2cd9ff7c78772c24f08deda3.png" src="_images/fcaf7d08001ed54f9a191022b5d5d578bfeabf5d2cd9ff7c78772c24f08deda3.png" />
 </div>
 </div>
 </section>
@@ -868,6 +935,16 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 <img alt="_images/a78e0eb4b76b2fc1c64d4c73e775b39f4367f2200544557df2dee627babc1d2a.png" src="_images/a78e0eb4b76b2fc1c64d4c73e775b39f4367f2200544557df2dee627babc1d2a.png" />
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[5], 5)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/f1d7326ad56d6891adacde652a159c389705488a1a0c9ce590437229d31bada8.png" src="_images/f1d7326ad56d6891adacde652a159c389705488a1a0c9ce590437229d31bada8.png" />
+</div>
+</div>
 </section>
 <section id="percent-of-wolves-in-top-likes">
 <h4>Percent of Wolves in Top Likes<a class="headerlink" href="#percent-of-wolves-in-top-likes" title="Permalink to this heading">#</a></h4>
@@ -876,6 +953,19 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[6], 6, day_colors)
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/230e646e15df791a797c99026a281afc9111800979d3a9803160b9913faa89f4.png" src="_images/230e646e15df791a797c99026a281afc9111800979d3a9803160b9913faa89f4.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[6], 6)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/22e384c4dc28cefd4d4d7e84b80c0ff14532b9cf3d95a8df37459bf05a06fbc6.png" src="_images/22e384c4dc28cefd4d4d7e84b80c0ff14532b9cf3d95a8df37459bf05a06fbc6.png" />
 </div>
 </div>
 </section>
@@ -887,6 +977,19 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/7b9c19e752f897bd6aa774691fef71fe8046d3f3c5157c2298b24d4b9ff8446e.png" src="_images/7b9c19e752f897bd6aa774691fef71fe8046d3f3c5157c2298b24d4b9ff8446e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[7], 7)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1df75df2404e108cf6598e00cc19467395fa50b39044b276b5763937279a5b4b.png" src="_images/1df75df2404e108cf6598e00cc19467395fa50b39044b276b5763937279a5b4b.png" />
+</div>
 </div>
 </section>
 <section id="percent-of-votes-targetting-dead-wolves">
@@ -896,6 +999,19 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[8], 8, day_colors)
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a0badb7ff31ede8421007ccec6f4209cd4a5dc6fa92169474996ea78b9704114.png" src="_images/a0badb7ff31ede8421007ccec6f4209cd4a5dc6fa92169474996ea78b9704114.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[8], 8)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/0e4fdb415b721252ad35722f8ee6057891610cb03d0f896018c7013fc0e32377.png" src="_images/0e4fdb415b721252ad35722f8ee6057891610cb03d0f896018c7013fc0e32377.png" />
 </div>
 </div>
 </section>
@@ -907,6 +1023,19 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/fe77a197fbb6f666ac5a6f05d3b53719d9917dab80c6b6e636f3c3b3f79ec8f0.png" src="_images/fe77a197fbb6f666ac5a6f05d3b53719d9917dab80c6b6e636f3c3b3f79ec8f0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[9], 9)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/765c0c3acc1382034718f2f8fb8467249ecc707bdf48e9b158be739a4ed27db9.png" src="_images/765c0c3acc1382034718f2f8fb8467249ecc707bdf48e9b158be739a4ed27db9.png" />
+</div>
 </div>
 </section>
 <section id="percent-of-likes-towards-dead-wolves">
@@ -916,6 +1045,19 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[10], 10, day_colors)
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/d999730b053bd128dd48a4947cb1d0dcfd9ca227fd18873a909c478bb570afcd.png" src="_images/d999730b053bd128dd48a4947cb1d0dcfd9ca227fd18873a909c478bb570afcd.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[10], 10)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/61921031b0df62c061f2b6640cb95397e8e002a6b94410e586039e2f3e2ceacc.png" src="_images/61921031b0df62c061f2b6640cb95397e8e002a6b94410e586039e2f3e2ceacc.png" />
 </div>
 </div>
 </section>
@@ -927,6 +1069,19 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/85ce23ba4dd02ece81c90f4a4b9424d38c3d9112db5db0058ad23a06c07d705f.png" src="_images/85ce23ba4dd02ece81c90f4a4b9424d38c3d9112db5db0058ad23a06c07d705f.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[11], 11)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/0f938946c608f70e69a2c1cb0a49ddd6121f7fb787582373bb05ea76dcba257f.png" src="_images/0f938946c608f70e69a2c1cb0a49ddd6121f7fb787582373bb05ea76dcba257f.png" />
+</div>
 </div>
 </section>
 <section id="percent-of-likes-for-dead-villagers">
@@ -936,6 +1091,19 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[12], 12, day_colors)
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a5305d24153093918ea6228a6915111000b0119a10a01b02b8534ab441cb35fa.png" src="_images/a5305d24153093918ea6228a6915111000b0119a10a01b02b8534ab441cb35fa.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[12], 12)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/060706298e3dee3ecd04be04cd3c718167ba45f54167fe92f5e9ef604d18c7ea.png" src="_images/060706298e3dee3ecd04be04cd3c718167ba45f54167fe92f5e9ef604d18c7ea.png" />
 </div>
 </div>
 </section>
@@ -947,177 +1115,25 @@ def plot_indicator(stacked_info, indicator_title, indicator_id, colors):
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/5c54d72cb6fc8ba3a3298e338bf99e6d83d66761c5d1ff2f71bea464bd21293a.png" src="_images/5c54d72cb6fc8ba3a3298e338bf99e6d83d66761c5d1ff2f71bea464bd21293a.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[13], 13)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/0e73b4d4ef6dcdef0d427058dc3db55735c3f638dc34670588adba2889a4ae58.png" src="_images/0e73b4d4ef6dcdef0d427058dc3db55735c3f638dc34670588adba2889a4ae58.png" />
+</div>
 </div>
 <p>Even though we are pnealizing villagers in reward functions, they are not mechanical penalities for voting for wolves, because selection masks out dead wolves. So its fine to vote based on reputation even if they are dead.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.style.use(&#39;ggplot&#39;)
-
-# make data
-x = [1,2,3]
-#y = tpv_stacked[:,:,0][3]
-
-# plot
-fig, axs = plt.subplots(4, 1, figsize=(6,8), sharex=True, sharey=True)
-
-for day in range(tav_stacked[0].shape[0]):
-    for name, stacked in zip([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;, &quot;CRLWolves&quot;, &quot;AggroWolves&quot;], tav_stacked):
-        axs[day].plot(list(range(stacked.shape[1])), stacked[:,:,4][day], linewidth=2.0, label=name)
-
-# set 
-x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
-axs[3].set_xticks([0,1,2], x_tick_labels, rotation=40)
-
-axs[0].legend(loc=&#39;upper center&#39;, bbox_to_anchor=(0.5, 1.40),
-          ncol=3, fancybox=True, shadow=True)
-
-fig.suptitle(&quot;Trained Villagers Targetting Wolves&quot;)
-
-fig.text(0.5, -0.02, &#39;Phases&#39;, ha=&#39;center&#39;)
-# fig.text(0.04, 0.5, &#39;Days&#39;, va=&#39;center&#39;, rotation=&#39;vertical&#39;)
-
-fig.text(-0.02, 0.80, &#39;Day 1&#39;)
-fig.text(-0.02, 0.60, &#39;Day 2&#39;)
-fig.text(-0.02, 0.40, &#39;Day 3&#39;)
-fig.text(-0.02, 0.20, &#39;Day 4&#39;)
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(-0.02, 0.2, &#39;Day 4&#39;)
-</pre></div>
-</div>
-<img alt="_images/d23759926d529da73e66bc5ff8b2e91e3597afef12d2daaab4534a9c156cc18c.png" src="_images/d23759926d529da73e66bc5ff8b2e91e3597afef12d2daaab4534a9c156cc18c.png" />
-</div>
-</div>
 <p>Harder to tell what is happening given these indicators, but we can assume given the win rates and tie rates that targets and likes are flying around, yet the main targets are still the wolves.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># TODO : Graph one stat across days on the same plot
-
-fig = plt.figure()
-
-for day in range(tav_stacked[0].shape[0]):
-    plt.plot(list(range(stacked.shape[1])), stacked[:,:,4][day], linewidth=2.0, label=f&#39;Day {day+1}&#39;)
-
-plt.legend()
-
-# plt.plot([1,2,3], [1,2,3])
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f5357c21b10&gt;
-</pre></div>
-</div>
-<img alt="_images/94808906aa561f10d2f3a829043534426adcd93d404e184a56a248d62ac18a6f.png" src="_images/94808906aa561f10d2f3a829043534426adcd93d404e184a56a248d62ac18a6f.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tav_stacked[0].shape[-1], 1, sharex=True, figsize=(10,50))
-
-for indicator in range(tav_stacked[0].shape[-1]):
-    for day in range(tav_stacked[0].shape[0]):
-        axs[indicator].plot(list(range(stacked.shape[1])), stacked[:,:,indicator][day], linewidth=2.0, label=f&#39;Day {day+1}&#39;)
-        axs[indicator].legend()
-        axs[indicator].set_title(indicator_titles[indicator])
-
-x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
-axs[-1].set_xticks([0,1,2], x_tick_labels, rotation=40)
-
-# lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes[-1]]
-# lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-#fig.suptitle(&quot;All Indicators Across Days and Phases&quot;)
-# fig.legend([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;, &quot;CRLWolves&quot;, &quot;AggroWolves&quot;], loc=&quot;upper right&quot;)
-# fig.tight_layout()
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.axis.XTick at 0x7f5349876fe0&gt;,
- &lt;matplotlib.axis.XTick at 0x7f53498749a0&gt;,
- &lt;matplotlib.axis.XTick at 0x7f5349b52920&gt;]
-</pre></div>
-</div>
-<img alt="_images/450cb2e5ffbf7f2ad8df9c9497a0e1d59ee6bd6da801755a10b9ce07d1b647eb.png" src="_images/450cb2e5ffbf7f2ad8df9c9497a0e1d59ee6bd6da801755a10b9ce07d1b647eb.png" />
-</div>
-</div>
 <p>We can see that percentage of votes targetting wolves goes up through the phases, and moreso across days. This does indicate uncertain consensus forming amongst villagers.</p>
 <p>Maybe self liking indicates own assurance with votes? These go up along with wolf targetting throughout phases in a day.</p>
 <p>Self targetting goes down.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tav_stacked[0].shape[-1]
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.style.use(&#39;ggplot&#39;)
-
-# make data
-x = [1,2,3]
-#y = tpv_stacked[:,:,0][3]
-
-# plot
-fig, axs = plt.subplots(5, 4, figsize=(8,8), sharex=True, sharey=True)
-
-for day in range(tav_stacked[0].shape[0]):
-    for name, stacked in zip([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;, &quot;CRLWolves&quot;, &quot;AggroWolves&quot;], tav_stacked):
-        axs[day].plot(list(range(stacked.shape[1])), stacked[:,:,4][day], linewidth=2.0, label=name)
-
-# set 
-x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
-axs[3].set_xticks([0,1,2], x_tick_labels, rotation=40)
-
-axs[0].legend(loc=&#39;upper center&#39;, bbox_to_anchor=(0.5, 1.40),
-          ncol=3, fancybox=True, shadow=True)
-
-fig.suptitle(&quot;Trained Villagers Targetting Wolves&quot;)
-
-fig.text(0.5, -0.02, &#39;Phases&#39;, ha=&#39;center&#39;)
-# fig.text(0.04, 0.5, &#39;Days&#39;, va=&#39;center&#39;, rotation=&#39;vertical&#39;)
-
-fig.text(-0.02, 0.80, &#39;Day 1&#39;)
-fig.text(-0.02, 0.60, &#39;Day 2&#39;)
-fig.text(-0.02, 0.40, &#39;Day 3&#39;)
-fig.text(-0.02, 0.20, &#39;Day 4&#39;)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tav_stacked[0].shape[-1], 4, sharex=True, sharey=&#39;row&#39;, figsize=(17,35))
-
-for indicator in range(tav_stacked[0].shape[-1]):
-    for day in range(tav_stacked[0].shape[0]):
-        for name, stacked in zip([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;, &quot;CRLWolves&quot;, &quot;AggroWolves&quot;], tav_stacked):
-            axs[indicator][day].plot(list(range(stacked.shape[1])), stacked[:,:,indicator][day], linewidth=2.0, label=name)
-
-x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
-for i in range(4):
-    axs[-1][i].set_xticks([0,1,2], x_tick_labels, rotation=40)
-
-# lines_labels = [ax.get_legend_handles_labels() for ax in fig.axes[-1]]
-# lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-fig.suptitle(&quot;All Indicators Across Days and Phases&quot;)
-fig.legend([&quot;Random&quot;, &quot;CRWolves&quot;, &quot;RevWolves&quot;, &quot;CRevWolves&quot;, &quot;CRLWolves&quot;, &quot;AggroWolves&quot;], loc=&quot;upper right&quot;)
-fig.tight_layout()
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/671049f7da7943363b282331efc97a4787444d42ce4effdc6ac0cabb0d372089.png" src="_images/671049f7da7943363b282331efc97a4787444d42ce4effdc6ac0cabb0d372089.png" />
-</div>
-</div>
 </section>
 </section>
 </section>
