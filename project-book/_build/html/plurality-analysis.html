@@ -745,7 +745,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 <section id="unique-targets">
 <h4>Unique Targets<a class="headerlink" href="#unique-targets" title="Permalink to this heading">#</a></h4>
-<p>This is a more dynamic indicator, because total targets get smaller per day, so if roughly the same number of people are targetted, it will be higher each subsequent day day, which is something we do see. An interpretation that can be made though, is that as we progress throughout phases in the day, this number trends down, indicating more consensus between agents.</p>
+<p>This is indicator is a ratio of votes towards different targets. The lower the numbers are, the more consensus there is. Unfortunately, there is a dynamic component to it, as each day there are <span class="math notranslate nohighlight">\(2\)</span> less agents. Looking at trends across phases is more indicative of consensus.  We can see that during each day, the number drops as we progress through phases, with the voting phase having the least amount of unique targets. The biggest drop can be seen on the last day, which makes sense as agents have stronger beliefs as to who the last werewolf would be.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tpv_stacked[1], indicator_titles[0], 0, day_colors)
@@ -756,6 +756,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <img alt="_images/2f7901f1505b4492c5a361eb4d9bb24bd0d2cd810440a13231ea4a784eb40aba.png" src="_images/2f7901f1505b4492c5a361eb4d9bb24bd0d2cd810440a13231ea4a784eb40aba.png" />
 </div>
 </div>
+<p>When looking at this indicator across games played between the trained agents and other wolf targets, the behavior remains very similar. The biggest difference we can make out here is that because our agents were trained against coordinated wolves, we see the largest drops in unique targets when the werewolves play a coordinated strategy such as CRWolves or CRevWolves.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tpv_stacked, indicator_titles[0], 0)
@@ -769,7 +770,8 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="likelihood-of-self-voting">
 <h4>Likelihood of self voting<a class="headerlink" href="#likelihood-of-self-voting" title="Permalink to this heading">#</a></h4>
-<p>While self-voting is penalized, agents may have learned to use it more in the accuastion rounds to indicate trust in themselves. It does go down and then back up</p>
+<p>Self-Voting is an indicator that has a negative associated reward. Agents will always be penalized if they target themselves, and given that they can only select a single candidate for executing in plurality voting, a self-vote can be quite disasterous.</p>
+<p>We can see that by the very low likelihoods, agents have learned to not do it much, and we can attribute some of this to the soft policy sampling selecting a self target every now and then, and maybe very rarely, agents may do it strategically. Because it tends to trend down throughout the day, trained agents are more comfortable doing it during accusation rounds.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tpv_stacked[1], indicator_titles[1], 1, day_colors)
@@ -780,6 +782,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <img alt="_images/5cb213bf608b40e63cbddcc647ee83bdd481b5a8f2b27122b6de867793e5d67c.png" src="_images/5cb213bf608b40e63cbddcc647ee83bdd481b5a8f2b27122b6de867793e5d67c.png" />
 </div>
 </div>
+<p>Across games versus different policies, we can see similar behaviors, with random wolves causing trained agents to vote for themselves more often.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tpv_stacked, indicator_titles[1], 1)
