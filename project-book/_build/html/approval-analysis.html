@@ -382,10 +382,10 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-votes-targetting-dead-players">Percent of Votes Targetting Dead Players</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-votes-targetting-dead-wolves">Percent of Votes Targetting Dead Wolves</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-votes-targetting-living-wolves">Percent of Votes Targetting Living Wolves</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-towards-dead-wolves">Percent of Likes Towards Dead Wolves</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-for-living-wolves">Percent of Likes for Living Wolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-towards-living-villagers">Percent of Likes Towards Living Villagers</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-for-dead-villagers">Percent of Likes for Dead Villagers</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-for-living-villagers">Percent of Likes for Living Villagers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-for-dead-wolves">Percent of Likes for Dead Wolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-towards-living-wolves">Percent of Likes Towards Living Wolves</a></li>
 </ul>
 </li>
 </ul>
@@ -452,6 +452,15 @@ from tabulate import tabulate
 <p>They seem to rely quite a bit using likes and neutrals, so werewolf policies that set these randomly were able to impact these trained agents.</p>
 <p>We believe that because targetting and liking are at the start and the end of our classification outputs, agents actually learned this ordinal representation.</p>
 <p>They like themselves more than they target themselves</p>
+<p>Targetting themselves during accusation rounds does not result in negative rewards, only if they do it during voting rounds. In addition</p>
+<p>This indicator solidifies our belief that likes have been learned to represent trust regardless of whether a player is alive or dead</p>
+<p>Whereas in plurality agents, there seemed to be some targetting of players during accusation phases for signaling and conveying some more information, it seems as though agents were more honest with their beliefs when proposing and updating their approval votes.</p>
+<p>– Old stuff below –</p>
+<p>Even though we are pnealizing villagers in reward functions, they are not mechanical penalities for voting for wolves, because selection masks out dead wolves. So its fine to vote based on reputation even if they are dead.</p>
+<p>Harder to tell what is happening given these indicators, but we can assume given the win rates and tie rates that targets and likes are flying around, yet the main targets are still the wolves.</p>
+<p>We can see that percentage of votes targetting wolves goes up through the phases, and moreso across days. This does indicate uncertain consensus forming amongst villagers.</p>
+<p>Maybe self liking indicates own assurance with votes? These go up along with wolf targetting throughout phases in a day.</p>
+<p>Self targetting goes down.</p>
 </section>
 <section id="win-rates">
 <h2>Win Rates<a class="headerlink" href="#win-rates" title="Permalink to this heading">#</a></h2>
@@ -756,8 +765,6 @@ vs. AggroWolves                0.394466         0.385389                        
 </ul>
 </li>
 </ul>
-<p>Some of these, especially those tracking both dead and alive villagers or wolves proved to be much more redundant than we had initially thought. We still explore them all, and give our opinions as this is a novel area.</p>
-<p>Some unexpected behavior is also seen due to the lack of rewarding or mechanism implementation for likes and neutrals. Agents do with these what they will. It was left like this by design to see what would happen.</p>
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -770,12 +777,12 @@ vs. AggroWolves                0.394466         0.385389                        
                     &quot;Avg Neutral Count&quot;,
                     &quot;Likelihood of Self Target&quot;,
                     &quot;Likelihood of Self Like&quot;,
-                    &quot;Percent of Wolves in Top Targets&quot;, # I dont like this one.
-                    &quot;Percent of Wolves in Top Likes&quot;, # I dont like this one
+                    &quot;Percent of Wolves in Top Targets&quot;,
+                    &quot;Percent of Wolves in Top Likes&quot;,
                     &quot;Percent of votes Targetting Dead Players&quot;,
                     &quot;Percent of votes Targetting Dead Wolves&quot;,
                     &quot;Percent of votes Targetting Living Wolves&quot;,
-                    &quot;Percent of Likes for Living Villagers&quot;
+                    &quot;Percent of Likes for Living Villagers&quot;,
                     &quot;Percent of Likes for Dead Villagers&quot;,
                     &quot;Percent of Likes for Dead Wolves&quot;,
                     &quot;Percent of Likes for Living Wolves&quot;,
@@ -823,7 +830,6 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <h4>Average Target Count<a class="headerlink" href="#average-target-count" title="Permalink to this heading">#</a></h4>
 <p>Each agent is able to target everyone, so this indicator looks at the average amount of targets trained agents selected. Seeing this number go down as the day progresses is a good indicator that agents feel more sure about their targets. The more pronounced the slope, the more certainty the agents have.</p>
 <p>An important note here is that every round we have <span class="math notranslate nohighlight">\(2\)</span> less players, so even with dead players, these agents are targetting roughly a third of total players.</p>
-<p><strong>CIRCLE BACK AND MENTION IF WE THINK THEY ARE TARGETTING DEAD OR ALIVE PLAYERS</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[0], 0, day_colors)
@@ -849,8 +855,8 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <section id="average-like-count">
 <h4>Average Like Count<a class="headerlink" href="#average-like-count" title="Permalink to this heading">#</a></h4>
 <p>Liking another agent does not provide agents with direct rewards, and is not mechanically relevant to elimination, so whereas humans would have used this indicator to highlight players we believe are more trustworthy, our PPO trained agents may use it in a very different way.</p>
-<p>In contrast to targetting, agents seem to use more likes as the day progresses, possibly mirroring how a human would “like” other trusted humans.</p>
-<p>** DO THEY USE THIS TOWARDS DEAD OR ALIVE WOLVES/VILLAGERS ? **</p>
+<p>In contrast to targetting, agents seem to use more likes as the day progresses, possibly mirroring how a human would “like” other trusted humans.
+This idea of trust is further reinforced in later indicators, where agents like who they believe are villagers, regardless of whether they are alive or dead.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[1], 1, day_colors)
@@ -858,7 +864,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/abf3d5ff671f6f406142125e2d542ef0549a504335137201eb2d43015de5507f.png" src="_images/abf3d5ff671f6f406142125e2d542ef0549a504335137201eb2d43015de5507f.png" />
+<img alt="_images/ae1a34da43e303e43dec8939919d8990903bbe657c27b3c8ec2699a7e64022a9.png" src="_images/ae1a34da43e303e43dec8939919d8990903bbe657c27b3c8ec2699a7e64022a9.png" />
 </div>
 </div>
 <p>This observed increase is also seen when playing other agents, with less likes towards CRLWolves and AggroWolves. We believe this strengthens the idea of trained agents liking other trusted players.</p>
@@ -878,7 +884,6 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <p>The third option an agent has in approval voting is to remain neutral towards another agent. This indicator tracks the average amount of neutrals an agent will use.</p>
 <p>Much like “likes”, a neutral vote does not provide agents with direct rewards, and is not mechanically relevant to elimination, however the usage of neutral appears to be much more chaotic.</p>
 <p>We believe that because targetting and liking are at the start and the end of our classification outputs, agents actually learned this ordinal representation, and maybe neutrals are a transient spot for other agents being shuffled between targets and likes, leading to chaotic looking graphs.</p>
-<p>We did not track the status or roles of players being given neutrals as we did for likes and deaths, so we don’t know if it has any correlation, but can <strong>speculate given what dead/alive likes/targets look like</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[2], 2, day_colors)
@@ -886,7 +891,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/f479d198ca403281d16be4e72c0964d99488842e56663670d28f53b7d27ecaa4.png" src="_images/f479d198ca403281d16be4e72c0964d99488842e56663670d28f53b7d27ecaa4.png" />
+<img alt="_images/3c4a739a2e00160bc0d178fe25f7a515dd332b3af19600360def567c76d604ea.png" src="_images/3c4a739a2e00160bc0d178fe25f7a515dd332b3af19600360def567c76d604ea.png" />
 </div>
 </div>
 <p>This chaotic usage is also seen in games against other policies. We had initially expectd that CRLWolves and Random wolves would have similar patterns, but even these differ quite a bit.</p>
@@ -903,6 +908,12 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="likelihood-of-self-targetting">
 <h4>Likelihood of Self Targetting<a class="headerlink" href="#likelihood-of-self-targetting" title="Permalink to this heading">#</a></h4>
+<p>This indicator tracks an agent’s propensity to target themselves, and seeing a downward trend indicates two things:</p>
+<ol class="arabic simple">
+<li><p>Early targetting may be used as a type of signal</p></li>
+<li><p>Less targetting during voting rounds means the agent has learned it is not a good idea to self-target during an elimination round</p></li>
+</ol>
+<p>Targetting themselves during accusation rounds does not result in negative rewards, only if they do it during voting rounds. In addition, the surplus of targetting in approval voting leads to self-targetting not being as dangerous as in plurality.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[3], 3, day_colors)
@@ -910,9 +921,10 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/f8de7f56f81a523fcf0a4f0e77a77570ca920786e9d5ed0acc57f2e273d93620.png" src="_images/f8de7f56f81a523fcf0a4f0e77a77570ca920786e9d5ed0acc57f2e273d93620.png" />
+<img alt="_images/ba1db131eb006f006fb7d142bdc251c8ecf07d538f5c2ed64433e3611458b93f.png" src="_images/ba1db131eb006f006fb7d142bdc251c8ecf07d538f5c2ed64433e3611458b93f.png" />
 </div>
 </div>
+<p>The same trend is exhibited with various werewolf policies, however AggroWolves stand out because it seems agents were able to realize it was more dangerous to self-target against these opponents.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[3], 3)
@@ -926,6 +938,11 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="likelihood-of-self-liking">
 <h4>Likelihood of Self Liking<a class="headerlink" href="#likelihood-of-self-liking" title="Permalink to this heading">#</a></h4>
+<p>This indicator tracks an agent’s propensity to like themselves. Interestingly, agents are less likely to use it on themselves early on in the day. There could be many different reasons for this, however two stand out:</p>
+<ol class="arabic simple">
+<li><p>CRWolves always “like” other wolves, so maybe this is a behavior they want to do sparingly to not attract suspicion.</p></li>
+<li><p>It could be how sure they are of the targetting profile they have chosen</p></li>
+</ol>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[4], 4, day_colors)
@@ -936,6 +953,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <img alt="_images/74f37769592a032640a8cd55cd4e297b79fbce3ed913b603d445712a3439623a.png" src="_images/74f37769592a032640a8cd55cd4e297b79fbce3ed913b603d445712a3439623a.png" />
 </div>
 </div>
+<p>Seeing results against other werewolf policies solidifies this possibly being an assurance indicator, because against Random wolves and more prominently against CRWolves, this number dips the most before they make a more confident vote for the day</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[4], 4)
@@ -949,7 +967,8 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="percent-of-wolves-in-top-targets">
 <h4>Percent of Wolves in Top Targets<a class="headerlink" href="#percent-of-wolves-in-top-targets" title="Permalink to this heading">#</a></h4>
-<p>This indicator did not prove to be too compelling. We do not know what position the targetted wolves are in and as the number of unique targets change, changes in this percent does not provide any real indication of <strong>a good word here</strong></p>
+<p>A dynamic <em>Top Targets</em> makes this indicator a little less compelling however it is easily interpretable. Top targets make the majority of targetting votes, and if wolves are a greater part of this, it means agents are able to better identify them.</p>
+<p>Not only do they go up during phases in a day, each subsequent voting day has a higher share of top targets allocated to wolves.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[5], 5, day_colors)
@@ -957,9 +976,10 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/a78e0eb4b76b2fc1c64d4c73e775b39f4367f2200544557df2dee627babc1d2a.png" src="_images/a78e0eb4b76b2fc1c64d4c73e775b39f4367f2200544557df2dee627babc1d2a.png" />
+<img alt="_images/fd8ffef9dcc84178ae17bbfee4c365e96545f5ee82d9be8b5b71b8675d8d308b.png" src="_images/fd8ffef9dcc84178ae17bbfee4c365e96545f5ee82d9be8b5b71b8675d8d308b.png" />
 </div>
 </div>
+<p>Against different policies, there is quite a stark contrast between policies with random likes/neutrals (Random, CRLWolves) and those without. Truly random werewolves are barely in the majority, whereas CRLWolves barely make it to half of top targetting by the last day. This is in contrast with AggroWolves, which are the easiest to pick out, and make up a majority of the top votes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[5], 5)
@@ -973,6 +993,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="percent-of-wolves-in-top-likes">
 <h4>Percent of Wolves in Top Likes<a class="headerlink" href="#percent-of-wolves-in-top-likes" title="Permalink to this heading">#</a></h4>
+<p>This indicator strongly implies that trained agents will use likes to indicate trust in other agents, and as werewolves are suspected, confidence in them falls throughout the day.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[6], 6, day_colors)
@@ -980,9 +1001,10 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/230e646e15df791a797c99026a281afc9111800979d3a9803160b9913faa89f4.png" src="_images/230e646e15df791a797c99026a281afc9111800979d3a9803160b9913faa89f4.png" />
+<img alt="_images/df9c1c8001fcec2d88d31c3b2f9afbb1112eb45538f9ce8c247426676c98e593.png" src="_images/df9c1c8001fcec2d88d31c3b2f9afbb1112eb45538f9ce8c247426676c98e593.png" />
 </div>
 </div>
+<p>Much like how CRLWolves and Random wolves posed a problem to trained agents that could be seen in <em>werewolves in top targets</em>, we can see a parallel effect where wolves are also trusted more often against these policies, leading to more mistakes and lower win-rates.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[6], 6)
@@ -996,6 +1018,8 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="percent-of-votes-targetting-dead-players">
 <h4>Percent of Votes Targetting Dead Players<a class="headerlink" href="#percent-of-votes-targetting-dead-players" title="Permalink to this heading">#</a></h4>
+<p>Targetting dead players only results in a minor negative reward, and is masked while determining group consensus so it poses minor risk to the trained agent.</p>
+<p>There are also more dead players every day, so seeing this number go up is not a surprise. Much like in plurality, targets towards dead players could be one of the signals villagers use amongst themselves to try to identify eachother.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[7], 7, day_colors)
@@ -1006,6 +1030,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <img alt="_images/7b9c19e752f897bd6aa774691fef71fe8046d3f3c5157c2298b24d4b9ff8446e.png" src="_images/7b9c19e752f897bd6aa774691fef71fe8046d3f3c5157c2298b24d4b9ff8446e.png" />
 </div>
 </div>
+<p>Against CRWolves and Random wolves, this number seems to be the highest, and against AggroWolves, the lowest. It could be that less signaling needs to occur when werewolves are easier to spot.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[7], 7)
@@ -1019,6 +1044,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="percent-of-votes-targetting-dead-wolves">
 <h4>Percent of Votes Targetting Dead Wolves<a class="headerlink" href="#percent-of-votes-targetting-dead-wolves" title="Permalink to this heading">#</a></h4>
+<p>On the heels of targets towars dead players, this indicator focuses soley on targets towards dead wolves. It is a small percentage out of the total targets towards dead players, and does not change much throughout the day other than increasing each day.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[8], 8, day_colors)
@@ -1026,9 +1052,10 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/a0badb7ff31ede8421007ccec6f4209cd4a5dc6fa92169474996ea78b9704114.png" src="_images/a0badb7ff31ede8421007ccec6f4209cd4a5dc6fa92169474996ea78b9704114.png" />
+<img alt="_images/89e3ce59d52340172986b597151f7d2d51923ffba4b0f454238dd49cdcd81f8a.png" src="_images/89e3ce59d52340172986b597151f7d2d51923ffba4b0f454238dd49cdcd81f8a.png" />
 </div>
 </div>
+<p>Werewolves randomly assigning likes and neutrals seem to pose problems for our trained wolves, so comparing them with the other policies is usally a good idea. In this case it would seem as though trained agents target dead CRLWolves and Random werewolves less.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[8], 8)
@@ -1042,6 +1069,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </section>
 <section id="percent-of-votes-targetting-living-wolves">
 <h4>Percent of Votes Targetting Living Wolves<a class="headerlink" href="#percent-of-votes-targetting-living-wolves" title="Permalink to this heading">#</a></h4>
+<p>A positive trend throughout the day and culminating with the highest amount during votes indicate that werewolves are being identified and properly targetted by trained agents. Why each day’s first accusatsion doesn’t target them must be a strategy trained agents employ to signal to other trained agents.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[9], 9, day_colors)
@@ -1049,9 +1077,10 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/fe77a197fbb6f666ac5a6f05d3b53719d9917dab80c6b6e636f3c3b3f79ec8f0.png" src="_images/fe77a197fbb6f666ac5a6f05d3b53719d9917dab80c6b6e636f3c3b3f79ec8f0.png" />
+<img alt="_images/718f0651b546f4efc55fdb702f5695fa2d2780aa9c05fb876e028ab25fb5446e.png" src="_images/718f0651b546f4efc55fdb702f5695fa2d2780aa9c05fb876e028ab25fb5446e.png" />
 </div>
 </div>
+<p>We can see that AggroWolves, which are the easiest to identify, are targetted more than any other werewolf policies, even moreso than the ones (CRWolves) the agents were trained against. In contrast, Random Wolves and CRLWolves are targetted the least, as these confuse our trained agents the most.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[9], 9)
@@ -1063,8 +1092,9 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 </section>
-<section id="percent-of-likes-towards-dead-wolves">
-<h4>Percent of Likes Towards Dead Wolves<a class="headerlink" href="#percent-of-likes-towards-dead-wolves" title="Permalink to this heading">#</a></h4>
+<section id="percent-of-likes-towards-living-villagers">
+<h4>Percent of Likes Towards Living Villagers<a class="headerlink" href="#percent-of-likes-towards-living-villagers" title="Permalink to this heading">#</a></h4>
+<p>This is an interesting indicator, because it shows that likes towards actual villagers do not change much throughout a day, and decreases each day. This decrease is proportional to the increase in likes for dead villagers, indicating that agents will continue to like dead players they considered true villagers, possibly to signal their knowledge to others.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[10], 10, day_colors)
@@ -1072,9 +1102,10 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/d999730b053bd128dd48a4947cb1d0dcfd9ca227fd18873a909c478bb570afcd.png" src="_images/d999730b053bd128dd48a4947cb1d0dcfd9ca227fd18873a909c478bb570afcd.png" />
+<img alt="_images/c0d5cc264ecefeb7816bb13caf794587ba084bed7c5bb2d0f8ff2abb60f92fb4.png" src="_images/c0d5cc264ecefeb7816bb13caf794587ba084bed7c5bb2d0f8ff2abb60f92fb4.png" />
 </div>
 </div>
+<p>The same trend can be seen against all other werewolf policies, with no big differences for us to focus on.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[10], 10)
@@ -1082,12 +1113,13 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/61921031b0df62c061f2b6640cb95397e8e002a6b94410e586039e2f3e2ceacc.png" src="_images/61921031b0df62c061f2b6640cb95397e8e002a6b94410e586039e2f3e2ceacc.png" />
+<img alt="_images/d9ab1789558d7b4a8b8b8f63ea6d42d24dd5641cd856dceea9caf2e6f2cd8c3a.png" src="_images/d9ab1789558d7b4a8b8b8f63ea6d42d24dd5641cd856dceea9caf2e6f2cd8c3a.png" />
 </div>
 </div>
 </section>
-<section id="percent-of-likes-for-living-wolves">
-<h4>Percent of Likes for Living Wolves<a class="headerlink" href="#percent-of-likes-for-living-wolves" title="Permalink to this heading">#</a></h4>
+<section id="percent-of-likes-for-dead-villagers">
+<h4>Percent of Likes for Dead Villagers<a class="headerlink" href="#percent-of-likes-for-dead-villagers" title="Permalink to this heading">#</a></h4>
+<p>As villagers die, trained agents still use a “like” on them to likely signal their knowledge and beliefs in regards to the roles of other agents. It was good to have this indicator and the likes towards living villagers to be able to observe and more confidently classify this behavior.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[11], 11, day_colors)
@@ -1095,7 +1127,7 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/85ce23ba4dd02ece81c90f4a4b9424d38c3d9112db5db0058ad23a06c07d705f.png" src="_images/85ce23ba4dd02ece81c90f4a4b9424d38c3d9112db5db0058ad23a06c07d705f.png" />
+<img alt="_images/1fb77066d9fe52a5a7d9c84025d71f05a883e024a2553633e8c0efc1f26bfe8a.png" src="_images/1fb77066d9fe52a5a7d9c84025d71f05a883e024a2553633e8c0efc1f26bfe8a.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1105,12 +1137,13 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/0f938946c608f70e69a2c1cb0a49ddd6121f7fb787582373bb05ea76dcba257f.png" src="_images/0f938946c608f70e69a2c1cb0a49ddd6121f7fb787582373bb05ea76dcba257f.png" />
+<img alt="_images/ac9196598bef921401aec9f30e3d9c595cf76fdbcb810e1b0e8160348b7c7f74.png" src="_images/ac9196598bef921401aec9f30e3d9c595cf76fdbcb810e1b0e8160348b7c7f74.png" />
 </div>
 </div>
 </section>
-<section id="percent-of-likes-for-dead-villagers">
-<h4>Percent of Likes for Dead Villagers<a class="headerlink" href="#percent-of-likes-for-dead-villagers" title="Permalink to this heading">#</a></h4>
+<section id="percent-of-likes-for-dead-wolves">
+<h4>Percent of Likes for Dead Wolves<a class="headerlink" href="#percent-of-likes-for-dead-wolves" title="Permalink to this heading">#</a></h4>
+<p>In contrast to likes towards villagers, likes towards wolves are low, and especially so towards dead wolves. This indicator solidifies our belief that likes have been learned to represent trust regardless of whether a player is alive or dead, and such low numbers for dead wolves indicate this.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[12], 12, day_colors)
@@ -1118,9 +1151,10 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/a5305d24153093918ea6228a6915111000b0119a10a01b02b8534ab441cb35fa.png" src="_images/a5305d24153093918ea6228a6915111000b0119a10a01b02b8534ab441cb35fa.png" />
+<img alt="_images/7b0aca77c6ee8cb69c8933f5ef583cbb6d4450c08f7fdd41881b5382ee76873d.png" src="_images/7b0aca77c6ee8cb69c8933f5ef583cbb6d4450c08f7fdd41881b5382ee76873d.png" />
 </div>
 </div>
+<p>AggroWolves being the lowest so consistently across days highlight how likelier they are to be identified by trained agents.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[12], 12)
@@ -1128,12 +1162,18 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/060706298e3dee3ecd04be04cd3c718167ba45f54167fe92f5e9ef604d18c7ea.png" src="_images/060706298e3dee3ecd04be04cd3c718167ba45f54167fe92f5e9ef604d18c7ea.png" />
+<img alt="_images/6c005abaa8ce9430c8232986fe229c04d62db07b6180c99de612c7950ea72a43.png" src="_images/6c005abaa8ce9430c8232986fe229c04d62db07b6180c99de612c7950ea72a43.png" />
 </div>
 </div>
 </section>
-<section id="percent-of-likes-for-living-villagers">
-<h4>Percent of Likes for Living Villagers<a class="headerlink" href="#percent-of-likes-for-living-villagers" title="Permalink to this heading">#</a></h4>
+<section id="percent-of-likes-towards-living-wolves">
+<h4>Percent of Likes Towards Living Wolves<a class="headerlink" href="#percent-of-likes-towards-living-wolves" title="Permalink to this heading">#</a></h4>
+<p>This indicator shows two very critical things:</p>
+<ol class="arabic simple">
+<li><p>Wolves are not as liked as villagers, strengthening the case that likes are used for trust</p></li>
+<li><p>Likes towards werewolves decrease both throughout and across days, with almost no misplaced trust in any wolves by the end of the game.</p></li>
+</ol>
+<p>Now using this information, we can say that likes for dead wolves don’t change as much because trained agents do not bother with them after they are dead.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator(tav_stacked[1], indicator_titles[13], 13, day_colors)
@@ -1141,9 +1181,10 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5c54d72cb6fc8ba3a3298e338bf99e6d83d66761c5d1ff2f71bea464bd21293a.png" src="_images/5c54d72cb6fc8ba3a3298e338bf99e6d83d66761c5d1ff2f71bea464bd21293a.png" />
+<img alt="_images/4d7ba45a3678ea60b8a5462ae036bb561d619aa61f32ad93d59bc0bec6191b33.png" src="_images/4d7ba45a3678ea60b8a5462ae036bb561d619aa61f32ad93d59bc0bec6191b33.png" />
 </div>
 </div>
+<p>These two points come across quite clearly against different werewolf policies, with our usual tricky Random and CRLWolves having the most trust, and AggroWolves having the least.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_indicator_across_other_wolves(tav_stacked, indicator_titles[13], 13)
@@ -1151,14 +1192,9 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/0e73b4d4ef6dcdef0d427058dc3db55735c3f638dc34670588adba2889a4ae58.png" src="_images/0e73b4d4ef6dcdef0d427058dc3db55735c3f638dc34670588adba2889a4ae58.png" />
+<img alt="_images/e321c99385b1b9c28f3ee0eb95fcd7e392ebf4808e550c625c7fa36eb077ab4d.png" src="_images/e321c99385b1b9c28f3ee0eb95fcd7e392ebf4808e550c625c7fa36eb077ab4d.png" />
 </div>
 </div>
-<p>Even though we are pnealizing villagers in reward functions, they are not mechanical penalities for voting for wolves, because selection masks out dead wolves. So its fine to vote based on reputation even if they are dead.</p>
-<p>Harder to tell what is happening given these indicators, but we can assume given the win rates and tie rates that targets and likes are flying around, yet the main targets are still the wolves.</p>
-<p>We can see that percentage of votes targetting wolves goes up through the phases, and moreso across days. This does indicate uncertain consensus forming amongst villagers.</p>
-<p>Maybe self liking indicates own assurance with votes? These go up along with wolf targetting throughout phases in a day.</p>
-<p>Self targetting goes down.</p>
 </section>
 </section>
 </section>
@@ -1247,10 +1283,10 @@ def plot_indicator_across_other_wolves(stacked_info, indicator_title, indicator_
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-votes-targetting-dead-players">Percent of Votes Targetting Dead Players</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-votes-targetting-dead-wolves">Percent of Votes Targetting Dead Wolves</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-votes-targetting-living-wolves">Percent of Votes Targetting Living Wolves</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-towards-dead-wolves">Percent of Likes Towards Dead Wolves</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-for-living-wolves">Percent of Likes for Living Wolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-towards-living-villagers">Percent of Likes Towards Living Villagers</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-for-dead-villagers">Percent of Likes for Dead Villagers</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-for-living-villagers">Percent of Likes for Living Villagers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-for-dead-wolves">Percent of Likes for Dead Wolves</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#percent-of-likes-towards-living-wolves">Percent of Likes Towards Living Wolves</a></li>
 </ul>
 </li>
 </ul>
