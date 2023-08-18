@@ -380,6 +380,7 @@ document.write(`
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-content">Additional Content</a></li>
 </ul>
             </nav>
         </div>
@@ -713,6 +714,7 @@ rv_stacked = [np.stack(list(avg_records.values())) for avg_records in rv_avg_rec
 
 # https://www.heavy.ai/blog/12-color-palettes-for-telling-better-stories-with-your-data
 day_colors = [&quot;#115f9a&quot;, &quot;#22a7f0&quot;, &quot;#76c68f&quot;, &quot;#c9e52f&quot;]
+#day_colors = [&quot;#1b4332&quot;, &quot;#2d6a4f&quot;, &quot;#40916c&quot;, &quot;#52b788&quot;]
 </pre></div>
 </div>
 </div>
@@ -727,22 +729,6 @@ day_colors = [&quot;#115f9a&quot;, &quot;#22a7f0&quot;, &quot;#76c68f&quot;, &qu
         plt.legend()
         plt.suptitle(indicator_title)
     plt.plot()
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, axs = plt.subplots(tpv_stacked[0].shape[-1], 1, sharex=True, figsize=(10,50))
-
-for indicator in range(tpv_stacked[0].shape[-1]):
-    for day in range(tpv_stacked[0].shape[0]):
-        axs[indicator].plot(list(range(stacked.shape[1])), stacked[:,:,indicator][day], linewidth=2.0, label=f&#39;Day {day+1}&#39;)
-        axs[indicator].legend()
-        axs[indicator].set_title(indicator_titles[indicator])
-
-x_tick_labels = [&quot;Accusation&quot;, &quot;Accusation&quot;, &quot;Voting&quot;]
-axs[-1].set_xticks([0,1,2], x_tick_labels, rotation=40)
 </pre></div>
 </div>
 </div>
@@ -815,6 +801,11 @@ axs[-1].set_xticks([0,1,2], x_tick_labels, rotation=40)
 <img alt="_images/a500417a294fbbe059bad0fd68bb51c3fc68b2b9fbff88f8d11ae7153ed544e5.png" src="_images/a500417a294fbbe059bad0fd68bb51c3fc68b2b9fbff88f8d11ae7153ed544e5.png" />
 </div>
 </div>
+</section>
+</section>
+</section>
+<section id="additional-content">
+<h2>Additional Content<a class="headerlink" href="#additional-content" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.style.use(&#39;ggplot&#39;)
@@ -983,8 +974,6 @@ fig.tight_layout()
 </div>
 </section>
 </section>
-</section>
-</section>
 
     <script type="text/x-thebe-config">
     {
@@ -1067,6 +1056,7 @@ fig.tight_layout()
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-content">Additional Content</a></li>
 </ul>
   </nav></div>
 
