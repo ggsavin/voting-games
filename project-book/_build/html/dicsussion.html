@@ -375,6 +375,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reward-shaping">Reward shaping</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-approval-voting">Why approval voting?</a></li>
 </ul>
             </nav>
         </div>
@@ -446,7 +447,7 @@ document.write(`
 <li><p>change optimizer</p></li>
 <li><p>simplify model strcuture</p></li>
 </ul>
-<p>These have been collected from many blog posts, reddit posts, and work done in <span id="id1">[<a class="reference internal" href="bibliography.html#id34" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>, <a class="reference internal" href="bibliography.html#id39" title="Peter Henderson, Riashat Islam, Philip Bachman, Joelle Pineau, Doina Precup, and David Meger. Deep reinforcement learning that matters. In AAAI Conference on Artificial Intelligence. 2017. URL: https://api.semanticscholar.org/CorpusID:4674781.">HIB+17</a>]</span>. We leave this exploration to future work, as it is not the direct scope of the project, but would help with consistency.</p>
+<p>These have been collected from many blog posts, reddit posts, and work done in <span id="id1">[<a class="reference internal" href="bibliography.html#id35" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>, <a class="reference internal" href="bibliography.html#id40" title="Peter Henderson, Riashat Islam, Philip Bachman, Joelle Pineau, Doina Precup, and David Meger. Deep reinforcement learning that matters. In AAAI Conference on Artificial Intelligence. 2017. URL: https://api.semanticscholar.org/CorpusID:4674781.">HIB+17</a>]</span>. We leave this exploration to future work, as it is not the direct scope of the project, but would help with consistency.</p>
 </section>
 <section id="training-times">
 <h3>Training Times<a class="headerlink" href="#training-times" title="Permalink to this heading">#</a></h3>
@@ -466,6 +467,10 @@ One game of approval takes :</p>
 <h3>Reward shaping<a class="headerlink" href="#reward-shaping" title="Permalink to this heading">#</a></h3>
 <p>Even though we are pnealizing villagers in reward functions, they are not mechanical penalities for voting for wolves, because selection masks out dead wolves. So its fine to vote based on reputation even if they are dead. THere is a risk, but it does not impact win rates as much. In plurality, having a single target was much more impactful, thus we say the targets towards dead wolves decrease through phases.</p>
 </section>
+</section>
+<section id="why-approval-voting">
+<h2>Why approval voting?<a class="headerlink" href="#why-approval-voting" title="Permalink to this heading">#</a></h2>
+<p>This maybe should go into motivation? Maybe into conclusion</p>
 </section>
 </section>
 
@@ -545,6 +550,7 @@ One game of approval takes :</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reward-shaping">Reward shaping</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-approval-voting">Why approval voting?</a></li>
 </ul>
   </nav></div>
 

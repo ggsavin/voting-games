@@ -444,15 +444,14 @@ from tabulate import tabulate
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="approval-voting">
 <h1>Approval Voting<a class="headerlink" href="#approval-voting" title="Permalink to this heading">#</a></h1>
-<p>Approval voting is a mechanism in which voters can select as many candidates from a list of all possible candidates to approve of.</p>
-<p>Cite approval voting, and more of a blurb on it.</p>
+<p>Approval voting <span id="id1">[<a class="reference internal" href="bibliography.html#id4" title="Steven J Brams and Peter C Fishburn. Approval voting. American Political Science Review, 72(3):831–847, 1978.">BF78</a>]</span> is a mechanism in which voters are not restricted to voting for just one candidate, but can vote for (approve) of as many candidates as they want. The winner (or loser in the case of werewolf) is the candidate with the most votes. As a reminder, because players are voting to eliminate another player, we have slightly modified this voting method to consider a targetting vote as a “dissaproval”, no particular vote as “neutral”, and a “like” as approval. Thus the player that receives the most “dissaprovals” will be eliminated. Likes and neutral opinions do not impact this vote, however allow for richer expression in preferences and more revealing information for other agents to synthesize.</p>
 <section id="quick-takeaways">
 <h2>Quick Takeaways<a class="headerlink" href="#quick-takeaways" title="Permalink to this heading">#</a></h2>
 <p>Trained villager agents were able to successfully play against coordinated werewolf policies better than the other heuristic villager policies, but were stumped by werewolf policies that randomized which players received likes and neutral votes. This indicates that trained agents learned to rely on likes and neutrals, despite them not providing any direct rewards or having any impact on the executed target consensus. Furthermore, agents seemed to have learned the ordinal representation of these three voting options (dislike/target, neutral, like), with liking being a form of trust signaling: either trust in others, or trust in themselves and their votes. Given that each trained villager roughly trusted 3-4 other agents, likes could have also acted as a form of opinion vetting for villagers to trust other villagers if they shared a like in common.</p>
 </section>
 <section id="win-rates">
 <h2>Win Rates<a class="headerlink" href="#win-rates" title="Permalink to this heading">#</a></h2>
-<p>We assume that some of the findings in the plurality werewolf game <span id="id1">[<a class="reference internal" href="bibliography.html#id40" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span> will still hold for approval voting, due to the nature of calculating the consensus amongst all the targetting done. (Target with the most dislikes gets voted out).</p>
+<p>We assume that some of the findings in the plurality werewolf game <span id="id2">[<a class="reference internal" href="bibliography.html#id41" title="Mark Braverman, Omid Etesami, and Elchanan Mossel. Mafia: a theoretical study of players and coalitions in a partial information environment. Annals of Applied Probability, 18:825-846, 2006. URL: https://api.semanticscholar.org/CorpusID:14668989.">BEM06</a>]</span> will still hold for approval voting, due to the nature of calculating the consensus amongst all the targetting done. (Target with the most dislikes gets voted out).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Below is code to generate the following table of 1000 runs between each villager policy and each werewolf policy. We base our discussion around this markdown table.</p>
@@ -1015,7 +1014,7 @@ This idea of trust is further reinforced in later indicators, where agents like 
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/7b9c19e752f897bd6aa774691fef71fe8046d3f3c5157c2298b24d4b9ff8446e.png" src="_images/7b9c19e752f897bd6aa774691fef71fe8046d3f3c5157c2298b24d4b9ff8446e.png" />
+<img alt="_images/e8fe75e32106c20915d8b4d5982d07fcbc136a5b282c13751d06146b6ed6bbb6.png" src="_images/e8fe75e32106c20915d8b4d5982d07fcbc136a5b282c13751d06146b6ed6bbb6.png" />
 </div>
 </div>
 <p>Against CRWolves and Random wolves, this number seems to be the highest, and against AggroWolves, the lowest. It could be that less signaling needs to occur when werewolves are easier to spot.</p>
