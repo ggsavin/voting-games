@@ -987,6 +987,39 @@ print(&quot;\n&quot;)
 </div>
 </div>
 <p>We can see that regardless of number of accusation phases, it seems as though for the first half, agents learn roughly at the same rate, probably learning the same behavior. Afterwards, learning becomes more temperamental. A lot of runs did not make it this far either, so some data we have is only from a single run. Each accusation phase was able to reach about <span class="math notranslate nohighlight">\(.50\)</span> win-rates, and given the lack of data, we cannot definitively say one was better than the other. The analysis was done with 2 accusation phases as some of our saved agents initially came from this batch.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>four_accusation_a_times = [(accusation.info.end_time - accusation.info.start_time)/(1000 * 60) for accusation in four_accusations_a]
+three_accusation_a_times = [(accusation.info.end_time - accusation.info.start_time)/(1000 * 60) for accusation in three_accusations_a]
+two_accusation_a_times = [(accusation.info.end_time - accusation.info.start_time)/(1000 * 60) for accusation in two_accusations_a]
+one_accusation_a_times = [(accusation.info.end_time - accusation.info.start_time)/(1000 * 60) for accusation in one_accusations_a]
+
+plt.boxplot([one_accusation_a_times, two_accusation_a_times, three_accusation_a_times, four_accusation_a_times],
+            vert=True,  # vertical box alignment
+            patch_artist=True,  # fill with color
+            labels=[1,2,3,4])
+plt.ylabel(&quot;Minutes&quot;)
+plt.xlabel(&quot;Number of Accusation Phase(s)&quot;)
+plt.suptitle(&quot;Time elapsed for PPO agent training loops&quot;)
+    
+print(&quot;\n&quot;)
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="_images/3ce3f6e034db1f353ff039ad393a791adbbdbc76a46f3fa83a17135655c8702b.png" src="_images/3ce3f6e034db1f353ff039ad393a791adbbdbc76a46f3fa83a17135655c8702b.png" />
+</div>
+</div>
+<p>We can also see that the more accusation phases we added, the less stable the training became. This was another reason we stuck with <span class="math notranslate nohighlight">\(2\)</span> accusation phases. For the hyperparameters we had settled on, it seemed the most stable.</p>
 </section>
 <section id="comparing-the-approval-and-plurality">
 <h3>Comparing the Approval and Plurality<a class="headerlink" href="#comparing-the-approval-and-plurality" title="Permalink to this heading">#</a></h3>
