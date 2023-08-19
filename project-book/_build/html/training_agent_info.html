@@ -373,7 +373,11 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-vectorization">Observation Vectorization</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-time">Training Time</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-training">Approval Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-the-approval-and-plurality">Comparing the Approval and Plurality</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -399,6 +403,7 @@ sys.path.append(&#39;../&#39;)
 from voting_games.werewolf_env_v0 import plurality_env, pare, Phase, Roles
 import random
 import copy
+import time
 from tqdm import tqdm
 from collections import Counter
 import matplotlib.pyplot as plt
@@ -406,12 +411,6 @@ from notebooks.learning_agents.models import ActorCriticAgent
 from notebooks.learning_agents.utils import play_recurrent_game, convert_obs
 from notebooks.learning_agents.static_agents import random_approval_wolf, random_plurality_wolf
 import mlflow
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/root/.local/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
-  from .autonotebook import tqdm as notebook_tqdm
 </pre></div>
 </div>
 </div>
@@ -813,47 +812,78 @@ The steps we follow are very closely related to our <a class="reference internal
 </section>
 <section id="training-time">
 <h2>Training Time<a class="headerlink" href="#training-time" title="Permalink to this heading">#</a></h2>
-<p>TODO: Mention run-times with different buffer sizes</p>
-<p>Maybe mention this in conclusions, future work
-Training for 1 agent took roughly 2-3 hours, but completing runs was not as sucessful. For approval, it was longer.
-Would take a 2-3 days at a time to collect stats, and there were bugs/mistakes.</p>
-<p>TODO: Show the difference between reward sharing vs not for training.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>p_env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
+observations, _, _, _, _ = p_env.reset()
+obs_size= p_env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
+
+plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128,
+                                        &quot;rec_layers&quot;: 1, 
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 1,
+                                        &quot;approval_states&quot;: 10},
+                                        num_players=10,
+                                        obs_size=obs_size)
+
+start = time.time()
+play_recurrent_game(p_env, random_plurality_wolf, plurality_agent, num_times=1000, hidden_state_size=128, voting_type=&quot;plurality&quot;)
+end = time.time()
+plurality_time = end - start
+
+
+a_env = pare(num_agents=10, werewolves=2, num_accusations=2)
+observations, _, _, _, _ = a_env.reset()
+obs_size= a_env.convert_obs(observations[&#39;player_0&#39;][&#39;observation&#39;]).shape[-1]
+
+approval_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 256,
+                                        &quot;rec_layers&quot;: 1, 
+                                        &quot;joint_mlp_size&quot;: 128,
+                                        &quot;split_mlp_size&quot;: 128,
+                                        &quot;num_votes&quot;: 10,
+                                        &quot;approval_states&quot;: 3},
+                                        num_players=10,
+                                        obs_size=obs_size)
+start = time.time()
+play_recurrent_game(a_env, random_approval_wolf, approval_agent, num_times=1000, hidden_state_size=256, voting_type=&quot;approval&quot;)
+end = time.time()
+approval_time = end - start
+
+print(f&#39;It took {plurality_time:.2f} s to play 1000 plurality games&#39;)
+print(f&#39;It took {approval_time:.2f} s to play 1000 approval games&#39;)
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>It took 20.80 s to play 1000 plurality games
+It took 46.75 s to play 1000 approval games
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can see the amount of time taken to play 1000 games is about 20 seconds for plurality and roughly double for approval.</p>
+<p>When it comes to training agents, we fill a buffer with 200 games, over  500 updates. This by itself is roughly 1 hour. Time is also spent during each epoch (of which we have 5) calculating loss, which requires passing through the model with all our data. This adds roughly another 4 hours to the run as training loops that have gone to completion with these parameters have taken roughly 5 hours.</p>
+<p>We fill buffers and collect avg/win rates seperately. In the spirit of saving time, we could have just used the results from filing the buffer to get win-rate updates at every update step.</p>
 </section>
 <section id="training-results">
 <h2>Training Results<a class="headerlink" href="#training-results" title="Permalink to this heading">#</a></h2>
-<p>We found more consistent results when the clip range was lower.</p>
-<div class="cell docutils container">
+<p>Below are the configurations of Plurality and Approval trained agents. We made the decision to stick with an LSTM hidden size of 128 for plurality agents due to the flattened input vector being quite a bit smaller than that of the approval agent. This assumed no one-hot encoding, as we found in our limited testing time that it did not have much of an impact.</p>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell content</span>
+<span class="expanded">Hide code cell content</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># in a docker container
-mlflow_client = mlflow.tracking.MlflowClient(tracking_uri=&quot;http://mlflow:5000&quot;)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># We have organized the runs in such a way
-plurality_experiment = mlflow_client.get_experiment_by_name(&quot;Plurality Training&quot;)
-plurality_runs = mlflow_client.search_runs([plurality_experiment.experiment_id])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>four_accusations = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;4_accusations&#39;&quot;)
-three_accusations = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;3_accusations&#39;&quot;)
-four_accusation_votes = \
-    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in four_accusations]
-three_accusation_votes = \
-    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in three_accusations]
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def tolerant_mean(arrs):
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># code to calculate mean and std dev for varying length arrays
+def tolerant_mean(arrs):
     lens = [len(i) for i in arrs]
     arr = np.ma.empty((np.max(lens),len(arrs)))
     arr.mask = True
@@ -863,80 +893,103 @@ three_accusation_votes = \
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
-y_3, error_3 = tolerant_mean(three_accusation_votes)
-y_4, error_4 = tolerant_mean(four_accusation_votes)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mlflow_client = mlflow.tracking.MlflowClient(tracking_uri=&quot;http://mlflow:5000&quot;)
 
-ax.plot(np.arange(len(y_3))+1, y_3, color=&#39;green&#39;)
-ax.fill_between(np.arange(len(y_3))+1, y_3-error_3, y_3+error_3, color=&#39;green&#39;, alpha=0.3)
+### PLURALITY 
+# plurality_experiment = mlflow_client.get_experiment_by_name(&quot;Plurality Training&quot;)
+# plurality_runs = mlflow_client.search_runs([plurality_experiment.experiment_id])
 
-ax.plot(np.arange(len(y_4))+1, y_4, color=&#39;blue&#39;)
-ax.fill_between(np.arange(len(y_4))+1, y_4-error_4, y_4+error_4, color=&#39;blue&#39;, alpha=0.3)
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7f33c8a5f220&gt;
-</pre></div>
-</div>
-<img alt="_images/46942a7242469be478f81b0df3de84ab60b02b224faa957236e9e978c47e518e.png" src="_images/46942a7242469be478f81b0df3de84ab60b02b224faa957236e9e978c47e518e.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
-y_3, error_3 = tolerant_mean(three_accusation_votes)
-y_4, error_4 = tolerant_mean(four_accusation_votes)
+# four_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;4_accusations&#39;&quot;)
+# three_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;3_accusations&#39;&quot;)
+# two_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;2_accusations&#39;&quot;)
+# one_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;1_accusations&#39;&quot;)
 
-ax.plot(np.arange(len(y_3))+1, y_3, color=&#39;green&#39;)
-#ax.fill_between(np.arange(len(y_3))+1, y_3-error_3, y_3+error_3, color=&#39;green&#39;, alpha=0.3)
-
-ax.plot(np.arange(len(y_4))+1, y_4, color=&#39;blue&#39;)
-#ax.fill_between(np.arange(len(y_4))+1, y_4-error_4, y_4+error_4, color=&#39;blue&#39;, alpha=0.3)
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f33c8acb040&gt;]
-</pre></div>
-</div>
-<img alt="_images/048355c5963fdfa7046f9107ed4d4d189b7c7fcf636406efc26d2f4d2e2d2665.png" src="_images/048355c5963fdfa7046f9107ed4d4d189b7c7fcf636406efc26d2f4d2e2d2665.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>approval_experiment = mlflow_client.get_experiment_by_name(&quot;Approval Training&quot;)
-approval_runs = mlflow_client.search_runs([plurality_experiment.experiment_id])
-
-one_accusations = mlflow_client.search_runs([approval_experiment.experiment_id], filter_string=&quot;run_name = &#39;1_accusations&#39;&quot;)
-#four_accusations = mlflow_client.search_runs([approval_experiment.experiment_id], filter_string=&quot;run_name = &#39;4_accusations&#39;&quot;)
-#three_accusations = mlflow_client.search_runs([approval_experiment.experiment_id], filter_string=&quot;run_name = &#39;3_accusations&#39;&quot;)
-one_accusation_votes = \
-    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in one_accusations]
-
-# four_accusation_votes = \
+# four_accusation_p_votes = \
 #     [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in four_accusations]
-# three_accusation_votes = \
+# three_accusation_p_votes = \
+#     [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in three_accusations]
+# four_accusation_p_votes = \
+#     [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in four_accusations]
+# three_accusation_p_votes = \
 #     [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in three_accusations]
 
-fig, ax = plt.subplots()
-y_1, error_1 = tolerant_mean(one_accusation_votes)
+### APPROVAL
 
-ax.plot(np.arange(len(y_1))+1, y_1, color=&#39;green&#39;)
-ax.fill_between(np.arange(len(y_1))+1, y_1-error_1, y_1+error_1, color=&#39;green&#39;, alpha=0.3)
+approval_experiment = mlflow_client.get_experiment_by_name(&quot;Approval Training&quot;)
+approval_runs = mlflow_client.search_runs([approval_experiment.experiment_id])
+
+four_accusations_a = mlflow_client.search_runs([approval_experiment.experiment_id], filter_string=&quot;run_name = &#39;4_accusations&#39;&quot;)
+three_accusations_a = mlflow_client.search_runs([approval_experiment.experiment_id], filter_string=&quot;run_name = &#39;3_accusations&#39;&quot;)
+two_accusations_a = mlflow_client.search_runs([approval_experiment.experiment_id], filter_string=&quot;run_name = &#39;2_accusations&#39;&quot;)
+one_accusations_a = mlflow_client.search_runs([approval_experiment.experiment_id], filter_string=&quot;run_name = &#39;1_accusations&#39;&quot;)
+
+four_accusation_a_votes = \
+    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in four_accusations_a]
+three_accusation_a_votes = \
+    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in three_accusations_a]
+two_accusation_a_votes = \
+    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in two_accusations_a]
+one_accusation_a_votes = \
+    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in one_accusations_a]
+
+print(&quot;Done gathering mlflow win rate metrics&quot;)
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7f33c897b400&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done gaathering mlflow win rate metrics
 </pre></div>
 </div>
-<img alt="_images/e6809cc08ebdf4c1a17bc7ccd63a248bf3a199d8fb05610f606bab6ea6e68f77.png" src="_images/e6809cc08ebdf4c1a17bc7ccd63a248bf3a199d8fb05610f606bab6ea6e68f77.png" />
 </div>
 </div>
+<section id="approval-training">
+<h3>Approval Training<a class="headerlink" href="#approval-training" title="Permalink to this heading">#</a></h3>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
+
+tolerant_results = [tolerant_mean(a_votes) for a_votes in [one_accusation_a_votes, two_accusation_a_votes, three_accusation_a_votes, four_accusation_a_votes]]
+
+for i, tolerant_result in enumerate(tolerant_results):
+    y, std = tolerant_result
+    ax.plot(np.arange(len(y))+1, y, label=i+1)
+    ax.fill_between(np.arange(len(y))+1, y-std, y+std, alpha=0.1)
+
+plt.ylabel(&quot;Win Percentage&quot;)
+plt.xlabel(&quot;Collection Step&quot;)
+plt.legend(title=&quot;Number of Accusation Phase(s)&quot;)
+plt.suptitle(&quot;Win-Rates while Training Approval Agents&quot;)
+print(&quot;\n&quot;)
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="_images/292a22b8bd62ebed6e659c92176dd058bc90ce676ee5c7af4fe41461f6e6c2dd.png" src="_images/292a22b8bd62ebed6e659c92176dd058bc90ce676ee5c7af4fe41461f6e6c2dd.png" />
+</div>
+</div>
+<p>We can see that regardless of number of accusation phases, it seems as though for the first half, agents learn roughly at the same rate, probably learning the same behavior. Afterwards, learning becomes more temperamental. A lot of runs did not make it this far either, so some data we have is only from a single run. Each accusation phase was able to reach about <span class="math notranslate nohighlight">\(.50\)</span> win-rates, and given the lack of data, we cannot definitively say one was better than the other. The analysis was done with 2 accusation phases as some of our saved agents initially came from this batch.</p>
+</section>
+<section id="comparing-the-approval-and-plurality">
+<h3>Comparing the Approval and Plurality<a class="headerlink" href="#comparing-the-approval-and-plurality" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
@@ -967,6 +1020,7 @@ ax.legend()
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://mlflow.org/">https://mlflow.org/</a></p>
 </aside>
+</section>
 </section>
 </section>
 
@@ -1044,7 +1098,11 @@ ax.legend()
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-vectorization">Observation Vectorization</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-time">Training Time</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-training">Approval Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-the-approval-and-plurality">Comparing the Approval and Plurality</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
