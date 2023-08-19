@@ -67,7 +67,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'dicsussion';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Future Directions" href="future.html" />
+    <link rel="next" title="Conclusion and Future Directions" href="conclusion-future.html" />
     <link rel="prev" title="Approval Voting" href="approval-analysis.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -171,7 +171,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="plurality-analysis.html">Plurality Voting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="approval-analysis.html">Approval Voting</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Discussion</a></li>
-<li class="toctree-l1"><a class="reference internal" href="future.html">Future Directions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion-future.html">Conclusion and Future Directions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -371,11 +371,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-times">Training Times</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-vs-plurality">Approval vs Plurality</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agents-learning-approval-and-plurality-mechanics">Agents learning Approval and Plurality Mechanics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reward-shaping">Reward shaping</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-approval-voting">Why approval voting?</a></li>
 </ul>
             </nav>
         </div>
@@ -422,14 +421,13 @@ document.write(`
 <h2>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h2>
 <section id="inconsistent-training">
 <h3>Inconsistent Training<a class="headerlink" href="#inconsistent-training" title="Permalink to this heading">#</a></h3>
-<p>Reinforcement learning is a hard problem, and MARL even more so given its dynamic nature. To train our agents, we use a policy gradient method (PPO) that consistently improves our agents, but almost always has some type of divergence or weight collapse. In Sutton and Barto <strong>REF</strong>, they refer to a combination of issues -<strong>deadly triad</strong>- that when used together, lead to divergence more often than not. These issues are :</p>
+<p>Reinforcement learning is a hard problem, and MARL even more so given its dynamic nature. To train our agents, we used a policy gradient method (PPO) that consistently improved our agents, but almost always had some type of divergence or weight collapse. In Sutton and Barto<a class="footnote-reference brackets" href="#sutton-barto-book" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, they refer to a combination of issues -<strong>deadly triad</strong>- that when used together, lead to divergence more often than not. These issues are:</p>
 <ul class="simple">
 <li><p>Using non-linear function approximations. <em>Our neural network</em></p></li>
 <li><p>Bootstraping our estimated values. <em>Our policy is changing constantly, along with our value approximation</em></p></li>
 <li><p>Off-Policy Training. <em>The one thing we do not do in this case!</em></p></li>
 </ul>
-<p>Another thing to note is the difficulty to calcuate good estimates of the policy gradient (cite Kakade Langfor 2002) given the stochasticity of our MARL environment, and if we get a couple unfortunate episodes with bad estiamtes, our parameters may change in a poor direction leading to policy collapse and a long to possibly never recovery time. We do see in our training that there are multiple such events, with and without future recovery.</p>
-<p>Empirically, our agents can train for around 500 update steps around <span class="math notranslate nohighlight">\(10\%\)</span> of the time, meaning a collapse of our weights is almost always the termination factor of training. Despite this we do get decent results in the meantime, and would like to make training more consistent and reduce this collapse.</p>
+<p>The difficulty in calculating good estimates of the policy gradient is compounded by the stochasticity of our MARL environment <span id="id2">[<a class="reference internal" href="bibliography.html#id5" title="Sham M. Kakade and John Langford. Approximately optimal approximate reinforcement learning. In International Conference on Machine Learning. 2002. URL: https://api.semanticscholar.org/CorpusID:31442909.">KL02</a>]</span>. If we get a couple unfortunate episodes with bad estimates, our parameters may go in a poor direction leading to policy collapse and a long to possibly never recovery time. Multiple such events can be seen during our training. Empirically, when training our agents for approximately 500 update steps, they run to completion only roughly <span class="math notranslate nohighlight">\(10\%\)</span> of the time. A collapse of our weights is almost always the termination factor of training. Despite this we do get decent results in the meantime, and would like to make training more consistent.</p>
 <p>Some ideas we believe may help and are worth trying:</p>
 <ul class="simple">
 <li><p>Using decaying rates for our learning rate</p></li>
@@ -447,36 +445,44 @@ document.write(`
 <li><p>change optimizer</p></li>
 <li><p>simplify model strcuture</p></li>
 </ul>
-<p>These have been collected from many blog posts, reddit posts, and work done in <span id="id1">[<a class="reference internal" href="bibliography.html#id35" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>, <a class="reference internal" href="bibliography.html#id41" title="Peter Henderson, Riashat Islam, Philip Bachman, Joelle Pineau, Doina Precup, and David Meger. Deep reinforcement learning that matters. In AAAI Conference on Artificial Intelligence. 2017. URL: https://api.semanticscholar.org/CorpusID:4674781.">HIB+17</a>]</span>. We leave this exploration to future work, as it is not the direct scope of the project, but would help with consistency.</p>
+<p>These have been collected from many blog posts, reddit posts, and work done in <span id="id3">[<a class="reference internal" href="bibliography.html#id36" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>, <a class="reference internal" href="bibliography.html#id44" title="Peter Henderson, Riashat Islam, Philip Bachman, Joelle Pineau, Doina Precup, and David Meger. Deep reinforcement learning that matters. In AAAI Conference on Artificial Intelligence. 2017. URL: https://api.semanticscholar.org/CorpusID:4674781.">HIB+17</a>]</span>. We leave this exploration to future work, as it is not the direct scope of the project, but would help with consistency.</p>
 </section>
 <section id="training-times">
 <h3>Training Times<a class="headerlink" href="#training-times" title="Permalink to this heading">#</a></h3>
+<p>Given our current hardware situation and vi.  This could be improved by attempting to parallelize the gameplay. Extending the game to a GPU framework like WarpDrive<a class="footnote-reference brackets" href="#warp-drive" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> may or may not beneficial.</p>
 <p>One game of plurality takes :
 One game of approval takes :</p>
 <p>We</p>
 </section>
 </section>
-<section id="approval-vs-plurality">
-<h2>Approval vs Plurality<a class="headerlink" href="#approval-vs-plurality" title="Permalink to this heading">#</a></h2>
-<p>Approval voting is a novel twist to the voting mechanics of werewolf, and hidden roles in general. Despite this, we were able to train agents to play successfuly, and even better than regular plurality agents could/would.</p>
-<p>While plurality agents seem to signal with inter day targets, approval agents were much more open in their voting and signal broadcasting. They did not have to rely on superceding itent?.</p>
-<p>Approval Voting allowed for agents to express dislikes as well as likes against all other agents in the game. This increased expressibility led to harder to interpret behavior, although trends were clearly seen. Training approval agents was more consistent than plurality agents, and they achieved higher win-rates much quicker.</p>
-<p>Approval voting is a novel twist to the voting mechanics of werewolf, and our trained agents were able to learn more consistently and had better results on average than plurality trained agents.</p>
-<p>Some indicators lined up between the two, such as self-targetting. We can see the stark difference between learned behavior, as the consensus mechanism allows for different behaviors.</p>
+<section id="agents-learning-approval-and-plurality-mechanics">
+<h2>Agents learning Approval and Plurality Mechanics<a class="headerlink" href="#agents-learning-approval-and-plurality-mechanics" title="Permalink to this heading">#</a></h2>
+<p>We were able to train both approval and plurality based agents to perform better than random policy villagers, even ones that coordinated in what would be a game breaking way. Despite the challenges with the PPO training itself, it was clear that agents trained in the approval environment were consistently reaching higher average win-rates.</p>
+<p>When it came down to what behaviors they seemed to have learnt, and how they went about executing them in-game, the expressability of our enhanced approval mechanism allowed agents to openly share their beliefs throughout accusations, while plurality agents had to repurpose targetting somewhat during accusation phases. This repurposing is probably why higher win-rates were more challenging for plurality agents to learn. They had to figure out how to superimpose intent and also synthesize it from others. On the other hand, trained approval agents consistently learned the ordinality of dissaprovals, neutrals and approvals, along with using approvals to indicate trust and to some extend, trust others with whom they shared a trusted agent.</p>
+<p>Both plurality and approval indicators when viewed holistically provided strong evidence for the behaviors we identified, and while analyzing them, we realized that being able to view dynamics of changing votes would have presented even more compelling proof. We leave creating indicators for changes between approval, neutral and dissaproval to future work.</p>
+<p>Experimentally, it was found that in approval voting scenarios, most voters will pick a small amount of candidates <span id="id5">[<a class="reference internal" href="bibliography.html#id42">LdS04</a>, <a class="reference internal" href="bibliography.html#id41">LS10</a>]</span> relative to the full candidate list<a class="footnote-reference brackets" href="#approval-voting-avg-targets" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. This was empirically observed in our werewolf game, albeit our claim here is not truly tested. If this number changed at a proportional rate to the amount of players, we could make it a stronger claim.</p>
 <section id="reward-shaping">
 <h3>Reward shaping<a class="headerlink" href="#reward-shaping" title="Permalink to this heading">#</a></h3>
-<p>Even though we are pnealizing villagers in reward functions, they are not mechanical penalities for voting for wolves, because selection masks out dead wolves. So its fine to vote based on reputation even if they are dead. THere is a risk, but it does not impact win rates as much. In plurality, having a single target was much more impactful, thus we say the targets towards dead wolves decrease through phases.</p>
+<p>We based our reward function and values on prior work in werewolf, however shaping behavior through rewards is challenging and not something prior works looked at. For approval agents, we had no direct rewards for liking or feeling neutral about other agents, and there was no mechanical incentive either, however they learned to use them to implicitly communicate in a way that was interpretable to us. Two ideas branch out from this finding:</p>
+<ol class="arabic simple">
+<li><p>One would be to have a derived reward function using Inverse Reinforcement Learning (IRL) by using human replays.</p></li>
+<li><p>Adding more complex rewarding logic to see if we can force certain behavior to be learned.</p></li>
+</ol>
+<p>In plurality voting, the couple of trained agents that were able to achieve higher win-rates did so by discovering an ability to superimpose intent in their targetting. This is more complex behavior, and they were able to do this possibly due to the fact that accusation phases did not penalize or reward in any way. By being heavy handed with penalties, this behavior may never have been discovered.</p>
+<hr class="footnotes docutils" />
+<aside class="footnote brackets" id="sutton-barto-book" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://incompleteideas.net/book/the-book-2nd.html">http://incompleteideas.net/book/the-book-2nd.html</a></p>
+</aside>
+<aside class="footnote brackets" id="warp-drive" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">2</a><span class="fn-bracket">]</span></span>
+<p><a class="github reference external" href="https://github.com/salesforce/warp-drive">salesforce/warp-drive</a></p>
+</aside>
+<aside class="footnote brackets" id="approval-voting-avg-targets" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://electionscience.org/commentary-analysis/super-tuesday-deep-voting-methods-dive/">https://electionscience.org/commentary-analysis/super-tuesday-deep-voting-methods-dive/</a></p>
+</aside>
 </section>
-</section>
-<section id="why-approval-voting">
-<h2>Why approval voting?<a class="headerlink" href="#why-approval-voting" title="Permalink to this heading">#</a></h2>
-<p>In a recent case for approval voting <span id="id2">[<a class="reference internal" href="bibliography.html#id40" title="Aaron Hamlin and Whitney Hua. The case for approval voting. Constitutional Political Economy, 34:335 - 345, 2022. URL: https://api.semanticscholar.org/CorpusID:254913046.">HH22</a>]</span>, Selecting a strong winner is where approval voting shines. It not only allows a voter to select their top cnadidate, but also to hedge their bets by selecting other favourable candidates. It seems this range is around 30-40% with our trained agents.
-THey also mention how accuracy relative to voters honest assessments is much higher with approval voting. In terms of hidden role games, it allows an uninformed majority the possibility to better</p>
-<p>THey also mention
-Approval voting has the advantage of being particularly easy to implement as well
-as avoiding administration concerns. This includes factors such as education, ballot
-design, voting machines, tabulation procedures, and risk-limiting audits</p>
-<p>It also means that approval voting is better insulated from  typical ballot mistakes seen in plurality voting, such as overvoting</p>
 </section>
 </section>
 
@@ -521,11 +527,11 @@ design, voting machines, tabulation procedures, and risk-limiting audits</p>
       </div>
     </a>
     <a class="right-next"
-       href="future.html"
+       href="conclusion-future.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Future Directions</p>
+        <p class="prev-next-title">Conclusion and Future Directions</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -552,11 +558,10 @@ design, voting machines, tabulation procedures, and risk-limiting audits</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-times">Training Times</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-vs-plurality">Approval vs Plurality</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agents-learning-approval-and-plurality-mechanics">Agents learning Approval and Plurality Mechanics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reward-shaping">Reward shaping</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-approval-voting">Why approval voting?</a></li>
 </ul>
   </nav></div>
 
