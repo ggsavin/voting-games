@@ -692,21 +692,27 @@ The steps we follow are very closely related to our <a class="reference internal
 <h2>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h2>
 <p>There are just under 20 hyperparameters, and can be split between gameplay parameters, neural network model parameters and PPO training parameters. Each value in this configuration object below can be changed, and is passed throughout training functions.</p>
 <p>Initializations and hyper-parameter choices were greatly influenced by the exhaustive work in <span id="id4">[<a class="reference internal" href="bibliography.html#id36" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>]</span> and <span id="id5">[<a class="reference internal" href="bibliography.html#id39" title="Marco Pleines, Matthias Pallasch, Frank Zimmer, and Mike Preuss. Memory gym: partially observable challenges to memory-based agents. In The Eleventh International Conference on Learning Representations. 2022.">PPZP22</a>]</span> for the LSTM portion.</p>
+<p>The following parameters are the ones we permuted the most</p>
 <ul class="simple">
 <li><p>Model</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">recurrent_hidden_size</span></code>: ww</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">joint_mlp_size</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">split_mlp_size</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">recurrent_hidden_size</span></code>: This refers to the LSTM hidden units</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">joint_mlp_size</span></code>: This is size of the first fully connected layer after the LSTM</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">split_mlp_size</span></code>: This is the size of the individual fully connected layers after the joint layer. One is for the policy, the other for the critic.</p></li>
 </ul>
 </li>
 <li><p>Training</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">epochs</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">updates</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">buffer_games_per_update</span></code>:</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">learning_rate</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code>: Number of samples we process before an update</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">epochs</span></code>: Number of times we go through all our samples</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">updates</span></code>: Number of times we fill our buffer and repeat epoch training</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">buffer_games_per_update</span></code>: How many werewolf games we play per update</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">learning_rate</span></code>: Tegulating our networks weights based on our loss gradient</p></li>
+</ul>
+</li>
+<li><p>Game:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">accusation_phases</span></code>: How many times agents accuse one another before a final vote phase</p></li>
 </ul>
 </li>
 </ul>

@@ -59,7 +59,7 @@ config_training = {
     },
     "training" : {
         "batch_size": 256, # 32-64-128-256-512-1024 (6)
-        "epochs": 5, # 4,5,6,7,8,9,10 (7)
+        "epochs": 3, # 4,5,6,7,8,9,10 (7)
         "updates": 1000, # 1000 (1)
         "buffer_games_per_update": 200, # 50-100-200 (3)
         "clip_range": 0.075, # 0.1,0.2,0.3 (3)
@@ -121,13 +121,13 @@ else:
 ## loop through accusation phases
 ### Run training multiple times, trying to get 3 complete training sessions
 
-accusation_phases = [1,2,3,4]
+accusation_phases = [2]
 
 for accusation_phase_num in accusation_phases:
     config['config_game']['gameplay']['accusation_phases'] = accusation_phase_num
 
     completed_training = 0
-    for _ in range(10):
+    for _ in range(20):
         try:
             trainer = PPOTrainer(env,
                                 config=config,
