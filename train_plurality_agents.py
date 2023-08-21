@@ -58,15 +58,15 @@ config_training = {
         "approval_states": 10 # this is tied to the number of players
     },
     "training" : {
-        "batch_size": 128, # 32-64-128-256-512-1024 (6)
-        "epochs": 3, # 4,5,6,7,8,9,10 (7)
-        "updates": 701, # 1000 (1)
+        "batch_size": 256, # 32-64-128-256-512-1024 (6)
+        "epochs": 5, # 4,5,6,7,8,9,10 (7)
+        "updates": 1000, # 1000 (1)
         "buffer_games_per_update": 200, # 50-100-200 (3)
-        "clip_range": 0.1, # 0.1,0.2,0.3 (3)
+        "clip_range": 0.075, # 0.1,0.2,0.3 (3)
         "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)
         "max_grad_norm": 0.5, 
         "beta": 0.01, # entropy loss multiplier # 0.1, 0.05, 0.01, 0.005, 0.001
-        "learning_rate": 0.0001, # 0.001, 0.0005, 0.0001, 0.00005, 0.00001
+        "learning_rate": 0.00005, # 0.001, 0.0005, 0.0001, 0.00005, 0.00001
         "adam_eps": 1e-5, # 1e-8, 1e-7. 1e-6, 1e-5
         "gamma": 0.99, # 0.99
         "gae_lambda": 0.95, #0.95-0.99

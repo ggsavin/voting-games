@@ -374,8 +374,9 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-vectorization">Observation Vectorization</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-time">Training Time</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plurality-training">Plurality Training</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-training">Approval Training</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-the-approval-and-plurality">Comparing the Approval and Plurality</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-approval-and-plurality">Comparing Approval and Plurality</a></li>
 </ul>
 </li>
 </ul>
@@ -870,7 +871,7 @@ It took 46.75 s to play 1000 approval games
 </div>
 <p>We can see the amount of time taken to play 1000 games is about 20 seconds for plurality and roughly double for approval.</p>
 <p>When it comes to training agents, we fill a buffer with 200 games, over  500 updates. This by itself is roughly 1 hour. Time is also spent during each epoch (of which we have 5) calculating loss, which requires passing through the model with all our data. This adds roughly another 4 hours to the run as training loops that have gone to completion with these parameters have taken roughly 5 hours.</p>
-<p>We fill buffers and collect avg/win rates seperately. In the spirit of saving time, we could have just used the results from filing the buffer to get win-rate updates at every update step.</p>
+<p>We fill buffers and collect avg/win rates seperately. In the spirit of saving time, we could have just used the results from filling the buffer to get win-rate updates at every update step.</p>
 </section>
 <section id="training-results">
 <h2>Training Results<a class="headerlink" href="#training-results" title="Permalink to this heading">#</a></h2>
@@ -904,23 +905,23 @@ def tolerant_mean(arrs):
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mlflow_client = mlflow.tracking.MlflowClient(tracking_uri=&quot;http://mlflow:5000&quot;)
 
-### PLURALITY 
-# plurality_experiment = mlflow_client.get_experiment_by_name(&quot;Plurality Training&quot;)
-# plurality_runs = mlflow_client.search_runs([plurality_experiment.experiment_id])
+## PLURALITY 
+plurality_experiment = mlflow_client.get_experiment_by_name(&quot;Plurality Training&quot;)
+plurality_runs = mlflow_client.search_runs([plurality_experiment.experiment_id])
 
-# four_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;4_accusations&#39;&quot;)
-# three_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;3_accusations&#39;&quot;)
-# two_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;2_accusations&#39;&quot;)
-# one_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;1_accusations&#39;&quot;)
+four_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;4_accusations&#39;&quot;)
+three_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;3_accusations&#39;&quot;)
+two_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;2_accusations&#39;&quot;)
+one_accusations_p = mlflow_client.search_runs([plurality_experiment.experiment_id], filter_string=&quot;run_name = &#39;1_accusations&#39;&quot;)
 
-# four_accusation_p_votes = \
-#     [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in four_accusations]
-# three_accusation_p_votes = \
-#     [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in three_accusations]
-# four_accusation_p_votes = \
-#     [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in four_accusations]
-# three_accusation_p_votes = \
-#     [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in three_accusations]
+four_accusation_p_votes = \
+    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in four_accusations_p]
+three_accusation_p_votes = \
+    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in three_accusations_p]
+two_accusation_p_votes = \
+    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in two_accusations_p]
+one_accusation_p_votes = \
+    [[item.value for item in mlflow_client.get_metric_history(run_id=accusation.info.run_id, key=&quot;avg_wins/100&quot;)] for accusation in one_accusations_p]
 
 ### APPROVAL
 
@@ -947,11 +948,80 @@ print(&quot;Done gathering mlflow win rate metrics&quot;)
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done gaathering mlflow win rate metrics
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done gathering mlflow win rate metrics
 </pre></div>
 </div>
 </div>
 </div>
+<section id="plurality-training">
+<h3>Plurality Training<a class="headerlink" href="#plurality-training" title="Permalink to this heading">#</a></h3>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
+
+tolerant_p_results = [tolerant_mean(a_votes) for a_votes in [one_accusation_p_votes, two_accusation_p_votes, three_accusation_p_votes, four_accusation_p_votes]]
+
+for i, tolerant_result in enumerate(tolerant_p_results):
+    y, std = tolerant_result
+    ax.plot(np.arange(len(y))+1, y, label=i+1)
+    ax.fill_between(np.arange(len(y))+1, y-std, y+std, alpha=0.1)
+
+plt.ylabel(&quot;Win Percentage&quot;)
+plt.xlabel(&quot;Collection Step&quot;)
+plt.legend(title=&quot;Number of Accusation Phase(s)&quot;)
+plt.suptitle(&quot;Win-Rates while Training Plurality Agents&quot;)
+print(&quot;\n&quot;)
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="_images/f3ca7021558e8dc6e13bf83a74c056718cc33437a31522965a17c572e6998398.png" src="_images/f3ca7021558e8dc6e13bf83a74c056718cc33437a31522965a17c572e6998398.png" />
+</div>
+</div>
+<p>We can see that regardless of one or many accusation phases, there is no definitive trend as to which performs the best. We had an outlier with a win-rate above <span class="math notranslate nohighlight">\(40\%\)</span> with <span class="math notranslate nohighlight">\(2\)</span> accusation phases, however just based on the graph, <span class="math notranslate nohighlight">\(4\)</span> accusation phases scored higher on average. Given what we know in our <a class="reference internal" href="plurality-analysis.html#p-analysis"><span class="std std-ref">plurality analysis</span></a>, it might be that more accusation phases are needed for agents that can only cast a vote for a single candidate. More time is needed to learn complex strategies for signaling intent.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>four_accusation_p_times = [(accusation.info.end_time - accusation.info.start_time)/(1000 * 60) for accusation in four_accusations_p]
+three_accusation_p_times = [(accusation.info.end_time - accusation.info.start_time)/(1000 * 60) for accusation in three_accusations_p]
+two_accusation_p_times = [(accusation.info.end_time - accusation.info.start_time)/(1000 * 60) for accusation in two_accusations_p]
+one_accusation_p_times = [(accusation.info.end_time - accusation.info.start_time)/(1000 * 60) for accusation in one_accusations_p]
+
+plt.boxplot([one_accusation_p_times, two_accusation_p_times, three_accusation_p_times, four_accusation_p_times],
+            vert=True,  # vertical box alignment
+            patch_artist=True,  # fill with color
+            labels=[1,2,3,4])
+plt.ylabel(&quot;Minutes&quot;)
+plt.xlabel(&quot;Number of Accusation Phase(s)&quot;)
+plt.suptitle(&quot;Time elapsed for PPO agent training loops&quot;)
+    
+print(&quot;\n&quot;)
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="_images/75753e17925e086aa40dc40a73e109874f804ce12c79c067a3981bcb953b6b0b.png" src="_images/75753e17925e086aa40dc40a73e109874f804ce12c79c067a3981bcb953b6b0b.png" />
+</div>
+</div>
+<p>Stability of training was quite poor for plurality voting, regardless of number of accusation phases.</p>
+</section>
 <section id="approval-training">
 <h3>Approval Training<a class="headerlink" href="#approval-training" title="Permalink to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
@@ -963,9 +1033,9 @@ print(&quot;Done gathering mlflow win rate metrics&quot;)
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
 
-tolerant_results = [tolerant_mean(a_votes) for a_votes in [one_accusation_a_votes, two_accusation_a_votes, three_accusation_a_votes, four_accusation_a_votes]]
+tolerant_a_results = [tolerant_mean(a_votes) for a_votes in [one_accusation_a_votes, two_accusation_a_votes, three_accusation_a_votes, four_accusation_a_votes]]
 
-for i, tolerant_result in enumerate(tolerant_results):
+for i, tolerant_result in enumerate(tolerant_a_results):
     y, std = tolerant_result
     ax.plot(np.arange(len(y))+1, y, label=i+1)
     ax.fill_between(np.arange(len(y))+1, y-std, y+std, alpha=0.1)
@@ -1021,8 +1091,47 @@ print(&quot;\n&quot;)
 </div>
 <p>We can also see that the more accusation phases we added, the less stable the training became. This was another reason we stuck with <span class="math notranslate nohighlight">\(2\)</span> accusation phases. For the hyperparameters we had settled on, it seemed the most stable.</p>
 </section>
-<section id="comparing-the-approval-and-plurality">
-<h3>Comparing the Approval and Plurality<a class="headerlink" href="#comparing-the-approval-and-plurality" title="Permalink to this heading">#</a></h3>
+<section id="comparing-approval-and-plurality">
+<h3>Comparing Approval and Plurality<a class="headerlink" href="#comparing-approval-and-plurality" title="Permalink to this heading">#</a></h3>
+<p>We can see that when comparing approval and purality training, an approval voting mechanism provided much better win-rates, and a faster and more consistent learning experience. The increased expressibility provided by approval voting gave learning agents a more consistent experience and way to signal.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
+
+tolerant_results = [tolerant_mean(a_votes) for a_votes in [one_accusation_a_votes, two_accusation_a_votes, three_accusation_a_votes, four_accusation_a_votes]]
+
+
+y_p, std_p = tolerant_p_results[1]
+y_a, std_a = tolerant_a_results[1]
+
+ax.plot(np.arange(len(y_p))+1, y_p, label=&quot;Plurality&quot;)
+# ax.fill_between(np.arange(len(y_p))+1, y_p-std_p, y_p+std_p, alpha=0.1)
+
+ax.plot(np.arange(len(y_a))+1, y_a, label=&quot;Approval&quot;)
+# ax.fill_between(np.arange(len(y_a))+1, y_a-std_a, y_a+std_a, alpha=0.1)
+
+plt.ylabel(&quot;Win Percentage&quot;)
+plt.xlabel(&quot;Collection Step&quot;)
+plt.legend(title=&quot;Voting Mechanism&quot;)
+plt.suptitle(&quot;Win-Rates while Training Approval Agents&quot;)
+print(&quot;\n&quot;)
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="_images/8914f1ae56ae20a4a58245d37802f6ae7a53696199f18ffd628ed603a0929fd3.png" src="_images/8914f1ae56ae20a4a58245d37802f6ae7a53696199f18ffd628ed603a0929fd3.png" />
+</div>
+</div>
+<p>T</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots()
@@ -1132,8 +1241,9 @@ ax.legend()
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observation-vectorization">Observation Vectorization</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-time">Training Time</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-results">Training Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plurality-training">Plurality Training</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#approval-training">Approval Training</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-the-approval-and-plurality">Comparing the Approval and Plurality</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-approval-and-plurality">Comparing Approval and Plurality</a></li>
 </ul>
 </li>
 </ul>
