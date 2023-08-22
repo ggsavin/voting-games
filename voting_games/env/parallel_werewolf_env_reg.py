@@ -1,6 +1,6 @@
 from pettingzoo.utils.env import ParallelEnv
 from pettingzoo.utils import agent_selector, wrappers
-from pettingzoo.test import api_test
+from pettingzoo.test import api_test, parallel_api_test
 from gymnasium.spaces import Discrete, MultiDiscrete, Dict, Box, Space
 import enum
 import random
@@ -419,42 +419,42 @@ def random_coordinated_single_wolf(env, agent, action=None):
 
 if __name__ == "__main__":
 
-    # api_test(raw_env(), num_cycles=100, verbose_progress=True)
-    env = raw_env(num_agents=10, werewolves=2, num_accusations=1)
-    env.reset()
-    num_times = 1
+    # parallel_api_test(raw_env(), num_cycles=100)
+    # env = raw_env(num_agents=10, werewolves=2, num_accusations=1)
+    # env.reset()
+    # num_times = 1
 
-    game_replays = []
-    state_buffer = []
-    for _ in range(num_times):
-        observations, rewards, terminations, truncations, infos = env.reset()
-        wolf_action = None
-        state_buffer.append(copy.deepcopy(env.world_state))
-        while env.agents:
+    # game_replays = []
+    # state_buffer = []
+    # for _ in range(num_times):
+    #     observations, rewards, terminations, truncations, infos = env.reset()
+    #     wolf_action = None
+    #     state_buffer.append(copy.deepcopy(env.world_state))
+    #     while env.agents:
             
-            villagers = set(env.agents) & set(env.world_state["villagers"])
-            wolves = set(env.agents) & set(env.world_state["werewolves"])
+    #         villagers = set(env.agents) & set(env.world_state["villagers"])
+    #         wolves = set(env.agents) & set(env.world_state["werewolves"])
 
-            v_actions = {villager: random_agent_action(env, villager) for villager in villagers}
+    #         v_actions = {villager: random_agent_action(env, villager) for villager in villagers}
 
-            phase = env.world_state['phase']
-            w_actions = {}
-            for wolf in wolves:
-                wolf_action = random_coordinated_single_wolf(env, wolf, action=wolf_action)
-                w_actions[wolf] = wolf_action
+    #         phase = env.world_state['phase']
+    #         w_actions = {}
+    #         for wolf in wolves:
+    #             wolf_action = random_coordinated_single_wolf(env, wolf, action=wolf_action)
+    #             w_actions[wolf] = wolf_action
 
-            actions = v_actions | w_actions
+    #         actions = v_actions | w_actions
 
-            next_observations, _, _, _, _ = env.step(actions)
-            state_buffer.append(copy.deepcopy(env.world_state))
+    #         next_observations, _, _, _, _ = env.step(actions)
+    #         state_buffer.append(copy.deepcopy(env.world_state))
 
-            if env.world_state['phase'] == Phase.NIGHT:
-                wolf_action = None
+    #         if env.world_state['phase'] == Phase.NIGHT:
+    #             wolf_action = None
             
-            if env.world_state['phase'] == Phase.ACCUSATION and phase == Phase.NIGHT:
-                wolf_action = None           
+    #         if env.world_state['phase'] == Phase.ACCUSATION and phase == Phase.NIGHT:
+    #             wolf_action = None           
 
-        game_replays.append(copy.deepcopy(env.history))
+    #     game_replays.append(copy.deepcopy(env.history))
         
     print("Done")
 

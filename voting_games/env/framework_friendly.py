@@ -1,6 +1,6 @@
 from pettingzoo.utils.env import ParallelEnv
 from pettingzoo.utils import agent_selector, wrappers
-from pettingzoo.test import api_test
+from pettingzoo.test import api_test, parallel_api_test
 from gymnasium.spaces import Discrete, MultiDiscrete, Dict, Box, Space
 import enum
 import random
@@ -8,19 +8,9 @@ import numpy as np
 import collections
 import json
 import os
-import copy 
+import copy
+import warnings
 
-from pettingzoo.utils.env import ParallelEnv
-from pettingzoo.utils import agent_selector, wrappers
-from pettingzoo.test import api_test
-from gymnasium.spaces import Discrete, MultiDiscrete, Dict, Box, Space
-import enum
-import random
-import numpy as np
-import collections
-import json
-import os
-import copy 
 
 class Roles(enum.IntEnum):
     VILLAGER = 0
@@ -44,12 +34,6 @@ REWARDS = {
     "no_sleep": -1,
 }
 
-def env(**kwargs):
-    env = raw_env(**kwargs)
-    env = wrappers.CaptureStdoutWrapper(env)
-    env = wrappers.AssertOutOfBoundsWrapper(env)
-    env = wrappers.OrderEnforcingWrapper(env)
-
 class raw_env(ParallelEnv):
 
     metadata = {
@@ -60,6 +44,7 @@ class raw_env(ParallelEnv):
     def __init__(self, num_agents=5, werewolves=1, num_accusations=1, rewards=REWARDS):
         super().__init__()
 
+        assert werewolves < num_agents, f"The number of werewolves should be less than the number of players ({num_agents})"
         assert werewolves <= np.sqrt(num_agents), f"The number of werewolves should be less than the square root of agents ({num_agents})"       
 
         self.agents = [f"player_{i}" for i in range(num_agents)]
@@ -239,8 +224,8 @@ class raw_env(ParallelEnv):
             elif self.world_state['phase'] == Phase.VOTING:
                 self.world_state['executed'].append(f'player_{target}')
 
-        # WIN CONDITIONS #
-        terminations = {agent: agent == f'player_{target}' for agent in self.agents}
+            # WIN CONDITIONS #
+            terminations = {agent: agent == f'player_{target}' for agent in self.agents}
 
         # Do we have winners
         winners = self._check_for_winner()
@@ -348,7 +333,8 @@ class raw_env(ParallelEnv):
         Renders the environment. In human mode, it prints to the terminal
         """
         os.system('cls' if os.name == 'nt' else 'clear')
-        print(json.dumps(self.world_state, indent=4))
+        # print(json.dumps(self.world_state, indent=4))
+        print(self.world_state)
     
     def close():
         """
@@ -400,7 +386,7 @@ class raw_env(ParallelEnv):
         terminations = {agent: False for agent in self.agents}
         truncations = {agent: False for agent in self.agents}
         infos = {agent: {} for agent in self.agents}
-        return observations, rewards, terminations, truncations, infos
+        return observations, {}
 
 
     def convert_obs(self, observation):
@@ -430,48 +416,52 @@ def random_coordinated_single_wolf(env, agent, action=None):
 
 if __name__ == "__main__":
 
-    # api_test(raw_env(), num_cycles=100, verbose_progress=True)
-    env = raw_env(num_agents=10, werewolves=2, num_accusations=1)
-    env.reset()
-    num_times = 1
+    env = raw_env()
+    parallel_api_test(env)
 
-    game_replays = []
-    state_buffer = []
-    for _ in range(num_times):
-        observations, rewards, terminations, truncations, infos = env.reset()
-        wolf_action = None
-        state_buffer.append(copy.deepcopy(env.world_state))
-        while env.agents:
+    #env = raw_env(num_agents=5, werewolves=1, num_accusations=1)
+    # env.reset()
+    # env.reset()
+    # num_times = 1
+
+    # game_replays = []
+    # state_buffer = []
+    # for _ in range(num_times):
+    #     observations, rewards, terminations, truncations, infos = env.reset()
+    #     wolf_action = None
+    #     state_buffer.append(copy.deepcopy(env.world_state))
+    #     while env.agents:
             
-            villagers = set(env.agents) & set(env.world_state["villagers"])
-            wolves = set(env.agents) & set(env.world_state["werewolves"])
+    #         villagers = set(env.agents) & set(env.world_state["villagers"])
+    #         wolves = set(env.agents) & set(env.world_state["werewolves"])
 
-            v_actions = {villager: random_agent_action(env, villager) for villager in villagers}
+    #         v_actions = {villager: random_agent_action(env, villager) for villager in villagers}
 
-            phase = env.world_state['phase']
-            w_actions = {}
-            for wolf in wolves:
-                wolf_action = random_coordinated_single_wolf(env, wolf, action=wolf_action)
-                w_actions[wolf] = wolf_action
+    #         phase = env.world_state['phase']
+    #         w_actions = {}
+    #         for wolf in wolves:
+    #             wolf_action = random_coordinated_single_wolf(env, wolf, action=wolf_action)
+    #             w_actions[wolf] = wolf_action
 
-            actions = v_actions | w_actions
+    #         actions = v_actions | w_actions
 
-            next_observations, _, _, _, _ = env.step(actions)
-            state_buffer.append(copy.deepcopy(env.world_state))
+    #         next_observations, _, _, _, _ = env.step(actions)
+    #         state_buffer.append(copy.deepcopy(env.world_state))
 
-            if env.world_state['phase'] == Phase.NIGHT:
-                wolf_action = None
+    #         if env.world_state['phase'] == Phase.NIGHT:
+    #             wolf_action = None
             
-            if env.world_state['phase'] == Phase.ACCUSATION and phase == Phase.NIGHT:
-                wolf_action = None           
+    #         if env.world_state['phase'] == Phase.ACCUSATION and phase == Phase.NIGHT:
+    #             wolf_action = None           
 
-        game_replays.append(copy.deepcopy(env.history))
+    #     game_replays.append(copy.deepcopy(env.history))
         
-    print("Done")
+    #print("Done")
 
     # env.render()
     # while env.agents:
     #     actions = {agent: env.action_space(agent).sample() for agent in env.agents if not (env.world_state["phase"] == Phase.NIGHT and env.agent_roles[agent] == Roles.VILLAGER)}  # this is where you would insert your policy
     #     observations, rewards, terminations, truncations, infos = env.step(actions)
-    #     env.render()
+        # env.render()
     # env.render() # post game render
+    # print("Hello")
