@@ -240,7 +240,7 @@ def fill_recurrent_buffer_scaled_rewards(buffer, env, config:dict, wolf_policy, 
             wolves = set(env.agents) & set(env.world_state["werewolves"])
 
              ## VILLAGER LOGIC ##
-            v_obs = torch.cat([torch.unsqueeze(torch.tensor(env.convert_obs(observations[villager]['observation']), dtype=torch.float), 0) for villager in villagers])
+            v_obs = torch.cat([torch.unsqueeze(torch.tensor(convert_obs(observations[villager]['observation'], voting_type=voting_type), dtype=torch.float), 0) for villager in villagers])
 
             # TODO: maybe this can be sped up? 
             hxs, cxs = zip(*[(hxs, cxs) for hxs, cxs in [magent_obs[villager]["hcxs"][-1] for villager in villagers]])

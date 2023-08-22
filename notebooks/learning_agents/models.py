@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-    
+
 class ActorCriticAgent(torch.nn.Module):
     def __init__(self, config:dict, num_players, obs_size=None):
         super().__init__()

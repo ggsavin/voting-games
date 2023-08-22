@@ -368,7 +368,6 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inconsistent-training">Inconsistent Training</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-times">Training Times</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agents-learning-approval-and-plurality-mechanics">Agents learning Approval and Plurality Mechanics</a><ul class="nav section-nav flex-column">
@@ -447,20 +446,13 @@ document.write(`
 </ul>
 <p>These have been collected from many blog posts, reddit posts, and work done in <span id="id3">[<a class="reference internal" href="bibliography.html#id36" title="Marcin Andrychowicz, Anton Raichuk, Piotr Stańczyk, Manu Orsini, Sertan Girgin, Raphael Marinier, Léonard Hussenot, Matthieu Geist, Olivier Pietquin, Marcin Michalski, Sylvain Gelly, and Olivier Bachem. What matters in On-Policy reinforcement learning? a Large-Scale empirical study. arXiv preprint arXiv:2006.05990, June 2020. arXiv:2006.05990.">ARStanczyk+20</a>, <a class="reference internal" href="bibliography.html#id44" title="Peter Henderson, Riashat Islam, Philip Bachman, Joelle Pineau, Doina Precup, and David Meger. Deep reinforcement learning that matters. In AAAI Conference on Artificial Intelligence. 2017. URL: https://api.semanticscholar.org/CorpusID:4674781.">HIB+17</a>]</span>. We leave this exploration to future work, as it is not the direct scope of the project, but would help with consistency.</p>
 </section>
-<section id="training-times">
-<h3>Training Times<a class="headerlink" href="#training-times" title="Permalink to this heading">#</a></h3>
-<p>Given our current hardware situation and vi.  This could be improved by attempting to parallelize the gameplay. Extending the game to a GPU framework like WarpDrive<a class="footnote-reference brackets" href="#warp-drive" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> may or may not beneficial.</p>
-<p>One game of plurality takes :
-One game of approval takes :</p>
-<p>We</p>
-</section>
 </section>
 <section id="agents-learning-approval-and-plurality-mechanics">
 <h2>Agents learning Approval and Plurality Mechanics<a class="headerlink" href="#agents-learning-approval-and-plurality-mechanics" title="Permalink to this heading">#</a></h2>
 <p>We were able to train both approval and plurality based agents to perform better than random policy villagers, even ones that coordinated in what would be a game breaking way. Despite the challenges with the PPO training itself, it was clear that agents trained in the approval environment were consistently reaching higher average win-rates.</p>
 <p>When it came down to what behaviors they seemed to have learnt, and how they went about executing them in-game, the expressability of our enhanced approval mechanism allowed agents to openly share their beliefs throughout accusations, while plurality agents had to repurpose targetting somewhat during accusation phases. This repurposing is probably why higher win-rates were more challenging for plurality agents to learn. They had to figure out how to superimpose intent and also synthesize it from others. On the other hand, trained approval agents consistently learned the ordinality of dissaprovals, neutrals and approvals, along with using approvals to indicate trust and to some extend, trust others with whom they shared a trusted agent.</p>
 <p>Both plurality and approval indicators when viewed holistically provided strong evidence for the behaviors we identified, and while analyzing them, we realized that being able to view dynamics of changing votes would have presented even more compelling proof. We leave creating indicators for changes between approval, neutral and dissaproval to future work.</p>
-<p>Experimentally, it was found that in approval voting scenarios, most voters will pick a small amount of candidates <span id="id5">[<a class="reference internal" href="bibliography.html#id42">LdS04</a>, <a class="reference internal" href="bibliography.html#id41">LS10</a>]</span> relative to the full candidate list<a class="footnote-reference brackets" href="#approval-voting-avg-targets" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. This was empirically observed in our werewolf game, albeit our claim here is not truly tested. If this number changed at a proportional rate to the amount of players, we could make it a stronger claim.</p>
+<p>Experimentally, it was found that in approval voting scenarios, most voters will pick a small amount of candidates <span id="id4">[<a class="reference internal" href="bibliography.html#id41" title="Jean-François Laslier and M Remzi Sanver. Handbook on approval voting. Springer Science &amp; Business Media, 2010.">LS10</a>, <a class="reference internal" href="bibliography.html#id42" title="Jean-François Laslier and Karine Van der Straeten. Une expérience de vote par assentiment lors de l’élection présidentielle française de 2002. Revue française de science politique, 54(1):99–130, 2004.">LVdS04</a>]</span> relative to the full candidate list<a class="footnote-reference brackets" href="#approval-voting-avg-targets" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. This was empirically observed in our werewolf game, albeit our claim here is not truly tested. If this number changed at a proportional rate to the amount of players, we could make it a stronger claim.</p>
 <section id="reward-shaping">
 <h3>Reward shaping<a class="headerlink" href="#reward-shaping" title="Permalink to this heading">#</a></h3>
 <p>We based our reward function and values on prior work in werewolf, however shaping behavior through rewards is challenging and not something prior works looked at. For approval agents, we had no direct rewards for liking or feeling neutral about other agents, and there was no mechanical incentive either, however they learned to use them to implicitly communicate in a way that was interpretable to us. Two ideas branch out from this finding:</p>
@@ -474,12 +466,8 @@ One game of approval takes :</p>
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://incompleteideas.net/book/the-book-2nd.html">http://incompleteideas.net/book/the-book-2nd.html</a></p>
 </aside>
-<aside class="footnote brackets" id="warp-drive" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">2</a><span class="fn-bracket">]</span></span>
-<p><a class="github reference external" href="https://github.com/salesforce/warp-drive">salesforce/warp-drive</a></p>
-</aside>
 <aside class="footnote brackets" id="approval-voting-avg-targets" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">2</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://electionscience.org/commentary-analysis/super-tuesday-deep-voting-methods-dive/">https://electionscience.org/commentary-analysis/super-tuesday-deep-voting-methods-dive/</a></p>
 </aside>
 </section>
@@ -555,7 +543,6 @@ One game of approval takes :</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training">Training</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inconsistent-training">Inconsistent Training</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-times">Training Times</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#agents-learning-approval-and-plurality-mechanics">Agents learning Approval and Plurality Mechanics</a><ul class="nav section-nav flex-column">
