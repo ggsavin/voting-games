@@ -29,6 +29,9 @@ To view the mlflow instance running on our remote server, run this command with 
 `ssh -L 9999:localhost:5000 A.B.C.D`
 
 ### Project Book
+#### View book
+
+The repo comes with a pre-compiled jupyter-book that can be viewed by opening `project-book/_build/html/index.html`
 
 #### Build the book
 
