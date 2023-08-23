@@ -638,10 +638,10 @@ Average amount of days until the next wolf was killed in approval games for 2 wo
 <h4>Plurality<a class="headerlink" href="#plurality" title="Permalink to this heading">#</a></h4>
 <p>To try an make sense of targetting, we chose to look at:</p>
 <ul class="simple">
-<li><p>Ratio of unique villager targets</p></li>
-<li><p>Ratio of villagers voting for themselves</p></li>
-<li><p>Percentage of villagers targetting dead players</p></li>
-<li><p>Percentage of villager votes targetting wolves and dead wolves</p></li>
+<li><p><strong>Ratio of unique villager targets</strong>: How many unique players are targetted on average by villagers?</p></li>
+<li><p><strong>Ratio of villagers voting for themselves</strong>: How much self targetting is occuring on average by villagers?</p></li>
+<li><p><strong>Percentage of villagers targetting dead players</strong>: How many villagers are voting for dead players out of total votes cast?</p></li>
+<li><p><strong>Percentage of villager votes targetting wolves and dead wolves</strong>: How many villagers are voting for werewolves out of total votes cast?</p></li>
 </ul>
 <p>These should be good enough to indicate cooperation as well as general role comprehension.</p>
 <div class="cell docutils container">
@@ -731,37 +731,24 @@ Villager votes : [3, 3, 6, 3, 6]
 </section>
 <section id="approval">
 <h4>Approval<a class="headerlink" href="#approval" title="Permalink to this heading">#</a></h4>
-<p>Because of the extra dimensions and expressability of approval voting, trying to determine behavior for these agents is much harder. We thus collect many different and interelated indicators to see what combinations of them might give us the most insight.</p>
+<p>Because of the extra dimensions and expressability of approval voting, trying to determine behavior for these agents is much harder. We thus collect many different and interelated indicators to see what combinations of them might give us the most insight. Some may seem redudant, but providing different perspectives to certain indicators will hopefully paint a more complete picture while we analyze our data.</p>
 <p>The ones we are currently looking at are:</p>
 <ul class="simple">
-<li><p>average target count</p></li>
-<li><p>average like count</p></li>
-<li><p>average neutral count</p></li>
-<li><p>average self target</p></li>
-<li><p>average self like</p></li>
-<li><p>percentage of wolves in top targets</p></li>
-<li><p>percentage of wolves in top likes</p></li>
-<li><p>percent of votes targetting dead players</p></li>
-<li><p>percent of votes targetting wolves by tracking:</p>
-<ul>
-<li><p>percent of votes targetting dead wolves</p></li>
-<li><p>percent of votes targetting wolves that are still alive</p></li>
+<li><p><strong>average target count</strong>: How many candidates does a single agent dissaprove of on average?</p></li>
+<li><p><strong>average like count</strong>: How many candidates does a single agent like on average?</p></li>
+<li><p><strong>average neutral count</strong>: How many candidates does a single agent use a neutral option for on average?</p></li>
+<li><p><strong>average self target</strong>: How likely is it a single agent will target/dissaprove of themselves?</p></li>
+<li><p><strong>average self like</strong>: How likely is it that a single agent will like themselves?</p></li>
+<li><p><strong>percentage of wolves in top targets</strong>: How many targets are allocated towards werewolves when considering a top percentage of targets cast.</p></li>
+<li><p><strong>percentage of wolves in top likes</strong>: How many likes are allocated towards werewolves when considering a top percentage of likes cast.</p></li>
+<li><p><strong>percent of votes targetting dead players</strong>: How many targets are towards dead players out of all targets cast.</p></li>
+<li><p><strong>percent of votes targetting dead wolves</strong>: How many targets are towards dead werewolves out of all targets cast.</p></li>
+<li><p><strong>percent of votes targetting wolves that are still alive</strong>: How many targets are towards werewolves still in the game out of all targets cast.</p></li>
+<li><p><strong>percent of likes for dead wolves</strong>: How many likes are towards dead werewolves out of all likes cast.</p></li>
+<li><p><strong>percent of likes for wolves that are still alive</strong>: How many likes are towards werewolves still in the game out of all likes cast.</p></li>
+<li><p><strong>percent of likes towards dead villagers</strong>: How many likes are towards dead villagers out of all likes cast.</p></li>
+<li><p><strong>percent of likes towards villagers that are still alive</strong>: How many likes are towards villagers still in the game out of all likes cast.</p></li>
 </ul>
-</li>
-<li><p>percent of likes towards wolves by tracking:</p>
-<ul>
-<li><p>percent of likes for dead wolves</p></li>
-<li><p>percent of likes for wolves that are still alive</p></li>
-</ul>
-</li>
-<li><p>percent of likes towards villagers by tracking:</p>
-<ul>
-<li><p>percent of likes towards dead villagers</p></li>
-<li><p>perceent of likes towards villagers that are still alive</p></li>
-</ul>
-</li>
-</ul>
-<p>There might be more complicated tracking indicators that look at changes in between targets, however these have not been implemented yet.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>_ = indicators._approval_target_indicators(trained_approval_villager_wins[0], verbose=True)
