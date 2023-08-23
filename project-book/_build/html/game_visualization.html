@@ -391,12 +391,6 @@ import networkx as nx
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/root/.local/lib/python3.10/site-packages/tqdm/auto.py:22: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
-  from .autonotebook import tqdm as notebook_tqdm
-</pre></div>
-</div>
-</div>
 </details>
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="replay-visualization">
@@ -404,7 +398,12 @@ import networkx as nx
 <p>We have ways to print out game replays, but humans tend to identify patterns quicker when they can visualize the data.
 By plotting the game in a graph format, we give the reader yet another way to consume game replays</p>
 <p>First we play a couple of games</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = plurality_env(num_agents=10, werewolves=2, num_accusations=2)
 observations, _, _, _, _ = env.reset()
@@ -428,7 +427,7 @@ trained_plurality_agent = ActorCriticAgent({&quot;rec_hidden_size&quot;: 128,
                                         &quot;approval_states&quot;: 10},
                                         num_players=10,
                                         obs_size=obs_size)
-trained_plurality_agent.load_state_dict(torch.load(&quot;stored_agents/lstm_first_no_one_hot_128_128/plurality_agent_10_score_46&quot;))
+trained_plurality_agent.load_state_dict(torch.load(&quot;../notebooks/stored_agents/lstm_first_no_one_hot_128_128/plurality_agent_10_score_46&quot;))
 
 # random_agent = None
 
@@ -436,9 +435,15 @@ trained_plurality_wins, trained_plurality_replays = play_recurrent_game(env, ran
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<p>Then we use this very unoptimized function to pull out graphs for each phase in each day, and color nodes and edges accordingly. Purple is a wolf, Green is a villager. Red means you died this phase, Black means the agent was already dead during the phase.</p>
-<div class="cell docutils container">
+<p>Then, using the hidden functions below, we generate graphs for each phase in each day, and color nodes and edges accordingly. Purple for werewolves, Green for villagers. Red means you died this phase, Black means the agent was already dead during the phase.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def viz_replay(replay):
     #[wolf for wolf in stage[&quot;werewolves&quot;]]
@@ -531,16 +536,22 @@ trained_plurality_wins, trained_plurality_replays = play_recurrent_game(env, ran
         color_map[phase[&#39;day&#39;]].append(graph_color_map)
 
     return day_info, pos, color_map
-
-viz_info, pos, cmap = viz_replay(trained_plurality_replays[0])
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<p>This loose piece of code takes in the output of our function and actually draws out the game in a matplotlib subplot graph with rows representing incrementing days, and columns representing incrementing phases.</p>
-<div class="cell docutils container">
+<p>This loose piece of code takes in the output of our function and actually draws out the game in a matplotlib subplot graph with rows representing incrementing days, and columns representing incrementing phases. Labelling and positioning of Day labels was tailored to this particular example.</p>
+<p>Reading this graph representation is similar to reading a book. You start from the top left subplot, and as you go across, you transition from accusation phases, to a voting phase, and finally the night phase where werewolves kill a villager. Being a uni-directional graph, terminating arrows indicate a targetting from an originating player.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># TODO: clean this up, maybe use newer matplotlib 3.4 subplots and put it in the viz_info function
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+viz_info, pos, cmap = viz_replay(trained_plurality_replays[3])
 
 day_num = len(viz_info.keys())
 phases_per_day = max([len(val) for val in viz_info.values()])
@@ -572,18 +583,19 @@ else:
     plt.suptitle(&quot;Wolves win!&quot;)
 
 fig.tight_layout()
-plt.show()
 
-# TODO : Consider adding labels for each day
-# fig.text(-0.02, 0.80, &#39;Day 1&#39;)
-# fig.text(-0.02, 0.60, &#39;Day 2&#39;)
-# fig.text(-0.02, 0.40, &#39;Day 3&#39;)
-# fig.text(-0.02, 0.20, &#39;Day 4&#39;)
+
+fig.text(-0.02, 0.80, &#39;Day 1&#39;)
+fig.text(-0.02, 0.45, &#39;Day 2&#39;)
+fig.text(-0.02, 0.19, &#39;Day 3&#39;)
+
+plt.show()
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<img alt="_images/8a73b4212e68142e168d41689bf636caad4e145f31678c4cad4fdfdc26c67358.png" src="_images/8a73b4212e68142e168d41689bf636caad4e145f31678c4cad4fdfdc26c67358.png" />
+<img alt="_images/8d4febd42643dfbab4f58020bab34e8c058d60f10aa54b324aad5f7e9ed31249.png" src="_images/8d4febd42643dfbab4f58020bab34e8c058d60f10aa54b324aad5f7e9ed31249.png" />
 </div>
 </div>
 </section>
