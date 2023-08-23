@@ -19,6 +19,7 @@ This repo is essentially a monolith with the following:
 
 #### Training
 
+Do not forget to connect the devcontainer to the mlflow container so that tracking the training works. Training scripts actually require a connection to mlflow
 
 Do not forget to change trainer.py `tqdm.__init__ = partialmethod(tqdm.__init__, disable=False)` to True to disable the tqdm output
 

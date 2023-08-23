@@ -51,9 +51,9 @@ def random_coordinated_single_wolf(env, agent, action=None):
 config_training = {
     "model": {
         "recurrent_layers": 1, # 1,2 (2)
-        "recurrent_hidden_size": 128, # 64-128-256-512 (4)
-        "joint_mlp_size": 128,
-        "split_mlp_size": 128,
+        "recurrent_hidden_size": 64, # 64-128-256-512 (4)
+        "joint_mlp_size": 64,
+        "split_mlp_size": 64,
         "num_votes": 1,
         "approval_states": 10 # this is tied to the number of players
     },
@@ -61,7 +61,7 @@ config_training = {
         "batch_size": 256, # 32-64-128-256-512-1024 (6)
         "epochs": 3, # 4,5,6,7,8,9,10 (7)
         "updates": 1000, # 1000 (1)
-        "buffer_games_per_update": 200, # 50-100-200 (3)
+        "buffer_games_per_update": 300, # 50-100-200 (3)
         "clip_range": 0.075, # 0.1,0.2,0.3 (3)
         "value_loss_coefficient": 0.1, # 0.1, 0.05, 0.01, 0.005, 0.001 (5)
         "max_grad_norm": 0.5, 
@@ -108,7 +108,7 @@ finished_one = False
 
 ## mlflow setting
 mlflow.set_tracking_uri("http://mlflow:5000")
-experiment = mlflow.get_experiment_by_name("Plurality Training")
+experiment = mlflow.get_experiment_by_name("Improved Plurality Training")
 
 if experiment == None:
     experiment_id = mlflow.create_experiment(
