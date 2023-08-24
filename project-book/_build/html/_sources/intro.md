@@ -1,4 +1,4 @@
-# COMP 5903 - Voting in Hidden Role Games
+# COMP 5903 - Learning to vote differently in Werewolf
 
 ## Abstract
 

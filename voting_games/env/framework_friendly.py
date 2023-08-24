@@ -386,7 +386,8 @@ class raw_env(ParallelEnv):
         terminations = {agent: False for agent in self.agents}
         truncations = {agent: False for agent in self.agents}
         infos = {agent: {} for agent in self.agents}
-        return observations, {}
+
+        return observations, infos
 
 
     def convert_obs(self, observation):
@@ -417,7 +418,7 @@ def random_coordinated_single_wolf(env, agent, action=None):
 if __name__ == "__main__":
 
     env = raw_env()
-    parallel_api_test(env)
+    parallel_api_test(env, num_cycles=1000000)
 
     #env = raw_env(num_agents=5, werewolves=1, num_accusations=1)
     # env.reset()
