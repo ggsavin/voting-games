@@ -390,7 +390,7 @@ document.write(`
 <li><p><span class="math notranslate nohighlight">\(S\)</span>, a set of states</p></li>
 <li><p><span class="math notranslate nohighlight">\(A\)</span>, a set of actions</p></li>
 <li><p><span class="math notranslate nohighlight">\(T\)</span>, a set of transition probabilities between states</p></li>
-<li><p><span class="math notranslate nohighlight">\(R: S \times A \rightarrow \mathbb{R}\)</span> is the rewaard function</p></li>
+<li><p><span class="math notranslate nohighlight">\(R: S \times A \rightarrow \mathbb{R}\)</span> is the reward function</p></li>
 <li><p><span class="math notranslate nohighlight">\(\Omega\)</span>, a set of observations</p></li>
 <li><p><span class="math notranslate nohighlight">\(O\)</span>, a set of observation probabilities</p></li>
 <li><p><span class="math notranslate nohighlight">\(\gamma\)</span> is a discount factor, bounded by <span class="math notranslate nohighlight">\([0,1)\)</span></p></li>
@@ -401,7 +401,7 @@ document.write(`
 <section id="rl-marl">
 <h2>RL &amp; MARL<a class="headerlink" href="#rl-marl" title="Permalink to this heading">#</a></h2>
 <p><a class="reference internal" href="#single-rl"><span class="std std-ref">Reinforcement Learning</span></a> is a training method wherein an agent takes an action in an environment and is either rewarded or punished while transitioning to a new state. This is repeated until the agent reaches a terminal state. Ideally an agent will learn an optimal <em>policy</em> that maps observations to actions through many interactions in their environment.</p>
-<p>When it comes to <a class="reference internal" href="#multi-agent-rl"><span class="std std-ref">Multi-Agent Learning</span></a>, multiple agents are either leaarning in a decentralized manner, or being directed by a central policy. The dynamic nature of of Multi-Agent systems make learning much more challenging, although certain algorithms such as PPO and DQN still work.</p>
+<p>When it comes to <a class="reference internal" href="#multi-agent-rl"><span class="std std-ref">Multi-Agent Learning</span></a>, multiple agents are either learning in a decentralized manner, or being directed by a central policy. The dynamic nature of of Multi-Agent systems make learning much more challenging, although certain algorithms such as PPO and DQN still work.</p>
 <p>Agents can learn using value-based, policy-based and model-based algorithms. A good taxonomy of different types of algorithms can be seen in the diagram below.</p>
 <figure class="align-default" id="rl-taxonomy">
 <img alt="Taxonomy of RL algorithms" src="https://spinningup.openai.com/en/latest/_images/rl_algorithms_9_15.svg" /><figcaption>

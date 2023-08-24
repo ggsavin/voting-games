@@ -6,7 +6,7 @@ Partially Observable Markov Decision Processes (POMDPs[^POMDPs]) are a special c
 - $S$, a set of states
 - $A$, a set of actions
 - $T$, a set of transition probabilities between states
-- $R: S \times A \rightarrow \mathbb{R}$ is the rewaard function
+- $R: S \times A \rightarrow \mathbb{R}$ is the reward function
 - $\Omega$, a set of observations
 - $O$, a set of observation probabilities
 - $\gamma$ is a discount factor, bounded by $[0,1)$
@@ -19,7 +19,7 @@ RL and MARL enviornments usually satisfy the Markov property that future states 
 
 [Reinforcement Learning](Single-RL) is a training method wherein an agent takes an action in an environment and is either rewarded or punished while transitioning to a new state. This is repeated until the agent reaches a terminal state. Ideally an agent will learn an optimal *policy* that maps observations to actions through many interactions in their environment. 
 
-When it comes to [Multi-Agent Learning](Multi-Agent-RL), multiple agents are either leaarning in a decentralized manner, or being directed by a central policy. The dynamic nature of of Multi-Agent systems make learning much more challenging, although certain algorithms such as PPO and DQN still work.
+When it comes to [Multi-Agent Learning](Multi-Agent-RL), multiple agents are either learning in a decentralized manner, or being directed by a central policy. The dynamic nature of of Multi-Agent systems make learning much more challenging, although certain algorithms such as PPO and DQN still work.
 
 Agents can learn using value-based, policy-based and model-based algorithms. A good taxonomy of different types of algorithms can be seen in the diagram below.
 

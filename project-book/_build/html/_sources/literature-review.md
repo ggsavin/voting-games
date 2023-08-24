@@ -5,7 +5,7 @@ While the idea of using different voting mechanisms in an SDG seems to be a nove
 
 ## Game theorertic work on mafia/werewolf
 
-Early iterative game theoretic research in mafia/werewolf {cite}`braverman2008mafia, yao2008theoretical, migdal2010mathematical` answered questions such as how large does the minority group (greater than or equal to the square root of total players) need to be to dominate a game aand what strategies should they follow (random policy). Although the game model was kept simple, and advanced behavior was not considered, it provided very good baseline insights for which further work could leverage. 
+Early iterative game theoretic research in mafia/werewolf {cite}`braverman2008mafia, yao2008theoretical, migdal2010mathematical` answered questions such as how large does the minority group (greater than or equal to the square root of total players) need to be to dominate a game and what strategies should they follow (random policy). Although the game model was kept simple, and advanced behavior was not considered, it provided very good baseline insights for which further work could leverage. 
 
 ## AIWolf and other Werewolf environments
 
