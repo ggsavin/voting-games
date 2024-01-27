@@ -57,6 +57,8 @@ class raw_env(ParallelEnv):
         self.agent_roles = { name : role for name, role in zip(self.agents, self.possible_roles)}
         self.num_accusation_steps = num_accusations
 
+        self.oracle_id = -1
+
         self.game_phase_tracker = self._game_phase_iterator()
         day, phase, accusation_round = next(self.game_phase_tracker)
 
@@ -100,6 +102,9 @@ class raw_env(ParallelEnv):
         self._agent_selector = agent_selector(self.agents)
         self.agent_selection = self._agent_selector.reset()
 
+    def set_oracle(self, oracle_id: int):
+        self.oracle_id = oracle_id
+
     def observation_space(self, agent: str) -> Space:
         return self.observation_spaces[agent]
 
@@ -121,6 +126,14 @@ class raw_env(ParallelEnv):
 
         for player, action in actions.items():
             pid = int(player.split("_")[-1])
+            if self.oracle_id and pid == self.oracle_id:
+                villager_actions = [action for player, action in actions.items() if self.agent_roles[player] == Roles.VILLAGER and player != f'player_{pid}'] 
+                villger_target_ids = [[i if v == -1 else 0 for i, v in enumerate(villager_action)] for villager_action in villager_actions]
+                counter = collections.Counter([item for sublist in villger_target_ids for item in sublist if item != 0]).most_common(1)
+                if len(counter) >= 1:
+                    mode, _ = counter[0]
+                    votes[mode] += -1
+                continue
 
             for i, opinion in enumerate(action):
                 
